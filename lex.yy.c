@@ -637,140 +637,140 @@ case 1:
 YY_RULE_SETUP
 #line 12 "lex.l"
 {
-                               printf("%s",yytext);
+                               printf("%s\n",yytext);
                             }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
 #line 15 "lex.l"
 {
-                               printf("%s",yytext);
+                               printf("%s\n",yytext);
                             }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
 #line 18 "lex.l"
 {
-                               printf("%s",yytext);
+                               printf("%s\n",yytext);
                             }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
 #line 21 "lex.l"
 {
-                               printf("%s",yytext);
+                               printf("%s\n",yytext);
                             }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
 #line 24 "lex.l"
 {
-                               printf("%s",yytext);
+                               printf("%s\n",yytext);
                             }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
 #line 27 "lex.l"
 {
-                               printf("%s",yytext);
+                               printf("%s\n",yytext);
                             }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
 #line 30 "lex.l"
 {
-                               printf("%s",yytext);
+                               printf("%s\n",yytext);
                             }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
 #line 33 "lex.l"
 {
-                               printf("%s",yytext);
+                               printf("%s\n",yytext);
                             }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
 #line 36 "lex.l"
 {
-                               printf("%s",yytext);
+                               printf("%s\n",yytext);
                             }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
 #line 39 "lex.l"
 {
-                               printf("%s",yytext);
+                               printf("%s\n",yytext);
                             }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
 #line 42 "lex.l"
 {
-                               printf("%s",yytext);
+                               printf("%s\n",yytext);
                             }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
 #line 45 "lex.l"
 {
-                               printf("%s",yytext);
+                               printf("%s\n",yytext);
                             }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
 #line 48 "lex.l"
 {
-                               printf("%s",yytext);
+                               printf("%s\n",yytext);
                             }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
 #line 51 "lex.l"
 {
-                               printf("%s",yytext);
+                               printf("%s\n",yytext);
                             }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
 #line 54 "lex.l"
 {
-                               printf("%s",yytext);
+                               printf("%s\n",yytext);
                             }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
 #line 57 "lex.l"
 {
-                               printf("%s",yytext);
+                               printf("%s\n",yytext);
                             }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
 #line 60 "lex.l"
 {
-                               printf("%s",yytext);
+                               printf("%s\n",yytext);
                             }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
 #line 63 "lex.l"
 {
-                               printf("%s",yytext);
+                               printf("%s\n",yytext);
                             }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
 #line 66 "lex.l"
 {
-				printf("%s - 1",yytext);
+				printf("%s - 1\n",yytext);
 			    }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
 #line 69 "lex.l"
 {
-				printf("%s - 0",yytext);
+				printf("%s - 0\n",yytext);
 			    }
 	YY_BREAK
 case 21:
@@ -796,7 +796,7 @@ case 22:
 YY_RULE_SETUP
 #line 87 "lex.l"
 {
-				printf("num - %s",yytext); 
+				printf("num: %s\n",yytext); 
 			    }
 	YY_BREAK
 case 23:
@@ -808,7 +808,7 @@ case 24:
 YY_RULE_SETUP
 #line 91 "lex.l"
 {
-				printf("comment");	
+				printf("comment\n");	
 			    }
 	YY_BREAK
 case 25:

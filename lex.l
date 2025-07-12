@@ -10,64 +10,64 @@ int id_or_keyword(char *s);
 %%
 
 "*"                         {
-                               printf("%s",yytext);
+                               printf("%s\n",yytext);
                             }
 "/"                         {
-                               printf("%s",yytext);
+                               printf("%s\n",yytext);
                             }
 "%"                         {
-                               printf("%s",yytext);
+                               printf("%s\n",yytext);
                             }
 "+"                         {
-                               printf("%s",yytext);
+                               printf("%s\n",yytext);
                             }
 "-"                         {
-                               printf("%s",yytext);
+                               printf("%s\n",yytext);
                             }
 "="                         {
-                               printf("%s",yytext);
+                               printf("%s\n",yytext);
                             }
 ">"                         {
-                               printf("%s",yytext);
+                               printf("%s\n",yytext);
                             }
 ">="                        {
-                               printf("%s",yytext);
+                               printf("%s\n",yytext);
                             }
 "<"                         {
-                               printf("%s",yytext);
+                               printf("%s\n",yytext);
                             }
 "<="                        {
-                               printf("%s",yytext);
+                               printf("%s\n",yytext);
                             }
 "=="                        {
-                               printf("%s",yytext);
+                               printf("%s\n",yytext);
                             }
 "<>"                        {
-                               printf("%s",yytext);
+                               printf("%s\n",yytext);
                             }
 "("                         {
-                               printf("%s",yytext);
+                               printf("%s\n",yytext);
                             }
 ")"                         {
-                               printf("%s",yytext);
+                               printf("%s\n",yytext);
                             }
 "{"                         {
-                               printf("%s",yytext);
+                               printf("%s\n",yytext);
                             }
 "}"                         {
-                               printf("%s",yytext);
+                               printf("%s\n",yytext);
                             }
 ","                         {
-                               printf("%s",yytext);
+                               printf("%s\n",yytext);
                             }
 ";"                         {
-                               printf("%s",yytext);
+                               printf("%s\n",yytext);
                             }
 "true"			    {
-				printf("%s - 1",yytext);
+				printf("%s - 1\n",yytext);
 			    }
 "false"			    {
-				printf("%s - 0",yytext);
+				printf("%s - 0\n",yytext);
 			    }
 [a-zA-Z]([a-zA-Z0-9_])*   {  int i = id_or_keyword(yytext);
     switch (i) {
@@ -85,11 +85,11 @@ int id_or_keyword(char *s);
     }
                             }
 "-"?([1-9][0-9]*|0)	    {
-				printf("num - %s",yytext); 
+				printf("num: %s\n",yytext); 
 			    }
 [ \f\n\r\t]+                printf("%s",yytext); 
 "//".* 		  	    {
-				printf("comment");	
+				printf("comment\n");	
 			    }
 .                           {
                                printf("Illegal character %s\n",yytext);
