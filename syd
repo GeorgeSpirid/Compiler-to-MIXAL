@@ -1,0 +1,148 @@
+%{
+ 
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <ctype.h>
+
+#define DEBUG 0
+
+/* ----------------------------------------------------------- */
+/* --------- Declarations for Syntax-Semantic Analysis ------- */
+/* ----------------------------------------------------------- */
+int yyparse();
+int yylex();
+
+%}
+
+%union
+{
+    int   yint;
+    char  ystr[81];
+    int   nonterm;
+}
+
+%token <yint> RETURN BREAK TRUE FALSE ELSE IF INT WHILE
+%token <ystr> NUM
+%token <ystr> '(' ')' '{' '}' ',' ';'
+%token <ystr> '*' '/' '%' '+' '-' '=' '>' '<' '>=' '<=' '=='
+%token <ystr> ID TRUE FALSE
+ 
+%type <nonterm> PROGRAM METH-LIST METH PARAMS FORMALS TYPE BODY DECLS DECL-LIST DECL VARS
+%type <nonterm> STMTS STMT BLOCK ASSIGN LOCATION METHOD EXPR RELOP ADD-EXPR ADDOP TERM
+%type <nonterm> MULOP FACTOR ACTUALS ARGS
+
+%start Expr
+
+%%
+
+PrimExpr           : Literal
+                     { 
+#if DEBUG
+                        printf("Rule #1\n");
+#endif
+                        $$=$1; 
+                     }
+                   ;
+Literal            : DEC_CONST
+                     {  
+#if DEBUG
+                        printf("Rule #2\n");
+#endif
+                        $$=atoi($1);
+                     }
+                   ;
+ParenExpr          : PrimExpr
+                     {
+#if DEBUG
+                        printf("Rule #3\n");
+#endif
+                        $$=$1; 
+                     }
+                   | '('  Expr  ')'
+                     { 
+#if DEBUG
+                        printf("Rule #4\n");
+#endif
+                        $$=$2; 
+                     }
+                   ;
+PrefixExpr         : ParenExpr
+                     { 
+#if DEBUG
+                        printf("Rule #5\n");
+#endif
+                        $$=$1; 
+                     }
+                   ;
+MultExpr           : PrefixExpr
+                     { 
+#if DEBUG
+                        printf("Rule #6\n");
+#endif
+                        $$=$1; 
+                     }
+                   | MultExpr '*' PrefixExpr
+                     { 
+#if DEBUG
+                        printf("Rule #7\n");
+#endif
+                        $$=$1*$3;
+                     }
+                   | MultExpr '/' PrefixExpr
+                     { 
+#if DEBUG
+                        printf("Rule #8\n");
+#endif
+                        $$=$1/$3;
+                     }
+                   | MultExpr '%' PrefixExpr
+                     { 
+#if DEBUG
+                        printf("Rule #9\n");
+#endif
+                        $$=$1%$3;
+                     }
+                   ;
+AddExpr            : MultExpr
+                     { 
+#if DEBUG
+                        printf("Rule #10\n");
+#endif
+                        $$=$1; 
+                     }
+		       | AddExpr '+' MultExpr
+                     { 
+#if DEBUG
+                        printf("Rule #11\n");
+#endif
+                        $$=$1+$3;
+                     }
+		       | AddExpr '-' MultExpr
+                     { 
+#if DEBUG
+                        printf("Rule #12\n");
+#endif
+                        $$=$1-$3;
+                     }
+                   ;
+Expr               : AddExpr
+                     { 
+#if DEBUG
+                        printf("Rule #13\n");
+#endif
+                        $$=$1;
+                        printf("To apotelesma einai: %d\n",$1);
+                     }
+                   ;
+%%
+
+void yyerror(char *s)
+{
+   fputs(s,stderr); putc('\n',stderr);
+}
+
+int main(void)
+{
+   yyparse();
+}

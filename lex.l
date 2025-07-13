@@ -1,93 +1,179 @@
 %{
 #include <stdio.h>
 #include <string.h>
-#include "defs.h"
+#include "y.tab.h"
 
 #define N  10
+#define DEBUG 0
 int id_or_keyword(char *s);
 %}
 
 %%
 
 "*"                         {
+#if DEBUG
                                printf("%s\n",yytext);
-                            }
+#endif
+                               strcpy(yylval.ystr,yytext);
+                               return('*');
+			    }
 "/"                         {
+#if DEBUG
                                printf("%s\n",yytext);
-                            }
+#endif
+                               strcpy(yylval.ystr,yytext);
+                               return('/');
+			    }
 "%"                         {
+#if DEBUG
                                printf("%s\n",yytext);
-                            }
+#endif
+                               strcpy(yylval.ystr,yytext);
+                               return('%');
+			}
 "+"                         {
+#if DEBUG
                                printf("%s\n",yytext);
-                            }
+#endif
+                               strcpy(yylval.ystr,yytext);
+                               return('+');
+			}
 "-"                         {
+#if DEBUG
                                printf("%s\n",yytext);
-                            }
+#endif
+                               strcpy(yylval.ystr,yytext);
+                               return('-');
+			}
 "="                         {
+#if DEBUG
                                printf("%s\n",yytext);
-                            }
+#endif
+                               strcpy(yylval.ystr,yytext);
+                               return('=');
+			}
 ">"                         {
+#if DEBUG
                                printf("%s\n",yytext);
-                            }
+#endif
+                               strcpy(yylval.ystr,yytext);
+                               return('>');
+			}
 ">="                        {
+#if DEBUG
                                printf("%s\n",yytext);
-                            }
+#endif
+                               strcpy(yylval.ystr,yytext);
+                               return('>=');
+			}
 "<"                         {
+#if DEBUG
                                printf("%s\n",yytext);
-                            }
+#endif
+                               strcpy(yylval.ystr,yytext);
+                               return('<');
+			}
 "<="                        {
+#if DEBUG
                                printf("%s\n",yytext);
-                            }
+#endif
+                               strcpy(yylval.ystr,yytext);
+                               return('<=');
+			}
 "=="                        {
+#if DEBUG
                                printf("%s\n",yytext);
-                            }
+#endif
+                               strcpy(yylval.ystr,yytext);
+                               return('==');
+			}
 "<>"                        {
+#if DEBUG
                                printf("%s\n",yytext);
-                            }
+#endif
+                               strcpy(yylval.ystr,yytext);
+                               return('<>');
+			}
 "("                         {
+#if DEBUG
                                printf("%s\n",yytext);
-                            }
+#endif
+                               strcpy(yylval.ystr,yytext);
+                               return('(');
+			}
 ")"                         {
+#if DEBUG
                                printf("%s\n",yytext);
-                            }
+#endif
+                               strcpy(yylval.ystr,yytext);
+                               return(')');
+			}
 "{"                         {
+#if DEBUG
                                printf("%s\n",yytext);
-                            }
+#endif
+                               strcpy(yylval.ystr,yytext);
+                               return('{');
+			}
 "}"                         {
+#if DEBUG
                                printf("%s\n",yytext);
-                            }
+#endif
+                               strcpy(yylval.ystr,yytext);
+                               return('}');
+			}
 ","                         {
+#if DEBUG
                                printf("%s\n",yytext);
-                            }
+#endif
+                               strcpy(yylval.ystr,yytext);
+                               return(',');
+			}
 ";"                         {
+#if DEBUG
                                printf("%s\n",yytext);
-                            }
+#endif
+                               strcpy(yylval.ystr,yytext);
+                               return(';');
+			}
 "true"			    {
-				printf("%s - 1\n",yytext);
+#if DEBUG
+				printf("%s\n",yytext);
+#endif
+				yylval.yint=1;
+				return(TRUE);
 			    }
 "false"			    {
-				printf("%s - 0\n",yytext);
+#if DEBUG
+				printf("%s\n",yytext);
+#endif
+				yylval.yint=0;
+				return(FALSE);
 			    }
-[a-zA-Z]([a-zA-Z0-9_])*   {  int i = id_or_keyword(yytext);
-    switch (i) {
-        case RETURN: printf("KEYWORD: return\n"); break;
-        case BREAK:  printf("KEYWORD: break\n");  break;
-        case ELSE:   printf("KEYWORD: else\n");   break;
-        case IF:     printf("KEYWORD: if\n");     break;
-        case INT:    printf("KEYWORD: int\n");    break;
-        case WHILE:  printf("KEYWORD: while\n");  break;
-        case TRUE:   printf("KEYWORD: true\n");   break;
-        case FALSE:  printf("KEYWORD: false\n");  break;
-        case NUM:    printf("KEYWORD: num\n");    break;
-        case ID:     printf("ID: %s\n", yytext);  break;
-        default:     printf("UNKNOWN TOKEN: %s\n", yytext); break;
-    }
+[a-zA-Z]([a-zA-Z0-9_])*   {  int i;
+#if DEBUG
+                               printf("%s\n",yytext);
+#endif
+                               i=id_or_keyword(yytext);
+                               if(i==ID) 
+                                  strcpy(yylval.ystr,yytext);
+                               else 
+                                  yylval.yint=i;
+                               return(i);
                             }
 "-"?([1-9][0-9]*|0)	    {
-				printf("num: %s\n",yytext); 
-			    }
-[ \f\n\r\t]+                printf("%s",yytext); 
+#if DEBUG
+                               printf("%s\n",yytext);
+#endif
+                               strcpy(yylval.ystr,yytext);
+                               return(NUM);
+                            }
+
+[ \f\n\r\t]+                {
+#if DEBUG
+								printf("%s\n",yytext); 
+#endif
+							}
 "//".* 		  	    {
 				printf("comment\n");	
 			    }
@@ -98,8 +184,8 @@ int id_or_keyword(char *s);
 
 %%
 
-static char *kid[N]={"id","num","return","break","true","false","else","if","int","while"};
-static int kval[N]={ID,NUM,RETURN,BREAK,TRUE,FALSE,ELSE,IF,INT,WHILE};
+static char *kid[N]={"return","break","true","false","else","if","int","while"};
+static int kval[N]={RETURN,BREAK,TRUE,FALSE,ELSE,IF,INT,WHILE};
 
 int id_or_keyword(char *s)
 {  int i,k;
@@ -109,10 +195,4 @@ int id_or_keyword(char *s)
       return kval[i];
    else
       return ID;
-}
-
-int main(void)
-{
-   yylex();
-   return 0;
 }

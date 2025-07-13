@@ -1712,8 +1712,8 @@ int main()
 #line 99 "lex.l"
 
 
-static char *kid[N]={"id","num","return","break","true","false","else","if","int","while"};
-static int kval[N]={ID,NUM,RETURN,BREAK,TRUE,FALSE,ELSE,IF,INT,WHILE};
+static char *kid[N]={"return","break","true","false","else","if","int","while"};
+static int kval[N]={RETURN,BREAK,TRUE,FALSE,ELSE,IF,INT,WHILE};
 
 int id_or_keyword(char *s)
 {  int i,k;
