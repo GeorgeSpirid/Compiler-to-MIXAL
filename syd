@@ -23,10 +23,10 @@ int yylex();
 }
 
 %token <yint> RETURN BREAK TRUE FALSE ELSE IF INT WHILE
-%token <ystr> NUM
+%token <ystr> TRUE FALSE
 %token <ystr> '(' ')' '{' '}' ',' ';'
 %token <ystr> '*' '/' '%' '+' '-' '=' '>' '<' '>=' '<=' '=='
-%token <ystr> ID TRUE FALSE
+%token <ystr> ID NUM
  
 %type <nonterm> PROGRAM METH-LIST METH PARAMS FORMALS TYPE BODY DECLS DECL-LIST DECL VARS
 %type <nonterm> STMTS STMT BLOCK ASSIGN LOCATION METHOD EXPR RELOP ADD-EXPR ADDOP TERM
@@ -36,105 +36,348 @@ int yylex();
 
 %%
 
-PrimExpr           : Literal
+PROGRAM            : METH-LIST
                      { 
 #if DEBUG
                         printf("Rule #1\n");
-#endif
-                        $$=$1; 
+#endif 
                      }
-                   ;
-Literal            : DEC_CONST
-                     {  
+		       | 
+                     { 
 #if DEBUG
                         printf("Rule #2\n");
 #endif
-                        $$=atoi($1);
-                     }
-                   ;
-ParenExpr          : PrimExpr
-                     {
+                     };
+METH-LIST            : METH METH-LIST
+                     { 
 #if DEBUG
                         printf("Rule #3\n");
-#endif
-                        $$=$1; 
+#endif 
                      }
-                   | '('  Expr  ')'
+		       | METH
                      { 
 #if DEBUG
                         printf("Rule #4\n");
 #endif
-                        $$=$2; 
-                     }
-                   ;
-PrefixExpr         : ParenExpr
+                     };
+METH            : TYPE ID '(' PARAMS ')' BODY
                      { 
 #if DEBUG
                         printf("Rule #5\n");
 #endif
-                        $$=$1; 
-                     }
-                   ;
-MultExpr           : PrefixExpr
+                     };
+PARAMS            : FORMALS TYPE ID
                      { 
 #if DEBUG
                         printf("Rule #6\n");
 #endif
-                        $$=$1; 
                      }
-                   | MultExpr '*' PrefixExpr
+		       | 
                      { 
 #if DEBUG
                         printf("Rule #7\n");
 #endif
-                        $$=$1*$3;
-                     }
-                   | MultExpr '/' PrefixExpr
+                     };
+TYPE            : INT
                      { 
 #if DEBUG
                         printf("Rule #8\n");
 #endif
-                        $$=$1/$3;
-                     }
-                   | MultExpr '%' PrefixExpr
+                     };
+BODY            : '{' DECLS STMTS '}'
                      { 
 #if DEBUG
                         printf("Rule #9\n");
 #endif
-                        $$=$1%$3;
-                     }
-                   ;
-AddExpr            : MultExpr
+                     };
+DECLS            : DECL-LIST DECL
                      { 
 #if DEBUG
                         printf("Rule #10\n");
 #endif
-                        $$=$1; 
                      }
-		       | AddExpr '+' MultExpr
+		       | 
                      { 
 #if DEBUG
                         printf("Rule #11\n");
 #endif
-                        $$=$1+$3;
-                     }
-		       | AddExpr '-' MultExpr
+                     };
+DECL-LIST            : DECL-LIST DECL
                      { 
 #if DEBUG
                         printf("Rule #12\n");
 #endif
-                        $$=$1-$3;
                      }
-                   ;
-Expr               : AddExpr
+		       | 
                      { 
 #if DEBUG
                         printf("Rule #13\n");
 #endif
-                        $$=$1;
-                        printf("To apotelesma einai: %d\n",$1);
+                     };
+DECL            : TYPE ID VARS ';'
+                     { 
+#if DEBUG
+                        printf("Rule #14\n");
+#endif
                      }
-                   ;
+		       | TYPE ID '=' EXPR VARS ';' 
+                     { 
+#if DEBUG
+                        printf("Rule #15\n");
+#endif
+                     };
+VARS            : ',' ID VARS
+                     { 
+#if DEBUG
+                        printf("Rule #16\n");
+#endif
+                     }
+		       | ',' ID '=' EXPR VARS
+                     { 
+#if DEBUG
+                        printf("Rule #17\n");
+#endif
+                     }
+		       | 
+                     { 
+#if DEBUG
+                        printf("Rule #18\n");
+#endif
+                     };
+STMTS            : STMTS STMT
+                     { 
+#if DEBUG
+                        printf("Rule #19\n");
+#endif
+                     }
+		       | 
+                     { 
+#if DEBUG
+                        printf("Rule #20\n");
+#endif
+                     };
+STMT            : ASSIGN ';'
+                     { 
+#if DEBUG
+                        printf("Rule #21\n");
+#endif
+                     }
+		       | RETURN EXPR ';'
+		{ 
+#if DEBUG
+                        printf("Rule #22\n");
+#endif
+                     }
+			| IF '(' EXPR ')' STMT ELSE STMT
+		{ 
+#if DEBUG
+                        printf("Rule #23\n");
+#endif
+                     }
+			| WHILE '(' EXPR ')' STMT
+		{ 
+#if DEBUG
+                        printf("Rule #24\n");
+#endif
+                     }
+			| BREAK ';'
+		{ 
+#if DEBUG
+                        printf("Rule #25\n");
+#endif
+                     }
+			| BLOCK
+		{ 
+#if DEBUG
+                        printf("Rule #26\n");
+#endif
+                     }
+		       | ';'
+                     { 
+#if DEBUG
+                        printf("Rule #27\n");
+#endif
+                     };
+BLOCK            : '{' STMTS '}'
+                     { 
+#if DEBUG
+                        printf("Rule #28\n");
+#endif
+                     };
+ASSIGN            : LOCATION '=' EXPR
+                     { 
+#if DEBUG
+                        printf("Rule #29\n");
+#endif
+                     };
+LOCATION            : ID
+                     { 
+#if DEBUG
+                        printf("Rule #30\n");
+#endif
+                     };
+METHOD            : ID
+                     { 
+#if DEBUG
+                        printf("Rule #31\n");
+#endif
+                     };
+EXPR            : ADD-EXPR RELOP ADD-EXPR
+                     { 
+#if DEBUG
+                        printf("Rule #32\n");
+#endif
+                     }
+		| ADD-EXPR
+                     { 
+#if DEBUG
+                        printf("Rule #33\n");
+#endif
+                     };
+RELOP            : '<='
+                     { 
+#if DEBUG
+                        printf("Rule #34\n");
+#endif
+                     }
+		| '<'
+                     { 
+#if DEBUG
+                        printf("Rule #35\n");
+#endif
+                     }
+		| '>'
+                     { 
+#if DEBUG
+                        printf("Rule #36\n");
+#endif
+                     }
+		| '>='
+                     { 
+#if DEBUG
+                        printf("Rule #37\n");
+#endif
+                     }
+		| '=='
+                     { 
+#if DEBUG
+                        printf("Rule #38\n");
+#endif
+                     }
+		| '!='
+                     { 
+#if DEBUG
+                        printf("Rule #39\n");
+#endif
+                     };
+ADD-EXPR            : ADD-EXPR ADDOP TERM
+                     { 
+#if DEBUG
+                        printf("Rule #40\n");
+#endif
+                     }
+		| TERM
+                     { 
+#if DEBUG
+                        printf("Rule #41\n");
+#endif
+                     };
+ADDOP            : '+'
+                     { 
+#if DEBUG
+                        printf("Rule #42\n");
+#endif
+                     }
+		| '-'
+                     { 
+#if DEBUG
+                        printf("Rule #43\n");
+#endif
+                     };
+TERM            : TERM MULOP FACTOR
+                     { 
+#if DEBUG
+                        printf("Rule #44\n");
+#endif
+                     }
+		| FACTOR
+                     { 
+#if DEBUG
+                        printf("Rule #45\n");
+#endif
+                     };
+MULOP            : '*'
+                     { 
+#if DEBUG
+                        printf("Rule #46\n");
+#endif
+                     }
+		| '/'
+                     { 
+#if DEBUG
+                        printf("Rule #47\n");
+#endif
+                     };
+FACTOR            : '(' EXPR ')'
+                     { 
+#if DEBUG
+                        printf("Rule #48\n");
+#endif
+                     }
+		| LOCATION
+                     { 
+#if DEBUG
+                        printf("Rule #49\n");
+#endif
+                     }
+		| NUM
+                     { 
+#if DEBUG
+                        printf("Rule #50\n");
+#endif
+                     }
+		| TRUE
+                     { 
+#if DEBUG
+                        printf("Rule #51\n");
+#endif
+                     }
+		| FALSE
+                     { 
+#if DEBUG
+                        printf("Rule #52\n");
+#endif
+                     }
+		| METHOD '(' ACTUALS ')'
+                     { 
+#if DEBUG
+                        printf("Rule #53\n");
+#endif
+                     };
+ACTUALS            : ARGS EXPR
+                     { 
+#if DEBUG
+                        printf("Rule #54\n");
+#endif
+                     }
+		|
+                     { 
+#if DEBUG
+                        printf("Rule #55\n");
+#endif
+                     };
+ARGS            : ARGS EXPR ','
+                     { 
+#if DEBUG
+                        printf("Rule #56\n");
+#endif
+                     }
+		|
+                     { 
+#if DEBUG
+                        printf("Rule #57\n");
+#endif
+                     };
 %%
 
 void yyerror(char *s)
