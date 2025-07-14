@@ -3,7 +3,7 @@
 #include <string.h>
 #include "y.tab.h"
 
-#define N  10
+#define N  8
 #define DEBUG 0
 int id_or_keyword(char *s);
 %}
@@ -57,42 +57,42 @@ int id_or_keyword(char *s);
                                printf("%s\n",yytext);
 #endif
                                strcpy(yylval.ystr,yytext);
-                               return('>');
+                               return(GT);
 			}
 ">="                        {
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
                                strcpy(yylval.ystr,yytext);
-                               return('>=');
+                               return(GE);
 			}
 "<"                         {
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
                                strcpy(yylval.ystr,yytext);
-                               return('<');
+                               return(LT);
 			}
 "<="                        {
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
                                strcpy(yylval.ystr,yytext);
-                               return('<=');
+                               return(LE);
 			}
 "=="                        {
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
                                strcpy(yylval.ystr,yytext);
-                               return('==');
+                               return(EQ);
 			}
-"<>"                        {
+"!="                        {
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
                                strcpy(yylval.ystr,yytext);
-                               return('<>');
+                               return(NE);
 			}
 "("                         {
 #if DEBUG

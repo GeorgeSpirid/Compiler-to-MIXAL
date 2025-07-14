@@ -22,17 +22,17 @@ int yylex();
     int   nonterm;
 }
 
-%token <yint> RETURN BREAK TRUE FALSE ELSE IF INT WHILE
-%token <ystr> TRUE FALSE
+%token <yint> RETURN BREAK ELSE IF INT WHILE TRUE FALSE
 %token <ystr> '(' ')' '{' '}' ',' ';'
-%token <ystr> '*' '/' '%' '+' '-' '=' '>' '<' '>=' '<=' '=='
+%token <ystr> '*' '/' '%' '+' '-' '='
+%token <yint> GT LT GE LE EQ NE
 %token <ystr> ID NUM
  
 %type <nonterm> PROGRAM METH-LIST METH PARAMS FORMALS TYPE BODY DECLS DECL-LIST DECL VARS
 %type <nonterm> STMTS STMT BLOCK ASSIGN LOCATION METHOD EXPR RELOP ADD-EXPR ADDOP TERM
 %type <nonterm> MULOP FACTOR ACTUALS ARGS
 
-%start Expr
+%start PROGRAM
 
 %%
 
