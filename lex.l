@@ -1,7 +1,7 @@
 %{
 #include <stdio.h>
 #include <string.h>
-#include "y.tab.h"
+#include "syd.tab.h"
 
 #define N  8
 #define DEBUG 0
@@ -165,7 +165,7 @@ int id_or_keyword(char *s);
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
-                               strcpy(yylval.ystr,yytext);
+                               yylval.yint=atoi(yytext);
                                return(NUM);
                             }
 
