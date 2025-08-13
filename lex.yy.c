@@ -399,7 +399,7 @@ char *yytext;
 #include "syd.tab.h"
 
 #define N  8
-#define DEBUG 0
+#define DEBUG 1
 int id_or_keyword(char *s);
 #line 405 "lex.yy.c"
 
@@ -863,7 +863,7 @@ YY_RULE_SETUP
 #line 153 "lex.l"
 {  int i;
 #if DEBUG
-                               printf("%s\n",yytext);
+                               printf("id or keyword-%s\n",yytext);
 #endif
                                i=id_or_keyword(yytext);
                                if(i==ID) 
@@ -878,7 +878,7 @@ YY_RULE_SETUP
 #line 164 "lex.l"
 {
 #if DEBUG
-                               printf("%s\n",yytext);
+                               printf("number-%s\n",yytext);
 #endif
                                yylval.yint=atoi(yytext);
                                return(NUM);
@@ -897,22 +897,24 @@ case 24:
 YY_RULE_SETUP
 #line 177 "lex.l"
 {
+#if DEBUG
 				printf("comment\n");	
+#endif
 			    }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 180 "lex.l"
+#line 182 "lex.l"
 {
                                printf("Illegal character %s\n",yytext);
                             }  
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 185 "lex.l"
+#line 187 "lex.l"
 ECHO;
 	YY_BREAK
-#line 916 "lex.yy.c"
+#line 918 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1798,7 +1800,7 @@ int main()
 	return 0;
 	}
 #endif
-#line 185 "lex.l"
+#line 187 "lex.l"
 
 
 static char *kid[N]={"return","break","true","false","else","if","int","while"};

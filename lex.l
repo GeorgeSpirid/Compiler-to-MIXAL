@@ -4,7 +4,7 @@
 #include "syd.tab.h"
 
 #define N  8
-#define DEBUG 0
+#define DEBUG 1
 int id_or_keyword(char *s);
 %}
 
@@ -152,7 +152,7 @@ int id_or_keyword(char *s);
 			    }
 [a-zA-Z]([a-zA-Z0-9_])*   {  int i;
 #if DEBUG
-                               printf("%s\n",yytext);
+                               printf("id or keyword-%s\n",yytext);
 #endif
                                i=id_or_keyword(yytext);
                                if(i==ID) 
@@ -163,7 +163,7 @@ int id_or_keyword(char *s);
                             }
 "-"?([1-9][0-9]*|0)	    {
 #if DEBUG
-                               printf("%s\n",yytext);
+                               printf("number-%s\n",yytext);
 #endif
                                yylval.yint=atoi(yytext);
                                return(NUM);
@@ -175,7 +175,9 @@ int id_or_keyword(char *s);
 #endif
 							}
 "//".* 		  	    {
+#if DEBUG
 				printf("comment\n");	
+#endif
 			    }
 .                           {
                                printf("Illegal character %s\n",yytext);

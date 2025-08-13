@@ -1,19 +1,15 @@
-Terminals unused in grammar
-
-    '%'
-
-
 Grammar
 
     0 $accept: PROGRAM $end
 
     1 PROGRAM: METH_LIST
-    2        | %empty
 
-    3 METH_LIST: METH METH_LIST
-    4          | METH
+    2 METH_LIST: METH METH_LIST
+    3          | METH
 
-    5 METH: TYPE ID '(' PARAMS ')' BODY
+    4 $@1: %empty
+
+    5 METH: TYPE ID $@1 '(' PARAMS ')' BODY
 
     6 PARAMS: FORMALS TYPE ID
     7       | %empty
@@ -96,18 +92,17 @@ Grammar
 Terminals, with rules where they appear
 
     $end (0) 0
-    '%' <ystr> (37)
-    '(' <ystr> (40) 5 25 26 50 55
-    ')' <ystr> (41) 5 25 26 50 55
-    '*' <ystr> (42) 48
-    '+' <ystr> (43) 44
-    ',' <ystr> (44) 8 18 19 58
-    '-' <ystr> (45) 45
-    '/' <ystr> (47) 49
-    ';' <ystr> (59) 16 17 23 24 27 29
-    '=' <ystr> (61) 17 19 31
-    '{' <ystr> (123) 11 30
-    '}' <ystr> (125) 11 30
+    '(' (40) 5 25 26 50 55
+    ')' (41) 5 25 26 50 55
+    '*' (42) 48
+    '+' (43) 44
+    ',' (44) 8 18 19 58
+    '-' (45) 45
+    '/' (47) 49
+    ';' (59) 16 17 23 24 27 29
+    '=' (61) 17 19 31
+    '{' (123) 11 30
+    '}' (125) 11 30
     error (256)
     RETURN <yint> (258) 24
     BREAK <yint> (259) 27
@@ -124,22 +119,25 @@ Terminals, with rules where they appear
     EQ <yint> (270) 40
     NE <yint> (271) 41
     ID <ystr> (272) 5 6 8 16 17 18 19 32 33
-    NUM <ystr> (273) 52
+    NUM <yint> (273) 52
 
 
 Nonterminals, with rules where they appear
 
-    $accept (31)
+    $accept (30)
         on left: 0
-    PROGRAM <nonterm> (32)
-        on left: 1 2
+    PROGRAM <nonterm> (31)
+        on left: 1
         on right: 0
-    METH_LIST <nonterm> (33)
-        on left: 3 4
-        on right: 1 3
-    METH <nonterm> (34)
+    METH_LIST <nonterm> (32)
+        on left: 2 3
+        on right: 1 2
+    METH <nonterm> (33)
         on left: 5
-        on right: 3 4
+        on right: 2 3
+    $@1 (34)
+        on left: 4
+        on right: 5
     PARAMS <nonterm> (35)
         on left: 6 7
         on right: 5
@@ -217,8 +215,6 @@ State 0
 
     INT  shift, and go to state 1
 
-    $default  reduce using rule 2 (PROGRAM)
-
     PROGRAM    go to state 2
     METH_LIST  go to state 3
     METH       go to state 4
@@ -248,12 +244,12 @@ State 3
 
 State 4
 
-    3 METH_LIST: METH . METH_LIST
-    4          | METH .
+    2 METH_LIST: METH . METH_LIST
+    3          | METH .
 
     INT  shift, and go to state 1
 
-    $default  reduce using rule 4 (METH_LIST)
+    $default  reduce using rule 3 (METH_LIST)
 
     METH_LIST  go to state 7
     METH       go to state 4
@@ -262,7 +258,7 @@ State 4
 
 State 5
 
-    5 METH: TYPE . ID '(' PARAMS ')' BODY
+    5 METH: TYPE . ID $@1 '(' PARAMS ')' BODY
 
     ID  shift, and go to state 8
 
@@ -276,147 +272,156 @@ State 6
 
 State 7
 
-    3 METH_LIST: METH METH_LIST .
+    2 METH_LIST: METH METH_LIST .
 
-    $default  reduce using rule 3 (METH_LIST)
+    $default  reduce using rule 2 (METH_LIST)
 
 
 State 8
 
-    5 METH: TYPE ID . '(' PARAMS ')' BODY
+    5 METH: TYPE ID . $@1 '(' PARAMS ')' BODY
 
-    '('  shift, and go to state 9
+    $default  reduce using rule 4 ($@1)
+
+    $@1  go to state 9
 
 
 State 9
 
-    5 METH: TYPE ID '(' . PARAMS ')' BODY
+    5 METH: TYPE ID $@1 . '(' PARAMS ')' BODY
 
-    INT       reduce using rule 9 (FORMALS)
-    $default  reduce using rule 7 (PARAMS)
-
-    PARAMS   go to state 10
-    FORMALS  go to state 11
+    '('  shift, and go to state 10
 
 
 State 10
 
-    5 METH: TYPE ID '(' PARAMS . ')' BODY
+    5 METH: TYPE ID $@1 '(' . PARAMS ')' BODY
 
-    ')'  shift, and go to state 12
+    INT       reduce using rule 9 (FORMALS)
+    $default  reduce using rule 7 (PARAMS)
+
+    PARAMS   go to state 11
+    FORMALS  go to state 12
 
 
 State 11
+
+    5 METH: TYPE ID $@1 '(' PARAMS . ')' BODY
+
+    ')'  shift, and go to state 13
+
+
+State 12
 
     6 PARAMS: FORMALS . TYPE ID
     8 FORMALS: FORMALS . TYPE ID ','
 
     INT  shift, and go to state 1
 
-    TYPE  go to state 13
-
-
-State 12
-
-    5 METH: TYPE ID '(' PARAMS ')' . BODY
-
-    '{'  shift, and go to state 14
-
-    BODY  go to state 15
+    TYPE  go to state 14
 
 
 State 13
 
-    6 PARAMS: FORMALS TYPE . ID
-    8 FORMALS: FORMALS TYPE . ID ','
+    5 METH: TYPE ID $@1 '(' PARAMS ')' . BODY
 
-    ID  shift, and go to state 16
+    '{'  shift, and go to state 15
+
+    BODY  go to state 16
 
 
 State 14
+
+    6 PARAMS: FORMALS TYPE . ID
+    8 FORMALS: FORMALS TYPE . ID ','
+
+    ID  shift, and go to state 17
+
+
+State 15
 
    11 BODY: '{' . DECLS STMTS '}'
 
     INT       reduce using rule 15 (DECL_LIST)
     $default  reduce using rule 13 (DECLS)
 
-    DECLS      go to state 17
-    DECL_LIST  go to state 18
-
-
-State 15
-
-    5 METH: TYPE ID '(' PARAMS ')' BODY .
-
-    $default  reduce using rule 5 (METH)
+    DECLS      go to state 18
+    DECL_LIST  go to state 19
 
 
 State 16
 
+    5 METH: TYPE ID $@1 '(' PARAMS ')' BODY .
+
+    $default  reduce using rule 5 (METH)
+
+
+State 17
+
     6 PARAMS: FORMALS TYPE ID .
     8 FORMALS: FORMALS TYPE ID . ','
 
-    ','  shift, and go to state 19
+    ','  shift, and go to state 20
 
     $default  reduce using rule 6 (PARAMS)
 
 
-State 17
+State 18
 
    11 BODY: '{' DECLS . STMTS '}'
 
     $default  reduce using rule 22 (STMTS)
 
-    STMTS  go to state 20
+    STMTS  go to state 21
 
 
-State 18
+State 19
 
    12 DECLS: DECL_LIST . DECL
    14 DECL_LIST: DECL_LIST . DECL
 
     INT  shift, and go to state 1
 
-    TYPE  go to state 21
-    DECL  go to state 22
+    TYPE  go to state 22
+    DECL  go to state 23
 
 
-State 19
+State 20
 
     8 FORMALS: FORMALS TYPE ID ',' .
 
     $default  reduce using rule 8 (FORMALS)
 
 
-State 20
+State 21
 
    11 BODY: '{' DECLS STMTS . '}'
    21 STMTS: STMTS . STMT
 
-    RETURN  shift, and go to state 23
-    BREAK   shift, and go to state 24
-    IF      shift, and go to state 25
-    WHILE   shift, and go to state 26
-    '{'     shift, and go to state 27
-    '}'     shift, and go to state 28
-    ';'     shift, and go to state 29
-    ID      shift, and go to state 30
+    RETURN  shift, and go to state 24
+    BREAK   shift, and go to state 25
+    IF      shift, and go to state 26
+    WHILE   shift, and go to state 27
+    ID      shift, and go to state 28
+    '{'     shift, and go to state 29
+    '}'     shift, and go to state 30
+    ';'     shift, and go to state 31
 
-    STMT      go to state 31
-    BLOCK     go to state 32
-    ASSIGN    go to state 33
-    LOCATION  go to state 34
+    STMT      go to state 32
+    BLOCK     go to state 33
+    ASSIGN    go to state 34
+    LOCATION  go to state 35
 
 
-State 21
+State 22
 
    16 DECL: TYPE . ID VARS ';'
    17     | TYPE . ID '=' EXPR VARS ';'
 
-    ID  shift, and go to state 35
+    ID  shift, and go to state 36
 
 
-State 22
+State 23
 
    12 DECLS: DECL_LIST DECL .
    14 DECL_LIST: DECL_LIST DECL .
@@ -425,146 +430,128 @@ State 22
     $default  reduce using rule 12 (DECLS)
 
 
-State 23
+State 24
 
    24 STMT: RETURN . EXPR ';'
 
-    TRUE   shift, and go to state 36
-    FALSE  shift, and go to state 37
-    '('    shift, and go to state 38
+    TRUE   shift, and go to state 37
+    FALSE  shift, and go to state 38
     ID     shift, and go to state 39
     NUM    shift, and go to state 40
+    '('    shift, and go to state 41
 
-    LOCATION  go to state 41
-    METHOD    go to state 42
-    EXPR      go to state 43
-    ADD_EXPR  go to state 44
-    TERM      go to state 45
-    FACTOR    go to state 46
-
-
-State 24
-
-   27 STMT: BREAK . ';'
-
-    ';'  shift, and go to state 47
+    LOCATION  go to state 42
+    METHOD    go to state 43
+    EXPR      go to state 44
+    ADD_EXPR  go to state 45
+    TERM      go to state 46
+    FACTOR    go to state 47
 
 
 State 25
 
-   25 STMT: IF . '(' EXPR ')' STMT ELSE STMT
+   27 STMT: BREAK . ';'
 
-    '('  shift, and go to state 48
+    ';'  shift, and go to state 48
 
 
 State 26
 
-   26 STMT: WHILE . '(' EXPR ')' STMT
+   25 STMT: IF . '(' EXPR ')' STMT ELSE STMT
 
     '('  shift, and go to state 49
 
 
 State 27
 
-   30 BLOCK: '{' . STMTS '}'
+   26 STMT: WHILE . '(' EXPR ')' STMT
 
-    $default  reduce using rule 22 (STMTS)
-
-    STMTS  go to state 50
+    '('  shift, and go to state 50
 
 
 State 28
-
-   11 BODY: '{' DECLS STMTS '}' .
-
-    $default  reduce using rule 11 (BODY)
-
-
-State 29
-
-   29 STMT: ';' .
-
-    $default  reduce using rule 29 (STMT)
-
-
-State 30
 
    32 LOCATION: ID .
 
     $default  reduce using rule 32 (LOCATION)
 
 
+State 29
+
+   30 BLOCK: '{' . STMTS '}'
+
+    $default  reduce using rule 22 (STMTS)
+
+    STMTS  go to state 51
+
+
+State 30
+
+   11 BODY: '{' DECLS STMTS '}' .
+
+    $default  reduce using rule 11 (BODY)
+
+
 State 31
+
+   29 STMT: ';' .
+
+    $default  reduce using rule 29 (STMT)
+
+
+State 32
 
    21 STMTS: STMTS STMT .
 
     $default  reduce using rule 21 (STMTS)
 
 
-State 32
+State 33
 
    28 STMT: BLOCK .
 
     $default  reduce using rule 28 (STMT)
 
 
-State 33
+State 34
 
    23 STMT: ASSIGN . ';'
 
-    ';'  shift, and go to state 51
-
-
-State 34
-
-   31 ASSIGN: LOCATION . '=' EXPR
-
-    '='  shift, and go to state 52
+    ';'  shift, and go to state 52
 
 
 State 35
 
-   16 DECL: TYPE ID . VARS ';'
-   17     | TYPE ID . '=' EXPR VARS ';'
+   31 ASSIGN: LOCATION . '=' EXPR
 
-    ','  shift, and go to state 53
-    '='  shift, and go to state 54
-
-    $default  reduce using rule 20 (VARS)
-
-    VARS  go to state 55
+    '='  shift, and go to state 53
 
 
 State 36
+
+   16 DECL: TYPE ID . VARS ';'
+   17     | TYPE ID . '=' EXPR VARS ';'
+
+    ','  shift, and go to state 54
+    '='  shift, and go to state 55
+
+    $default  reduce using rule 20 (VARS)
+
+    VARS  go to state 56
+
+
+State 37
 
    53 FACTOR: TRUE .
 
     $default  reduce using rule 53 (FACTOR)
 
 
-State 37
+State 38
 
    54 FACTOR: FALSE .
 
     $default  reduce using rule 54 (FACTOR)
-
-
-State 38
-
-   50 FACTOR: '(' . EXPR ')'
-
-    TRUE   shift, and go to state 36
-    FALSE  shift, and go to state 37
-    '('    shift, and go to state 38
-    ID     shift, and go to state 39
-    NUM    shift, and go to state 40
-
-    LOCATION  go to state 41
-    METHOD    go to state 42
-    EXPR      go to state 56
-    ADD_EXPR  go to state 44
-    TERM      go to state 45
-    FACTOR    go to state 46
 
 
 State 39
@@ -585,376 +572,383 @@ State 40
 
 State 41
 
+   50 FACTOR: '(' . EXPR ')'
+
+    TRUE   shift, and go to state 37
+    FALSE  shift, and go to state 38
+    ID     shift, and go to state 39
+    NUM    shift, and go to state 40
+    '('    shift, and go to state 41
+
+    LOCATION  go to state 42
+    METHOD    go to state 43
+    EXPR      go to state 57
+    ADD_EXPR  go to state 45
+    TERM      go to state 46
+    FACTOR    go to state 47
+
+
+State 42
+
    51 FACTOR: LOCATION .
 
     $default  reduce using rule 51 (FACTOR)
 
 
-State 42
+State 43
 
    55 FACTOR: METHOD . '(' ACTUALS ')'
 
-    '('  shift, and go to state 57
-
-
-State 43
-
-   24 STMT: RETURN EXPR . ';'
-
-    ';'  shift, and go to state 58
+    '('  shift, and go to state 58
 
 
 State 44
+
+   24 STMT: RETURN EXPR . ';'
+
+    ';'  shift, and go to state 59
+
+
+State 45
 
    34 EXPR: ADD_EXPR . RELOP ADD_EXPR
    35     | ADD_EXPR .
    42 ADD_EXPR: ADD_EXPR . ADDOP TERM
 
-    '+'  shift, and go to state 59
-    '-'  shift, and go to state 60
-    GT   shift, and go to state 61
-    LT   shift, and go to state 62
-    GE   shift, and go to state 63
-    LE   shift, and go to state 64
-    EQ   shift, and go to state 65
-    NE   shift, and go to state 66
+    GT   shift, and go to state 60
+    LT   shift, and go to state 61
+    GE   shift, and go to state 62
+    LE   shift, and go to state 63
+    EQ   shift, and go to state 64
+    NE   shift, and go to state 65
+    '+'  shift, and go to state 66
+    '-'  shift, and go to state 67
 
     $default  reduce using rule 35 (EXPR)
 
-    RELOP  go to state 67
-    ADDOP  go to state 68
+    RELOP  go to state 68
+    ADDOP  go to state 69
 
 
-State 45
+State 46
 
    43 ADD_EXPR: TERM .
    46 TERM: TERM . MULOP FACTOR
 
-    '*'  shift, and go to state 69
-    '/'  shift, and go to state 70
+    '*'  shift, and go to state 70
+    '/'  shift, and go to state 71
 
     $default  reduce using rule 43 (ADD_EXPR)
 
-    MULOP  go to state 71
+    MULOP  go to state 72
 
 
-State 46
+State 47
 
    47 TERM: FACTOR .
 
     $default  reduce using rule 47 (TERM)
 
 
-State 47
+State 48
 
    27 STMT: BREAK ';' .
 
     $default  reduce using rule 27 (STMT)
 
 
-State 48
+State 49
 
    25 STMT: IF '(' . EXPR ')' STMT ELSE STMT
 
-    TRUE   shift, and go to state 36
-    FALSE  shift, and go to state 37
-    '('    shift, and go to state 38
+    TRUE   shift, and go to state 37
+    FALSE  shift, and go to state 38
     ID     shift, and go to state 39
     NUM    shift, and go to state 40
+    '('    shift, and go to state 41
 
-    LOCATION  go to state 41
-    METHOD    go to state 42
-    EXPR      go to state 72
-    ADD_EXPR  go to state 44
-    TERM      go to state 45
-    FACTOR    go to state 46
-
-
-State 49
-
-   26 STMT: WHILE '(' . EXPR ')' STMT
-
-    TRUE   shift, and go to state 36
-    FALSE  shift, and go to state 37
-    '('    shift, and go to state 38
-    ID     shift, and go to state 39
-    NUM    shift, and go to state 40
-
-    LOCATION  go to state 41
-    METHOD    go to state 42
+    LOCATION  go to state 42
+    METHOD    go to state 43
     EXPR      go to state 73
-    ADD_EXPR  go to state 44
-    TERM      go to state 45
-    FACTOR    go to state 46
+    ADD_EXPR  go to state 45
+    TERM      go to state 46
+    FACTOR    go to state 47
 
 
 State 50
 
-   21 STMTS: STMTS . STMT
-   30 BLOCK: '{' STMTS . '}'
+   26 STMT: WHILE '(' . EXPR ')' STMT
 
-    RETURN  shift, and go to state 23
-    BREAK   shift, and go to state 24
-    IF      shift, and go to state 25
-    WHILE   shift, and go to state 26
-    '{'     shift, and go to state 27
-    '}'     shift, and go to state 74
-    ';'     shift, and go to state 29
-    ID      shift, and go to state 30
+    TRUE   shift, and go to state 37
+    FALSE  shift, and go to state 38
+    ID     shift, and go to state 39
+    NUM    shift, and go to state 40
+    '('    shift, and go to state 41
 
-    STMT      go to state 31
-    BLOCK     go to state 32
-    ASSIGN    go to state 33
-    LOCATION  go to state 34
+    LOCATION  go to state 42
+    METHOD    go to state 43
+    EXPR      go to state 74
+    ADD_EXPR  go to state 45
+    TERM      go to state 46
+    FACTOR    go to state 47
 
 
 State 51
+
+   21 STMTS: STMTS . STMT
+   30 BLOCK: '{' STMTS . '}'
+
+    RETURN  shift, and go to state 24
+    BREAK   shift, and go to state 25
+    IF      shift, and go to state 26
+    WHILE   shift, and go to state 27
+    ID      shift, and go to state 28
+    '{'     shift, and go to state 29
+    '}'     shift, and go to state 75
+    ';'     shift, and go to state 31
+
+    STMT      go to state 32
+    BLOCK     go to state 33
+    ASSIGN    go to state 34
+    LOCATION  go to state 35
+
+
+State 52
 
    23 STMT: ASSIGN ';' .
 
     $default  reduce using rule 23 (STMT)
 
 
-State 52
+State 53
 
    31 ASSIGN: LOCATION '=' . EXPR
 
-    TRUE   shift, and go to state 36
-    FALSE  shift, and go to state 37
-    '('    shift, and go to state 38
+    TRUE   shift, and go to state 37
+    FALSE  shift, and go to state 38
     ID     shift, and go to state 39
     NUM    shift, and go to state 40
+    '('    shift, and go to state 41
 
-    LOCATION  go to state 41
-    METHOD    go to state 42
-    EXPR      go to state 75
-    ADD_EXPR  go to state 44
-    TERM      go to state 45
-    FACTOR    go to state 46
-
-
-State 53
-
-   18 VARS: ',' . ID VARS
-   19     | ',' . ID '=' EXPR VARS
-
-    ID  shift, and go to state 76
+    LOCATION  go to state 42
+    METHOD    go to state 43
+    EXPR      go to state 76
+    ADD_EXPR  go to state 45
+    TERM      go to state 46
+    FACTOR    go to state 47
 
 
 State 54
 
-   17 DECL: TYPE ID '=' . EXPR VARS ';'
+   18 VARS: ',' . ID VARS
+   19     | ',' . ID '=' EXPR VARS
 
-    TRUE   shift, and go to state 36
-    FALSE  shift, and go to state 37
-    '('    shift, and go to state 38
-    ID     shift, and go to state 39
-    NUM    shift, and go to state 40
-
-    LOCATION  go to state 41
-    METHOD    go to state 42
-    EXPR      go to state 77
-    ADD_EXPR  go to state 44
-    TERM      go to state 45
-    FACTOR    go to state 46
+    ID  shift, and go to state 77
 
 
 State 55
 
-   16 DECL: TYPE ID VARS . ';'
+   17 DECL: TYPE ID '=' . EXPR VARS ';'
 
-    ';'  shift, and go to state 78
+    TRUE   shift, and go to state 37
+    FALSE  shift, and go to state 38
+    ID     shift, and go to state 39
+    NUM    shift, and go to state 40
+    '('    shift, and go to state 41
+
+    LOCATION  go to state 42
+    METHOD    go to state 43
+    EXPR      go to state 78
+    ADD_EXPR  go to state 45
+    TERM      go to state 46
+    FACTOR    go to state 47
 
 
 State 56
 
-   50 FACTOR: '(' EXPR . ')'
+   16 DECL: TYPE ID VARS . ';'
 
-    ')'  shift, and go to state 79
+    ';'  shift, and go to state 79
 
 
 State 57
+
+   50 FACTOR: '(' EXPR . ')'
+
+    ')'  shift, and go to state 80
+
+
+State 58
 
    55 FACTOR: METHOD '(' . ACTUALS ')'
 
     ')'       reduce using rule 57 (ACTUALS)
     $default  reduce using rule 59 (ARGS)
 
-    ACTUALS  go to state 80
-    ARGS     go to state 81
+    ACTUALS  go to state 81
+    ARGS     go to state 82
 
 
-State 58
+State 59
 
    24 STMT: RETURN EXPR ';' .
 
     $default  reduce using rule 24 (STMT)
 
 
-State 59
-
-   44 ADDOP: '+' .
-
-    $default  reduce using rule 44 (ADDOP)
-
-
 State 60
-
-   45 ADDOP: '-' .
-
-    $default  reduce using rule 45 (ADDOP)
-
-
-State 61
 
    38 RELOP: GT .
 
     $default  reduce using rule 38 (RELOP)
 
 
-State 62
+State 61
 
    37 RELOP: LT .
 
     $default  reduce using rule 37 (RELOP)
 
 
-State 63
+State 62
 
    39 RELOP: GE .
 
     $default  reduce using rule 39 (RELOP)
 
 
-State 64
+State 63
 
    36 RELOP: LE .
 
     $default  reduce using rule 36 (RELOP)
 
 
-State 65
+State 64
 
    40 RELOP: EQ .
 
     $default  reduce using rule 40 (RELOP)
 
 
-State 66
+State 65
 
    41 RELOP: NE .
 
     $default  reduce using rule 41 (RELOP)
 
 
+State 66
+
+   44 ADDOP: '+' .
+
+    $default  reduce using rule 44 (ADDOP)
+
+
 State 67
 
-   34 EXPR: ADD_EXPR RELOP . ADD_EXPR
+   45 ADDOP: '-' .
 
-    TRUE   shift, and go to state 36
-    FALSE  shift, and go to state 37
-    '('    shift, and go to state 38
-    ID     shift, and go to state 39
-    NUM    shift, and go to state 40
-
-    LOCATION  go to state 41
-    METHOD    go to state 42
-    ADD_EXPR  go to state 82
-    TERM      go to state 45
-    FACTOR    go to state 46
+    $default  reduce using rule 45 (ADDOP)
 
 
 State 68
 
-   42 ADD_EXPR: ADD_EXPR ADDOP . TERM
+   34 EXPR: ADD_EXPR RELOP . ADD_EXPR
 
-    TRUE   shift, and go to state 36
-    FALSE  shift, and go to state 37
-    '('    shift, and go to state 38
+    TRUE   shift, and go to state 37
+    FALSE  shift, and go to state 38
     ID     shift, and go to state 39
     NUM    shift, and go to state 40
+    '('    shift, and go to state 41
 
-    LOCATION  go to state 41
-    METHOD    go to state 42
-    TERM      go to state 83
-    FACTOR    go to state 46
+    LOCATION  go to state 42
+    METHOD    go to state 43
+    ADD_EXPR  go to state 83
+    TERM      go to state 46
+    FACTOR    go to state 47
 
 
 State 69
+
+   42 ADD_EXPR: ADD_EXPR ADDOP . TERM
+
+    TRUE   shift, and go to state 37
+    FALSE  shift, and go to state 38
+    ID     shift, and go to state 39
+    NUM    shift, and go to state 40
+    '('    shift, and go to state 41
+
+    LOCATION  go to state 42
+    METHOD    go to state 43
+    TERM      go to state 84
+    FACTOR    go to state 47
+
+
+State 70
 
    48 MULOP: '*' .
 
     $default  reduce using rule 48 (MULOP)
 
 
-State 70
+State 71
 
    49 MULOP: '/' .
 
     $default  reduce using rule 49 (MULOP)
 
 
-State 71
+State 72
 
    46 TERM: TERM MULOP . FACTOR
 
-    TRUE   shift, and go to state 36
-    FALSE  shift, and go to state 37
-    '('    shift, and go to state 38
+    TRUE   shift, and go to state 37
+    FALSE  shift, and go to state 38
     ID     shift, and go to state 39
     NUM    shift, and go to state 40
+    '('    shift, and go to state 41
 
-    LOCATION  go to state 41
-    METHOD    go to state 42
-    FACTOR    go to state 84
-
-
-State 72
-
-   25 STMT: IF '(' EXPR . ')' STMT ELSE STMT
-
-    ')'  shift, and go to state 85
+    LOCATION  go to state 42
+    METHOD    go to state 43
+    FACTOR    go to state 85
 
 
 State 73
 
-   26 STMT: WHILE '(' EXPR . ')' STMT
+   25 STMT: IF '(' EXPR . ')' STMT ELSE STMT
 
     ')'  shift, and go to state 86
 
 
 State 74
 
+   26 STMT: WHILE '(' EXPR . ')' STMT
+
+    ')'  shift, and go to state 87
+
+
+State 75
+
    30 BLOCK: '{' STMTS '}' .
 
     $default  reduce using rule 30 (BLOCK)
 
 
-State 75
+State 76
 
    31 ASSIGN: LOCATION '=' EXPR .
 
     $default  reduce using rule 31 (ASSIGN)
 
 
-State 76
+State 77
 
    18 VARS: ',' ID . VARS
    19     | ',' ID . '=' EXPR VARS
 
-    ','  shift, and go to state 53
-    '='  shift, and go to state 87
-
-    $default  reduce using rule 20 (VARS)
-
-    VARS  go to state 88
-
-
-State 77
-
-   17 DECL: TYPE ID '=' EXPR . VARS ';'
-
-    ','  shift, and go to state 53
+    ','  shift, and go to state 54
+    '='  shift, and go to state 88
 
     $default  reduce using rule 20 (VARS)
 
@@ -963,227 +957,238 @@ State 77
 
 State 78
 
+   17 DECL: TYPE ID '=' EXPR . VARS ';'
+
+    ','  shift, and go to state 54
+
+    $default  reduce using rule 20 (VARS)
+
+    VARS  go to state 90
+
+
+State 79
+
    16 DECL: TYPE ID VARS ';' .
 
     $default  reduce using rule 16 (DECL)
 
 
-State 79
+State 80
 
    50 FACTOR: '(' EXPR ')' .
 
     $default  reduce using rule 50 (FACTOR)
 
 
-State 80
+State 81
 
    55 FACTOR: METHOD '(' ACTUALS . ')'
 
-    ')'  shift, and go to state 90
-
-
-State 81
-
-   56 ACTUALS: ARGS . EXPR
-   58 ARGS: ARGS . EXPR ','
-
-    TRUE   shift, and go to state 36
-    FALSE  shift, and go to state 37
-    '('    shift, and go to state 38
-    ID     shift, and go to state 39
-    NUM    shift, and go to state 40
-
-    LOCATION  go to state 41
-    METHOD    go to state 42
-    EXPR      go to state 91
-    ADD_EXPR  go to state 44
-    TERM      go to state 45
-    FACTOR    go to state 46
+    ')'  shift, and go to state 91
 
 
 State 82
 
-   34 EXPR: ADD_EXPR RELOP ADD_EXPR .
-   42 ADD_EXPR: ADD_EXPR . ADDOP TERM
+   56 ACTUALS: ARGS . EXPR
+   58 ARGS: ARGS . EXPR ','
 
-    '+'  shift, and go to state 59
-    '-'  shift, and go to state 60
+    TRUE   shift, and go to state 37
+    FALSE  shift, and go to state 38
+    ID     shift, and go to state 39
+    NUM    shift, and go to state 40
+    '('    shift, and go to state 41
 
-    $default  reduce using rule 34 (EXPR)
-
-    ADDOP  go to state 68
+    LOCATION  go to state 42
+    METHOD    go to state 43
+    EXPR      go to state 92
+    ADD_EXPR  go to state 45
+    TERM      go to state 46
+    FACTOR    go to state 47
 
 
 State 83
 
-   42 ADD_EXPR: ADD_EXPR ADDOP TERM .
-   46 TERM: TERM . MULOP FACTOR
+   34 EXPR: ADD_EXPR RELOP ADD_EXPR .
+   42 ADD_EXPR: ADD_EXPR . ADDOP TERM
 
-    '*'  shift, and go to state 69
-    '/'  shift, and go to state 70
+    '+'  shift, and go to state 66
+    '-'  shift, and go to state 67
 
-    $default  reduce using rule 42 (ADD_EXPR)
+    $default  reduce using rule 34 (EXPR)
 
-    MULOP  go to state 71
+    ADDOP  go to state 69
 
 
 State 84
+
+   42 ADD_EXPR: ADD_EXPR ADDOP TERM .
+   46 TERM: TERM . MULOP FACTOR
+
+    '*'  shift, and go to state 70
+    '/'  shift, and go to state 71
+
+    $default  reduce using rule 42 (ADD_EXPR)
+
+    MULOP  go to state 72
+
+
+State 85
 
    46 TERM: TERM MULOP FACTOR .
 
     $default  reduce using rule 46 (TERM)
 
 
-State 85
+State 86
 
    25 STMT: IF '(' EXPR ')' . STMT ELSE STMT
 
-    RETURN  shift, and go to state 23
-    BREAK   shift, and go to state 24
-    IF      shift, and go to state 25
-    WHILE   shift, and go to state 26
-    '{'     shift, and go to state 27
-    ';'     shift, and go to state 29
-    ID      shift, and go to state 30
-
-    STMT      go to state 92
-    BLOCK     go to state 32
-    ASSIGN    go to state 33
-    LOCATION  go to state 34
-
-
-State 86
-
-   26 STMT: WHILE '(' EXPR ')' . STMT
-
-    RETURN  shift, and go to state 23
-    BREAK   shift, and go to state 24
-    IF      shift, and go to state 25
-    WHILE   shift, and go to state 26
-    '{'     shift, and go to state 27
-    ';'     shift, and go to state 29
-    ID      shift, and go to state 30
+    RETURN  shift, and go to state 24
+    BREAK   shift, and go to state 25
+    IF      shift, and go to state 26
+    WHILE   shift, and go to state 27
+    ID      shift, and go to state 28
+    '{'     shift, and go to state 29
+    ';'     shift, and go to state 31
 
     STMT      go to state 93
-    BLOCK     go to state 32
-    ASSIGN    go to state 33
-    LOCATION  go to state 34
+    BLOCK     go to state 33
+    ASSIGN    go to state 34
+    LOCATION  go to state 35
 
 
 State 87
 
-   19 VARS: ',' ID '=' . EXPR VARS
+   26 STMT: WHILE '(' EXPR ')' . STMT
 
-    TRUE   shift, and go to state 36
-    FALSE  shift, and go to state 37
-    '('    shift, and go to state 38
-    ID     shift, and go to state 39
-    NUM    shift, and go to state 40
+    RETURN  shift, and go to state 24
+    BREAK   shift, and go to state 25
+    IF      shift, and go to state 26
+    WHILE   shift, and go to state 27
+    ID      shift, and go to state 28
+    '{'     shift, and go to state 29
+    ';'     shift, and go to state 31
 
-    LOCATION  go to state 41
-    METHOD    go to state 42
-    EXPR      go to state 94
-    ADD_EXPR  go to state 44
-    TERM      go to state 45
-    FACTOR    go to state 46
+    STMT      go to state 94
+    BLOCK     go to state 33
+    ASSIGN    go to state 34
+    LOCATION  go to state 35
 
 
 State 88
+
+   19 VARS: ',' ID '=' . EXPR VARS
+
+    TRUE   shift, and go to state 37
+    FALSE  shift, and go to state 38
+    ID     shift, and go to state 39
+    NUM    shift, and go to state 40
+    '('    shift, and go to state 41
+
+    LOCATION  go to state 42
+    METHOD    go to state 43
+    EXPR      go to state 95
+    ADD_EXPR  go to state 45
+    TERM      go to state 46
+    FACTOR    go to state 47
+
+
+State 89
 
    18 VARS: ',' ID VARS .
 
     $default  reduce using rule 18 (VARS)
 
 
-State 89
+State 90
 
    17 DECL: TYPE ID '=' EXPR VARS . ';'
 
-    ';'  shift, and go to state 95
+    ';'  shift, and go to state 96
 
 
-State 90
+State 91
 
    55 FACTOR: METHOD '(' ACTUALS ')' .
 
     $default  reduce using rule 55 (FACTOR)
 
 
-State 91
+State 92
 
    56 ACTUALS: ARGS EXPR .
    58 ARGS: ARGS EXPR . ','
 
-    ','  shift, and go to state 96
+    ','  shift, and go to state 97
 
     $default  reduce using rule 56 (ACTUALS)
 
 
-State 92
+State 93
 
    25 STMT: IF '(' EXPR ')' STMT . ELSE STMT
 
-    ELSE  shift, and go to state 97
+    ELSE  shift, and go to state 98
 
 
-State 93
+State 94
 
    26 STMT: WHILE '(' EXPR ')' STMT .
 
     $default  reduce using rule 26 (STMT)
 
 
-State 94
+State 95
 
    19 VARS: ',' ID '=' EXPR . VARS
 
-    ','  shift, and go to state 53
+    ','  shift, and go to state 54
 
     $default  reduce using rule 20 (VARS)
 
-    VARS  go to state 98
+    VARS  go to state 99
 
 
-State 95
+State 96
 
    17 DECL: TYPE ID '=' EXPR VARS ';' .
 
     $default  reduce using rule 17 (DECL)
 
 
-State 96
+State 97
 
    58 ARGS: ARGS EXPR ',' .
 
     $default  reduce using rule 58 (ARGS)
 
 
-State 97
+State 98
 
    25 STMT: IF '(' EXPR ')' STMT ELSE . STMT
 
-    RETURN  shift, and go to state 23
-    BREAK   shift, and go to state 24
-    IF      shift, and go to state 25
-    WHILE   shift, and go to state 26
-    '{'     shift, and go to state 27
-    ';'     shift, and go to state 29
-    ID      shift, and go to state 30
+    RETURN  shift, and go to state 24
+    BREAK   shift, and go to state 25
+    IF      shift, and go to state 26
+    WHILE   shift, and go to state 27
+    ID      shift, and go to state 28
+    '{'     shift, and go to state 29
+    ';'     shift, and go to state 31
 
-    STMT      go to state 99
-    BLOCK     go to state 32
-    ASSIGN    go to state 33
-    LOCATION  go to state 34
+    STMT      go to state 100
+    BLOCK     go to state 33
+    ASSIGN    go to state 34
+    LOCATION  go to state 35
 
 
-State 98
+State 99
 
    19 VARS: ',' ID '=' EXPR VARS .
 
     $default  reduce using rule 19 (VARS)
 
 
-State 99
+State 100
 
    25 STMT: IF '(' EXPR ')' STMT ELSE STMT .
 
