@@ -46,19 +46,11 @@ static int currentmethod=-1;
 
 MethodTab mt[MAX_METHOD_NUMBER];
 
-int TopOfStack=-1;
-symbol *vs[30];
-
-symbol *p,*p1,*p2,*p3;
-
 void Init_Hash_Table(HASH_TAB *ht);
-void push_vs(symbol *p);
-symbol *pop_vs(void);
 symbol *new_symbol(char *name);
 int mkkey(char *s);
 void addsymb(HASH_TAB *ht, symbol *symbp);
 symbol *findsymb(HASH_TAB *ht, char *onoma);
-symbol *create_id(symbol *symbp);
 int methodidx(char *name);
 void addmethod(char *name);
 void currentscope(char *name);
@@ -156,7 +148,7 @@ TYPE            : INT
 BODY            : '{' DECLS STMTS '}'
                      { 
 #if DEBUG
-                        printf("Rule 11\n");
+                        printf("Rule #11\n");
 #endif
                      };
 DECLS            : DECL_LIST DECL
@@ -465,16 +457,6 @@ void Init_Hash_Table(HASH_TAB *ht)
       ht->table[i]=NULL;
 }
 
-void push_vs(symbol *p)
-{
-   vs[++TopOfStack]=p;
-}
-
-symbol *pop_vs(void)
-{
-   return(vs[TopOfStack--]);
-}
-
 symbol *new_symbol(char *name)
 {  symbol *symbp;
    symbp=(symbol *)malloc(sizeof(symbol));
@@ -521,18 +503,6 @@ symbol *findsymb(HASH_TAB *ht, char *onoma)
    p=ht->table[i];
    while(p && (strcmp(p->name,onoma) !=0))
       p=p->NextSymbol;
-   return(p);
-}
-
-symbol *create_id(symbol *symbp)
-{  symbol *p;
-  
-   p=new_symbol(symbp->name);
-   memcpy(p,symbp,sizeof(symbol));
-   p->timi=symbp->timi;
-   p->parameter=symbp->parameter;
-   p->NextSymbol=NULL;
-   p->PrevSymbol=NULL;
    return(p);
 }
 
