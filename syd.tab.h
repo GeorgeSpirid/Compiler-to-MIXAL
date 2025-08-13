@@ -78,13 +78,14 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 72 "syd.y"
+#line 83 "syd.y"
 
     int   yint;
     char  ystr[81];
     int   nonterm;
+    struct AstNode_tag *stnode;
 
-#line 88 "syd.tab.h"
+#line 89 "syd.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

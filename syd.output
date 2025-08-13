@@ -126,85 +126,85 @@ Nonterminals, with rules where they appear
 
     $accept (30)
         on left: 0
-    PROGRAM <nonterm> (31)
+    PROGRAM <stnode> (31)
         on left: 1
         on right: 0
-    METH_LIST <nonterm> (32)
+    METH_LIST <stnode> (32)
         on left: 2 3
         on right: 1 2
-    METH <nonterm> (33)
+    METH <stnode> (33)
         on left: 5
         on right: 2 3
     $@1 (34)
         on left: 4
         on right: 5
-    PARAMS <nonterm> (35)
+    PARAMS <stnode> (35)
         on left: 6 7
         on right: 5
-    FORMALS <nonterm> (36)
+    FORMALS <stnode> (36)
         on left: 8 9
         on right: 6 8
-    TYPE <nonterm> (37)
+    TYPE <stnode> (37)
         on left: 10
         on right: 5 6 8 16 17
-    BODY <nonterm> (38)
+    BODY <stnode> (38)
         on left: 11
         on right: 5
-    DECLS <nonterm> (39)
+    DECLS <stnode> (39)
         on left: 12 13
         on right: 11
-    DECL_LIST <nonterm> (40)
+    DECL_LIST <stnode> (40)
         on left: 14 15
         on right: 12 14
-    DECL <nonterm> (41)
+    DECL <stnode> (41)
         on left: 16 17
         on right: 12 14
-    VARS <nonterm> (42)
+    VARS <stnode> (42)
         on left: 18 19 20
         on right: 16 17 18 19
-    STMTS <nonterm> (43)
+    STMTS <stnode> (43)
         on left: 21 22
         on right: 11 21 30
-    STMT <nonterm> (44)
+    STMT <stnode> (44)
         on left: 23 24 25 26 27 28 29
         on right: 21 25 26
-    BLOCK <nonterm> (45)
+    BLOCK <stnode> (45)
         on left: 30
         on right: 28
-    ASSIGN <nonterm> (46)
+    ASSIGN <stnode> (46)
         on left: 31
         on right: 23
-    LOCATION <nonterm> (47)
+    LOCATION <stnode> (47)
         on left: 32
         on right: 31 51
-    METHOD <nonterm> (48)
+    METHOD <stnode> (48)
         on left: 33
         on right: 55
-    EXPR <nonterm> (49)
+    EXPR <stnode> (49)
         on left: 34 35
         on right: 17 19 24 25 26 31 50 56 58
-    RELOP <nonterm> (50)
+    RELOP <stnode> (50)
         on left: 36 37 38 39 40 41
         on right: 34
-    ADD_EXPR <nonterm> (51)
+    ADD_EXPR <stnode> (51)
         on left: 42 43
         on right: 34 35 42
-    ADDOP <nonterm> (52)
+    ADDOP <stnode> (52)
         on left: 44 45
         on right: 42
-    TERM <nonterm> (53)
+    TERM <stnode> (53)
         on left: 46 47
         on right: 42 43 46
-    MULOP <nonterm> (54)
+    MULOP <stnode> (54)
         on left: 48 49
         on right: 46
-    FACTOR <nonterm> (55)
+    FACTOR <stnode> (55)
         on left: 50 51 52 53 54 55
         on right: 46 47
-    ACTUALS <nonterm> (56)
+    ACTUALS <stnode> (56)
         on left: 56 57
         on right: 55
-    ARGS <nonterm> (57)
+    ARGS <stnode> (57)
         on left: 58 59
         on right: 56 58
 

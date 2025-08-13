@@ -1,15 +1,34 @@
-#ifndef DEFS_H
-#define DEFS_H
-
-#define ID     256
-#define NUM    257
-#define RETURN 258
-#define BREAK  259
-#define TRUE   260
-#define FALSE  261
-#define ELSE   262
-#define IF     263
-#define INT    264
-#define WHILE  265
-
-#endif
+enum {
+    astProgram = 1,
+    astMethList,
+    astMethod,
+    astParams,
+    astParam,
+    astBody,
+    astDecls,
+    astVarList,
+    astStmtSeq,
+    astBlock,
+    astExprStmt,
+    astAssign,
+    astReturnStmt,
+    astIfStmt,
+    astIfElseStmt,
+    astWhileStmt,
+    astBreakStmt,
+    astNullStmt,
+    astAdd,
+    astSub,
+    astMult,
+    astDiv,
+    astEq,
+    astNotEq,
+    astLess,
+    astLeEq,
+    astGreater,
+    astGrEq,
+    astId,
+    astDecimConst,
+    astCall,
+    astArgs
+};
