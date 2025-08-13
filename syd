@@ -6,14 +6,51 @@
 #include <ctype.h>
 
 void yyerror(char *s);
+int yyparse();
+int yylex();
 
 #define DEBUG 0
 
 /* ----------------------------------------------------------- */
 /* --------- Declarations for Syntax-Semantic Analysis ------- */
 /* ----------------------------------------------------------- */
-int yyparse();
-int yylex();
+
+#define SYM_TABLE_SIZE 41
+#define NAME_MAX  32
+#define MAX_METHOD_NUMBER 64
+
+#define TRUE  1
+#define FALSE 0
+
+typedef struct symbol_tag {
+   unsigned char name[NAME_MAX+1];  /* -- Variable name .------------------ */
+   int timi;                        /* -- Value assigned . ---------------- */
+   int parameter;                     /* -- TRUE or FALSE .------------------ */
+   struct symbol_tag *NextSymbol;
+   struct symbol_tag *PrevSymbol;
+} symbol;
+
+typedef struct hash_tab {
+   int numbsymbols;
+   symbol *table[SYM_TABLE_SIZE];
+} HASH_TAB;
+
+typedef struct method_tab{
+   char name[NAME_MAX+1];
+   HASH_TAB ht;
+   int exists; /* -- TRUE or FALSE .------------------ */
+} MethodTab;
+
+static int numbmethods=0;
+static int currentmethod=-1;
+
+MethodTab mt[MAX_METHOD_NUMBER];
+
+int TopOfStack=-1;
+symbol *vs[30];
+
+symbol *p,*p1,*p2,*p3;
+
 
 %}
 
@@ -393,6 +430,151 @@ ARGS            : ARGS EXPR ','
 #endif
                      };
 %%
+
+void Init_Hash_Table(HASH_TAB *ht)
+{  
+   ht->numbsymbols=0;
+   int i;
+
+   for(i=0; i<SYM_TABLE_SIZE; i++)
+      ht->table[i]=NULL;
+}
+
+void push_vs(symbol *p)
+{
+   vs[++TopOfStack]=p;
+}
+
+symbol *pop_vs(void)
+{
+   return(vs[TopOfStack--]);
+}
+
+symbol *new_symbol(char *name)
+{  symbol *symbp;
+   symbp=(symbol *)malloc(sizeof(symbol));
+
+   if(!symbp){
+      fprintf(stderr,"cannot allocate memory for symbp %s\n", name);
+      exit(1);
+   }
+   memset(symbp,0,sizeof(symbol));
+   strncpy(symbp->name,name,(strlen(name)>NAME_MAX)?NAME_MAX:strlen(name));
+   symbp->timi=0;
+   symbp->parameter=0;
+   symbp->NextSymbol=NULL;
+   symbp->PrevSymbol=NULL;
+   return(symbp);
+}
+
+int mkkey(char *s)
+{  char *p;
+   int athr=0;
+
+   for(p=s; *p; p++) athr=athr+(*p);
+   return (athr % SYM_TABLE_SIZE);
+}
+
+void addsymb(HASH_TAB *ht, symbol *symbp)
+{  int i;
+   symbol *p;
+
+   i=mkkey(symbp->name);
+   p=ht->table[i];
+   symbp->NextSymbol=p;
+   symbp->PrevSymbol=NULL;
+   if(p) p->PrevSymbol=symbp;
+   ht->table[i]=symbp;
+   ht->numbsymbols++;
+}
+
+symbol *findsymb(HASH_TAB *ht, char *onoma)
+{  int i;
+   symbol *p;
+
+   i=mkkey(onoma);
+   p=ht->table[i];
+   while(p && (strcmp(p->name,onoma) !=0))
+      p=p->NextSymbol;
+   return(p);
+}
+
+symbol *create_id(symbol *symbp)
+{  symbol *p;
+  
+   p=new_symbol(symbp->name);
+   memcpy(p,symbp,sizeof(symbol));
+   p->timi=symbp->timi;
+   p->parameter=sumbp->parameter;
+   p->NextSymbol=NULL;
+   p->PrevSymbol=NULL;
+   return(p);
+}
+
+int methodidx(char *name){
+   for(int i=0;i<numbmethods;++i){
+      if(strcmp(mt[i].name,name)==0)
+         return i;
+   }
+   return -1;
+}
+
+void addmethod(char *name){
+   if(methodidx(name)!=-1){
+      fprintf(stderr, "cannot add %s because it has already been definded",name);
+      exit(1);
+   }
+   if (numbmethods>=MAX_METHOD_NUMBER){
+      fprintf(stderr, "cannot add %s, too many methods",name);
+      exit(1);
+   }
+   strncpy(mt[numbmethods].name,name,NAME_MAX);
+   mt[numbmethods].name[NAME_MAX]='\0';
+   Init_Hash_Table(&mt[numbmethods].ht);
+   mt[numbmethods].exists=1;
+   numbmethods++;
+}
+
+void currentscope(char *name){
+   int i=methodidx(name);
+   if (i==-1){
+      fprintf(stderr,"%s method isn't registered\n",name);
+      exit(1);
+   }
+   currentmethod=i;
+}
+
+void leavescope(void){
+   currentmethod=-1;
+}
+
+void addvariable(char *name, int parameter){
+   if(currentmethod==-1){
+      fprintf(stderr,"delaring variable outside of a method\n");
+      exit(1);
+   }
+   HASH_TAB *tempht = &mt[currentmethod].ht;
+   if(findsymb(tempht,name)){
+      fprintf(stderr,"redelaring variable %s in method %s\n",name,mt[currentmethod].name);
+      exit(1);
+   }
+   symbol *temps = new_symbol(name);
+   temps->parameter=parameter?1:0;
+   addsymb(tempht,temps);
+}
+
+symbol* findsymbolinmethod(char *name){
+   if(currentmethod==-1){
+      fprintf(stderr,"looking for a variable outside a method\n");
+      exit(1);
+   }
+   symbol* temps = findsymb(&mt[currentmethod].ht, name);
+   if(!temps){
+      fprintf(stderr,"variable %s not found in method %s\n",name,mt[currentmethod].name);
+      exit(1);
+   }
+   return s;
+}
 
 void yyerror(char *s)
 {
