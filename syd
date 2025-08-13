@@ -99,17 +99,24 @@ METH_LIST            : METH METH_LIST
                         printf("Rule #4\n");
 #endif
                      };
-METH            : TYPE ID '(' PARAMS ')' BODY
+METH            : TYPE ID 
                      { 
 #if DEBUG
                         printf("Rule #5\n");
 #endif
+			addmethod($2);
+			currentscope($2);
+'(' PARAMS ')' BODY
+{
+			leavescope();
+}
                      };
 PARAMS            : FORMALS TYPE ID
                      { 
 #if DEBUG
                         printf("Rule #6\n");
 #endif
+			addvariable($3,TRUE);
                      }
 		       | 
                      { 
@@ -122,6 +129,7 @@ FORMALS            : FORMALS TYPE ID ','
 #if DEBUG
                         printf("Rule #8\n");
 #endif
+			addvariable($3,TRUE);
                      }
 		       | 
                      { 
@@ -170,12 +178,14 @@ DECL            : TYPE ID VARS ';'
 #if DEBUG
                         printf("Rule #16\n");
 #endif
+			addvariable($2,FALSE);
                      }
 		       | TYPE ID '=' EXPR VARS ';' 
                      { 
 #if DEBUG
                         printf("Rule #17\n");
 #endif
+			addvariable($2,FALSE);
                      };
 VARS            : ',' ID VARS
                      { 
@@ -266,12 +276,17 @@ LOCATION            : ID
 #if DEBUG
                         printf("Rule #32\n");
 #endif
+			findsymbolinmethod($1);
                      };
 METHOD            : ID
                      { 
 #if DEBUG
                         printf("Rule #33\n");
 #endif
+			if(methodidx($1)==-1){
+				fprintf(stderr,"method %s isn't declared\n",$1);
+				exit(1);
+			}
                      };
 EXPR            : ADD_EXPR RELOP ADD_EXPR
                      { 
@@ -424,7 +439,7 @@ ARGS            : ARGS EXPR ','
 #endif
                      }
 		|
-                     { 
+                     	{ 
 #if DEBUG
                         printf("Rule #59\n");
 #endif
@@ -505,7 +520,7 @@ symbol *create_id(symbol *symbp)
    p=new_symbol(symbp->name);
    memcpy(p,symbp,sizeof(symbol));
    p->timi=symbp->timi;
-   p->parameter=sumbp->parameter;
+   p->parameter=symbp->parameter;
    p->NextSymbol=NULL;
    p->PrevSymbol=NULL;
    return(p);
@@ -521,7 +536,7 @@ int methodidx(char *name){
 
 void addmethod(char *name){
    if(methodidx(name)!=-1){
-      fprintf(stderr, "cannot add %s because it has already been definded",name);
+      fprintf(stderr, "cannot add %s because it has already been defined",name);
       exit(1);
    }
    if (numbmethods>=MAX_METHOD_NUMBER){
@@ -573,7 +588,7 @@ symbol* findsymbolinmethod(char *name){
       fprintf(stderr,"variable %s not found in method %s\n",name,mt[currentmethod].name);
       exit(1);
    }
-   return s;
+   return temps;
 }
 
 void yyerror(char *s)
