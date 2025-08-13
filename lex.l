@@ -161,7 +161,7 @@ int id_or_keyword(char *s);
                                   yylval.yint=i;
                                return(i);
                             }
-"-"?([1-9][0-9]*|0)	    {
+[0-9]+	    {
 #if DEBUG
                                printf("number-%s\n",yytext);
 #endif
