@@ -3,7 +3,7 @@
 int numbmethods=0;
 int currentmethod=-1;
 MethodTab mt[MAX_METHOD_NUMBER];
-AstNode *TreeRoot;
+AstNode *TreeRoot; // poinrter to the root of the AST
 
 
 void Init_Hash_Table(HASH_TAB *ht)
@@ -171,16 +171,16 @@ void printAST(AstNode *p, int n)
         case astBody:        indent(n); puts("astBody"); break;
         case astDecls:       indent(n); puts("astDecls"); break;
         case astVarList:     indent(n); puts("astVarList"); break;
-        case astStmtSeq:     indent(n); puts("astStmtSeq"); break;      /* reused */
+        case astStmtSeq:     indent(n); puts("astStmtSeq"); break;
         case astBlock:       indent(n); puts("astBlock"); break;
-        case astExprStmt:    indent(n); puts("astExprStmt"); break;     /* reused */
-        case astAssign:      indent(n); puts("astAssign"); break;       /* reused */
+        case astExprStmt:    indent(n); puts("astExprStmt"); break;
+        case astAssign:      indent(n); puts("astAssign"); break;
         case astReturnStmt:  indent(n); puts("astReturnStmt"); break;
-        case astIfStmt:      indent(n); puts("astIfStmt"); break;       /* reused */
-        case astIfElseStmt:  indent(n); puts("astIfElseStmt"); break;   /* reused */
-        case astWhileStmt:   indent(n); puts("astWhileStmt"); break;    /* reused */
+        case astIfStmt:      indent(n); puts("astIfStmt"); break;
+        case astIfElseStmt:  indent(n); puts("astIfElseStmt"); break;
+        case astWhileStmt:   indent(n); puts("astWhileStmt"); break;
         case astBreakStmt:   indent(n); puts("astBreakStmt"); break;
-        case astAdd:         indent(n); puts("astAdd"); break;          /* reused */
+        case astAdd:         indent(n); puts("astAdd"); break;
         case astSub:         indent(n); puts("astSub"); break;
         case astMult:        indent(n); puts("astMult"); break;
         case astDiv:         indent(n); puts("astDiv"); break;

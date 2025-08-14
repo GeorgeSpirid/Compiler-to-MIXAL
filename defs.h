@@ -6,13 +6,14 @@
 #include <string.h>
 #include <ctype.h>
 
-#define SYM_TABLE_SIZE 41
+#define SYM_TABLE_SIZE 41 /*  is prime, good for hash distribution with % */
 #define NAME_MAX  32
 #define MAX_METHOD_NUMBER 64
 
 #define TRUE_VAL  1
 #define FALSE_VAL 0
 
+/* AST node type tag for node kinds, with offset to avoid collisions with token codes in parser generator */
 #define astProgram       435
 #define astMethList      436
 #define astMethod        437
@@ -46,7 +47,7 @@
 #define astCall          465
 #define astArgs          466
 
-
+/* !!! identifier table entries */
 typedef struct symbol_tag {
    unsigned char name[NAME_MAX+1];
    int timi;
@@ -55,44 +56,45 @@ typedef struct symbol_tag {
    struct symbol_tag *PrevSymbol;
 } symbol;
 
+/* per scope per method */
 typedef struct hash_tab {
-   int numbsymbols;
-   symbol *table[SYM_TABLE_SIZE];
+   int numbsymbols; /* tracks population */
+   symbol *table[SYM_TABLE_SIZE]; /* 41 buckets */
 } HASH_TAB;
 
+/* per method */
 typedef struct method_tab{
    char name[NAME_MAX+1];
    HASH_TAB ht;
-   int exists; /* -- TRUE or FALSE .------------------ */
+   int exists; /* to avoid duplicates */
 } MethodTab;
 
 typedef struct AstNode_tag {
-    int NodeType;
+    int NodeType; /* one of the tags above */
     struct symbol_tag *SymbolNode;
-    struct AstNode_tag *pAstNode[4];
+    struct AstNode_tag *pAstNode[4]; /* up to 4 children */
 } AstNode;
 
 
-extern int numbmethods;
-extern int currentmethod;
+extern int numbmethods; /* number of defined methods */
+extern int currentmethod; /* index to mt[] for active spot */
 extern MethodTab mt[MAX_METHOD_NUMBER];
-extern AstNode *TreeRoot;
+extern AstNode *TreeRoot; /* AST root for program */
 
-
-AstNode *MkNode(int tipos,symbol *sn,AstNode *z0,AstNode *z1,AstNode *z2,AstNode *z3);
-static void indent(int n);
-void printAST(AstNode *p, int n);
-void Init_Hash_Table(HASH_TAB *ht);
-symbol *new_symbol(char *name);
-int mkkey(char *s);
-void addsymb(HASH_TAB *ht, symbol *symbp);
-symbol *findsymb(HASH_TAB *ht, char *onoma);
-int methodidx(char *name);
-void addmethod(char *name);
-void currentscope(char *name);
-void leavescope(void);
-void addvariable(char *name, int parameter);
-symbol* findsymbolinmethod(char *name);
+AstNode *MkNode(int tipos,symbol *sn,AstNode *z0,AstNode *z1,AstNode *z2,AstNode *z3); /* creates an AST node */
+static void indent(int n); /* spaces for display */
+void printAST(AstNode *p, int n); /* display the tree */
+void Init_Hash_Table(HASH_TAB *ht); /* reset counters to zero */
+symbol *new_symbol(char *name); /* allocate and initialize symbol */
+int mkkey(char *s); /* hash function for sumbol names */
+void addsymb(HASH_TAB *ht, symbol *symbp); /* add symbp into ht */
+symbol *findsymb(HASH_TAB *ht, char *onoma); /* return symbol if in ht with onoma */
+int methodidx(char *name); /* return index of method in mt */
+void addmethod(char *name); /* add new MethodTab with name to mt */
+void currentscope(char *name); /* set currentscope to method with name when entering it */
+void leavescope(void); /* currentscope=-1, not in a method, there cannnot be nested methods */
+void addvariable(char *name, int parameter); /* create symbol and add it to current methods table */
+symbol* findsymbolinmethod(char *name); /* return symbol if in current methods hash table */
 
 
 #endif

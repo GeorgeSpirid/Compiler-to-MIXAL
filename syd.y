@@ -14,11 +14,11 @@ static symbol *new_num_symbol(int value);
 
 %}
 
-%union
+%union /* all types a grammar symbol can carry */
 {
     int   yint;
     char  ystr[81];
-    struct AstNode_tag *stnode;
+    struct AstNode_tag *stnode; /* for nonterms that carry an AST node pointer */
 }
 
 %token <yint> RETURN BREAK ELSE IF INT WHILE TRUE FALSE
@@ -31,7 +31,7 @@ static symbol *new_num_symbol(int value);
 %type <stnode> STMTS STMT BLOCK ASSIGN LOCATION METHOD EXPR RELOP ADD_EXPR ADDOP TERM
 %type <stnode> MULOP FACTOR ACTUALS ARGS
 
-%start PROGRAM
+%start PROGRAM /* parsing begins at this rule */
 
 %%
 
@@ -483,6 +483,7 @@ ARGS            : ARGS EXPR ','
                      };
 %%
 
+/* creates symbols with int instead of char* */
 static symbol *new_num_symbol(int value) {
     char buf[32];
     snprintf(buf, sizeof(buf), "%d", value);
