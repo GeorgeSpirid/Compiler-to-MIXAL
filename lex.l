@@ -5,7 +5,8 @@
 #include "syd.tab.h"
 
 #define N  8
-#define DEBUG 1
+#define DEBUG 0
+
 int id_or_keyword(char *s);
 %}
 

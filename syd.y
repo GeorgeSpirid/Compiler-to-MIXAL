@@ -7,7 +7,7 @@ void yyerror(char *s);
 int yyparse();
 int yylex();
 
-#define DEBUG 1
+#define DEBUG 0
 
 static symbol *new_num_symbol(int value);
 
