@@ -500,6 +500,6 @@ void yyerror(char *s)
 int main(void)
 {
    if(yyparse()==0){
-      printAST(TreeRoot, 0);
+      printAST(TreeRoot, -3);
    }
 }

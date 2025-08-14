@@ -82,7 +82,7 @@ union YYSTYPE
 
     int   yint;
     char  ystr[81];
-    struct AstNode_tag *stnode;
+    struct AstNode_tag *stnode; /* for nonterms that carry an AST node pointer */
 
 #line 88 "syd.tab.h"
 

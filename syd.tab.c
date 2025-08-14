@@ -2067,6 +2067,7 @@ yyreturnlab:
 #line 484 "syd.y"
 
 
+/* creates symbols with int instead of char* */
 static symbol *new_num_symbol(int value) {
     char buf[32];
     snprintf(buf, sizeof(buf), "%d", value);
@@ -2083,6 +2084,6 @@ void yyerror(char *s)
 int main(void)
 {
    if(yyparse()==0){
-      printAST(TreeRoot, 0);
+      printAST(TreeRoot, -3);
    }
 }

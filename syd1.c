@@ -152,51 +152,54 @@ AstNode *MkNode(int tipos,symbol *sn,
 }
 
 
-static void indent(int n){ for(int i=0;i<n;i++) putchar(' '); }
-
+void kena(int n)
+{  int i;
+   
+   for(i=0; i<n; i++) printf(" ");
+}
 void printAST(AstNode *p, int n)
 {
     if (!p) return;
-    n += 2;
+    n=n+3;
     switch (p->NodeType) {
-        case astProgram:     indent(n); puts("astProgram"); break;
-        case astMethList:    indent(n); puts("astMethList"); break;
-        case astMethod:      indent(n); printf("astMethod%s%s\n",
+        case astProgram:     kena(n); puts("astProgram"); break;
+        case astMethList:    kena(n); puts("astMethList"); break;
+        case astMethod:      kena(n); printf("astMethod%s%s\n",
                                  p->SymbolNode ? "=" : "",
                                  p->SymbolNode ? (char*)p->SymbolNode->name : ""); break;
-        case astParams:      indent(n); puts("astParams"); break;
-        case astParam:       indent(n); printf("astParam%s%s\n",
+        case astParams:      kena(n); puts("astParams"); break;
+        case astParam:       kena(n); printf("astParam%s%s\n",
                                  p->SymbolNode ? "=" : "",
                                  p->SymbolNode ? (char*)p->SymbolNode->name : ""); break;
-        case astBody:        indent(n); puts("astBody"); break;
-        case astDecls:       indent(n); puts("astDecls"); break;
-        case astVarList:     indent(n); puts("astVarList"); break;
-        case astStmtSeq:     indent(n); puts("astStmtSeq"); break;
-        case astBlock:       indent(n); puts("astBlock"); break;
-        case astExprStmt:    indent(n); puts("astExprStmt"); break;
-        case astAssign:      indent(n); puts("astAssign"); break;
-        case astReturnStmt:  indent(n); puts("astReturnStmt"); break;
-        case astIfStmt:      indent(n); puts("astIfStmt"); break;
-        case astIfElseStmt:  indent(n); puts("astIfElseStmt"); break;
-        case astWhileStmt:   indent(n); puts("astWhileStmt"); break;
-        case astBreakStmt:   indent(n); puts("astBreakStmt"); break;
-        case astAdd:         indent(n); puts("astAdd"); break;
-        case astSub:         indent(n); puts("astSub"); break;
-        case astMult:        indent(n); puts("astMult"); break;
-        case astDiv:         indent(n); puts("astDiv"); break;
-        case astEq:          indent(n); puts("astEq"); break;
-        case astNotEq:       indent(n); puts("astNotEq"); break;
-        case astLess:        indent(n); puts("astLess"); break;
-        case astLeEq:        indent(n); puts("astLeEq"); break;
-        case astGreater:     indent(n); puts("astGreater"); break;
-        case astGrEq:        indent(n); puts("astGrEq"); break;
-        case astId:          indent(n); printf("astId=%s\n",
+        case astBody:        kena(n); puts("astBody"); break;
+        case astDecls:       kena(n); puts("astDecls"); break;
+        case astVarList:     kena(n); puts("astVarList"); break;
+        case astStmtSeq:     kena(n); puts("astStmtSeq"); break;
+        case astBlock:       kena(n); puts("astBlock"); break;
+        case astExprStmt:    kena(n); puts("astExprStmt"); break;
+        case astAssign:      kena(n); puts("astAssign"); break;
+        case astReturnStmt:  kena(n); puts("astReturnStmt"); break;
+        case astIfStmt:      kena(n); puts("astIfStmt"); break;
+        case astIfElseStmt:  kena(n); puts("astIfElseStmt"); break;
+        case astWhileStmt:   kena(n); puts("astWhileStmt"); break;
+        case astBreakStmt:   kena(n); puts("astBreakStmt"); break;
+        case astAdd:         kena(n); puts("astAdd"); break;
+        case astSub:         kena(n); puts("astSub"); break;
+        case astMult:        kena(n); puts("astMult"); break;
+        case astDiv:         kena(n); puts("astDiv"); break;
+        case astEq:          kena(n); puts("astEq"); break;
+        case astNotEq:       kena(n); puts("astNotEq"); break;
+        case astLess:        kena(n); puts("astLess"); break;
+        case astLeEq:        kena(n); puts("astLeEq"); break;
+        case astGreater:     kena(n); puts("astGreater"); break;
+        case astGrEq:        kena(n); puts("astGrEq"); break;
+        case astId:          kena(n); printf("astId=%s\n",
                                  p->SymbolNode ? (char*)p->SymbolNode->name : "?"); break;
-        case astDecimConst:  indent(n); printf("astDecimConst=%s\n",
+        case astDecimConst:  kena(n); printf("astDecimConst=%s\n",
                                  p->SymbolNode ? (char*)p->SymbolNode->name : "?"); break;
-        case astCall:        indent(n); puts("astCall"); break;
-        case astArgs:        indent(n); puts("astArgs"); break;
-        default:             indent(n); printf("UNKNOWN=%d\n", p->NodeType);
+        case astCall:        kena(n); puts("astCall"); break;
+        case astArgs:        kena(n); puts("astArgs"); break;
+        default:             kena(n); printf("UNKNOWN=%d\n", p->NodeType);
     }
     for (int i=0;i<4;i++) if (p->pAstNode[i]) printAST(p->pAstNode[i], n);
 }

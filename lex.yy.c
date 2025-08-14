@@ -392,12 +392,13 @@ char *yytext;
 #line 2 "lex.l"
 #include <stdio.h>
 #include <string.h>
+#include "defs.h"
 #include "syd.tab.h"
 
 #define N  8
 #define DEBUG 1
 int id_or_keyword(char *s);
-#line 401 "lex.yy.c"
+#line 402 "lex.yy.c"
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -548,10 +549,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
 
-#line 11 "lex.l"
+#line 12 "lex.l"
 
 
-#line 555 "lex.yy.c"
+#line 556 "lex.yy.c"
 
 	if ( yy_init )
 		{
@@ -636,7 +637,7 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 13 "lex.l"
+#line 14 "lex.l"
 {
 #if DEBUG
                                printf("%s\n",yytext);
@@ -647,7 +648,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 20 "lex.l"
+#line 21 "lex.l"
 {
 #if DEBUG
                                printf("%s\n",yytext);
@@ -658,7 +659,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 27 "lex.l"
+#line 28 "lex.l"
 {
 #if DEBUG
                                printf("%s\n",yytext);
@@ -669,7 +670,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 34 "lex.l"
+#line 35 "lex.l"
 {
 #if DEBUG
                                printf("%s\n",yytext);
@@ -680,7 +681,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 41 "lex.l"
+#line 42 "lex.l"
 {
 #if DEBUG
                                printf("%s\n",yytext);
@@ -691,7 +692,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 48 "lex.l"
+#line 49 "lex.l"
 {
 #if DEBUG
                                printf("%s\n",yytext);
@@ -702,7 +703,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 55 "lex.l"
+#line 56 "lex.l"
 {
 #if DEBUG
                                printf("%s\n",yytext);
@@ -713,7 +714,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 62 "lex.l"
+#line 63 "lex.l"
 {
 #if DEBUG
                                printf("%s\n",yytext);
@@ -724,7 +725,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 69 "lex.l"
+#line 70 "lex.l"
 {
 #if DEBUG
                                printf("%s\n",yytext);
@@ -735,7 +736,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 76 "lex.l"
+#line 77 "lex.l"
 {
 #if DEBUG
                                printf("%s\n",yytext);
@@ -746,7 +747,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 83 "lex.l"
+#line 84 "lex.l"
 {
 #if DEBUG
                                printf("%s\n",yytext);
@@ -757,7 +758,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 90 "lex.l"
+#line 91 "lex.l"
 {
 #if DEBUG
                                printf("%s\n",yytext);
@@ -768,7 +769,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 97 "lex.l"
+#line 98 "lex.l"
 {
 #if DEBUG
                                printf("%s\n",yytext);
@@ -779,7 +780,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 104 "lex.l"
+#line 105 "lex.l"
 {
 #if DEBUG
                                printf("%s\n",yytext);
@@ -790,7 +791,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 111 "lex.l"
+#line 112 "lex.l"
 {
 #if DEBUG
                                printf("%s\n",yytext);
@@ -801,7 +802,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 118 "lex.l"
+#line 119 "lex.l"
 {
 #if DEBUG
                                printf("%s\n",yytext);
@@ -812,7 +813,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 125 "lex.l"
+#line 126 "lex.l"
 {
 #if DEBUG
                                printf("%s\n",yytext);
@@ -823,7 +824,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 132 "lex.l"
+#line 133 "lex.l"
 {
 #if DEBUG
                                printf("%s\n",yytext);
@@ -834,7 +835,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 139 "lex.l"
+#line 140 "lex.l"
 {
 #if DEBUG
 				printf("%s\n",yytext);
@@ -845,7 +846,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 146 "lex.l"
+#line 147 "lex.l"
 {
 #if DEBUG
 				printf("%s\n",yytext);
@@ -856,7 +857,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 153 "lex.l"
+#line 154 "lex.l"
 {  int i;
 #if DEBUG
                                printf("id or keyword-%s\n",yytext);
@@ -871,7 +872,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 164 "lex.l"
+#line 165 "lex.l"
 {
 #if DEBUG
                                printf("number-%s\n",yytext);
@@ -882,7 +883,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 172 "lex.l"
+#line 173 "lex.l"
 {
 #if DEBUG
 								printf("%s\n",yytext); 
@@ -891,7 +892,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 177 "lex.l"
+#line 178 "lex.l"
 {
 #if DEBUG
 				printf("comment\n");	
@@ -900,17 +901,17 @@ YY_RULE_SETUP
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 182 "lex.l"
+#line 183 "lex.l"
 {
                                printf("Illegal character %s\n",yytext);
                             }  
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 187 "lex.l"
+#line 188 "lex.l"
 ECHO;
 	YY_BREAK
-#line 914 "lex.yy.c"
+#line 915 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1796,7 +1797,7 @@ int main()
 	return 0;
 	}
 #endif
-#line 187 "lex.l"
+#line 188 "lex.l"
 
 
 static char *kid[N]={"return","break","true","false","else","if","int","while"};
