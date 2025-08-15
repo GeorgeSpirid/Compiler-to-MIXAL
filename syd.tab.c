@@ -563,7 +563,7 @@ static const yytype_int16 yyrline[] =
      281,   292,   299,   306,   313,   320,   328,   340,   347,   354,
      361,   368,   375,   382,   389,   396,   403,   410,   417,   424,
      435,   442,   449,   456,   463,   470,   478,   486,   494,   515,
-     526,   532,   540
+     527,   533,   541
 };
 #endif
 
@@ -1903,47 +1903,48 @@ yyreduce:
 #endif
 			if((yyvsp[-1].stnode)==NULL){
 				(yyval.stnode)=MkNode(astArgs,NULL,(yyvsp[0].stnode),NULL,NULL,NULL);
-			}
+			}else{
 			        (yyval.stnode) = MkNode(astArgs, NULL, (yyvsp[-1].stnode), MkNode(astArgs, NULL, (yyvsp[0].stnode), 				NULL, NULL, NULL), NULL, NULL);
+			}
                      }
-#line 1910 "syd.tab.c"
+#line 1911 "syd.tab.c"
     break;
 
   case 60: /* ACTUALS: %empty  */
-#line 526 "syd.y"
+#line 527 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #57\n");
 #endif
 			(yyval.stnode)=NULL;
                      }
-#line 1921 "syd.tab.c"
+#line 1922 "syd.tab.c"
     break;
 
   case 61: /* ARGS: ARGS EXPR ','  */
-#line 533 "syd.y"
+#line 534 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #58\n");
 #endif
 			(yyval.stnode)=MkNode(astArgs,NULL,(yyvsp[-2].stnode),MkNode(astArgs,NULL,(yyvsp[-1].stnode),NULL,NULL,NULL),NULL,NULL);
                      }
-#line 1932 "syd.tab.c"
+#line 1933 "syd.tab.c"
     break;
 
   case 62: /* ARGS: %empty  */
-#line 540 "syd.y"
+#line 541 "syd.y"
                         { 
 #if DEBUG
                         printf("Rule #59\n");
 #endif
 			(yyval.stnode)=NULL;
                      }
-#line 1943 "syd.tab.c"
+#line 1944 "syd.tab.c"
     break;
 
 
-#line 1947 "syd.tab.c"
+#line 1948 "syd.tab.c"
 
       default: break;
     }
@@ -2136,7 +2137,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 546 "syd.y"
+#line 547 "syd.y"
 
 
 /* creates symbols with int instead of char* */

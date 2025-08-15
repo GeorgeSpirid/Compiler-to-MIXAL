@@ -519,8 +519,9 @@ ACTUALS            : ARGS EXPR
 #endif
 			if($1==NULL){
 				$$=MkNode(astArgs,NULL,$2,NULL,NULL,NULL);
-			}
+			}else{
 			        $$ = MkNode(astArgs, NULL, $1, MkNode(astArgs, NULL, $2, 				NULL, NULL, NULL), NULL, NULL);
+			}
                      }
 		|
                      { 
