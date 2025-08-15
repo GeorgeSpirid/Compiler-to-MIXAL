@@ -220,10 +220,10 @@ STMTS            : STMTS STMT
 #if DEBUG
                         printf("Rule #21\n");
 #endif
-			/* if(ast_returns($1)){
+			if(ast_returns($1)){
 				printf("cannot reach code after return in method %					s",mt[currentmethod].name);
 				exit(1);
-			} */
+			}
 			$$=MkNode(astStmtSeq,NULL,$1,$2,NULL,NULL);
                      }
 		       | 
@@ -517,8 +517,10 @@ ACTUALS            : ARGS EXPR
 #if DEBUG
                         printf("Rule #56\n");
 #endif
-			AstNode *last=MkNode(astArgs,NULL,$2,NULL,NULL,NULL);
-			$$=MkNode(astArgs,NULL,$2,NULL,NULL,NULL);
+			if($1==NULL){
+				$$=MkNode(astArgs,NULL,$2,NULL,NULL,NULL);
+			}
+			        $$ = MkNode(astArgs, NULL, $1, MkNode(astArgs, NULL, $2, 				NULL, NULL, NULL), NULL, NULL);
                      }
 		|
                      { 
@@ -559,10 +561,6 @@ void yyerror(char *s)
 
 int main(void)
 {
-   fprintf(stderr, "Starting parse...\n");
-   yyparse();
-   fprintf(stderr, "yyparse() returned %d\n", yyparse());
-
    if(yyparse()==0){
 	int mi=methodidx("main");
 	if(mi==-1){

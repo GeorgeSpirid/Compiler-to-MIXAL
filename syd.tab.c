@@ -563,7 +563,7 @@ static const yytype_int16 yyrline[] =
      281,   292,   299,   306,   313,   320,   328,   340,   347,   354,
      361,   368,   375,   382,   389,   396,   403,   410,   417,   424,
      435,   442,   449,   456,   463,   470,   478,   486,   494,   515,
-     524,   530,   538
+     526,   532,   540
 };
 #endif
 
@@ -1460,10 +1460,10 @@ yyreduce:
 #if DEBUG
                         printf("Rule #21\n");
 #endif
-			/* if(ast_returns($1)){
+			if(ast_returns((yyvsp[-1].stnode))){
 				printf("cannot reach code after return in method %					s",mt[currentmethod].name);
 				exit(1);
-			} */
+			}
 			(yyval.stnode)=MkNode(astStmtSeq,NULL,(yyvsp[-1].stnode),(yyvsp[0].stnode),NULL,NULL);
                      }
 #line 1470 "syd.tab.c"
@@ -1901,47 +1901,49 @@ yyreduce:
 #if DEBUG
                         printf("Rule #56\n");
 #endif
-			AstNode *last=MkNode(astArgs,NULL,(yyvsp[0].stnode),NULL,NULL,NULL);
-			(yyval.stnode)=MkNode(astArgs,NULL,(yyvsp[0].stnode),NULL,NULL,NULL);
+			if((yyvsp[-1].stnode)==NULL){
+				(yyval.stnode)=MkNode(astArgs,NULL,(yyvsp[0].stnode),NULL,NULL,NULL);
+			}
+			        (yyval.stnode) = MkNode(astArgs, NULL, (yyvsp[-1].stnode), MkNode(astArgs, NULL, (yyvsp[0].stnode), 				NULL, NULL, NULL), NULL, NULL);
                      }
-#line 1908 "syd.tab.c"
+#line 1910 "syd.tab.c"
     break;
 
   case 60: /* ACTUALS: %empty  */
-#line 524 "syd.y"
+#line 526 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #57\n");
 #endif
 			(yyval.stnode)=NULL;
                      }
-#line 1919 "syd.tab.c"
+#line 1921 "syd.tab.c"
     break;
 
   case 61: /* ARGS: ARGS EXPR ','  */
-#line 531 "syd.y"
+#line 533 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #58\n");
 #endif
 			(yyval.stnode)=MkNode(astArgs,NULL,(yyvsp[-2].stnode),MkNode(astArgs,NULL,(yyvsp[-1].stnode),NULL,NULL,NULL),NULL,NULL);
                      }
-#line 1930 "syd.tab.c"
+#line 1932 "syd.tab.c"
     break;
 
   case 62: /* ARGS: %empty  */
-#line 538 "syd.y"
+#line 540 "syd.y"
                         { 
 #if DEBUG
                         printf("Rule #59\n");
 #endif
 			(yyval.stnode)=NULL;
                      }
-#line 1941 "syd.tab.c"
+#line 1943 "syd.tab.c"
     break;
 
 
-#line 1945 "syd.tab.c"
+#line 1947 "syd.tab.c"
 
       default: break;
     }
@@ -2134,7 +2136,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 544 "syd.y"
+#line 546 "syd.y"
 
 
 /* creates symbols with int instead of char* */
@@ -2153,10 +2155,6 @@ void yyerror(char *s)
 
 int main(void)
 {
-   fprintf(stderr, "Starting parse...\n");
-   yyparse();
-   fprintf(stderr, "yyparse() returned %d\n", yyparse());
-
    if(yyparse()==0){
 	int mi=methodidx("main");
 	if(mi==-1){

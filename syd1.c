@@ -216,15 +216,8 @@ AstNode*  mostright(AstNode *p)
 {
     if (!p) return NULL;
     if(p->NodeType==astStmtSeq){
-      if(p->pAstNode[3]) {
-        return mostright(p->pAstNode[3]);
-      } else if (p->pAstNode[2]) {
-        return mostright(p->pAstNode[2]);
-      } else if (p->pAstNode[1]) {
-        return mostright(p->pAstNode[1]);
-      } else if (p->pAstNode[0]) {
-        return mostright(p->pAstNode[0]);
-      }
+      if(p->pAstNode[1]) return mostright(p->pAstNode[1]);
+      else return mostright(p->pAstNode[0]);
     }
     return p;
 }
@@ -239,17 +232,17 @@ int ast_returns(AstNode *s){
    return 0;
 }
 
-int count_args(AstNode *s){
-   if(!s) return 0;
-   int count=0;
-   if(s->NodeType==astArgs){
-      if(s->pAstNode[0]) count += count_args(s->pAstNode[0]);
-      if(s->pAstNode[1]) count += count_args(s->pAstNode[1]);
-      if(!s->pAstNode[0] && !s->pAstNode[1]) count++;
-      return count;
-   }
-   return 1;
+int count_args(AstNode *s) {
+    if (!s) return 0;
+
+    if (s->NodeType == astArgs) {
+        return count_args(s->pAstNode[0]) + count_args(s->pAstNode[1]);
+    }
+
+    // Any non-astArgs node is a single argument
+    return 1;
 }
+
 
 int is_zero(AstNode *s){
    return s && s->NodeType==astDecimConst && s->SymbolNode && s->SymbolNode->timi==0;
