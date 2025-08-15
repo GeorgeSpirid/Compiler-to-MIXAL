@@ -80,7 +80,7 @@ METH            : TYPE ID
                         printf("Rule #5\n");
 #endif
 			if(!mt[currentmethod].has_return){
-				printf("method %s doesn't have 								return",mt[currentmethod].name);
+				printf("method %s doesn't have return",mt[currentmethod].name);
 				exit(1);
 			}
 			symbol *temps=new_symbol($2);
@@ -93,6 +93,10 @@ PARAMS            : FORMALS TYPE ID
 #if DEBUG
                         printf("Rule #6\n");
 #endif
+			if(findsymb(&mt[currentmethod].ht,$3)){
+				printf("duplicate parameter %s in method %s\n",$3,mt[currentmethod].name);
+				exit(1);
+			}
 			addvariable($3,TRUE_VAL);
 			cur_param_count++;
 			symbol *temps=new_symbol($3);
@@ -238,7 +242,7 @@ STMT            : ASSIGN ';'
 #if DEBUG
                         printf("Rule #23\n");
 #endif
-			if(!is_location($1->pAstNode[0])){
+			if(!$1 || !is_location($1->pAstNode[0])){
 				printf("assignment target is not a variable\n");
 				exit(1);
 			}
@@ -252,7 +256,7 @@ STMT            : ASSIGN ';'
 			if(currentmethod==-1){
 				printf("return outside of method\n");
 				exit(1);
-			}
+			}			
 			mt[currentmethod].has_return=1;
 			$$=MkNode(astReturnStmt,NULL,$2,NULL,NULL,NULL);
                      }
@@ -507,7 +511,7 @@ FACTOR            : '(' EXPR ')'
 			}
 			int ca=count_args($3);
 			if(ca != mt[mi].param_count){
-				printf("method %s needs %d arguments but got %d\n",mt[mi].name,mt[mi].param_count,ca);
+				printf("method %s needs %d arguments but got %d										\n",mt[mi].name,mt[mi].param_count,ca);
                            	exit(1);
 			}
 			$$=MkNode(astCall,NULL,$1,$3,NULL,NULL);
@@ -554,6 +558,7 @@ static symbol *new_num_symbol(int value) {
     s->timi = value;
     return s;
 }
+
 
 void yyerror(char *s)
 {

@@ -167,6 +167,10 @@ int id_or_keyword(char *s);
 #if DEBUG
                                printf("number-%s\n",yytext);
 #endif
+				if(yytext[0]=='0' && strlen(yytext)>1){
+					printf("%s number cannot start with zero",yytext);
+					exit(1);
+				}
                                yylval.yint=atoi(yytext);
                                return(NUM);
                             }

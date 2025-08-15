@@ -878,13 +878,17 @@ YY_RULE_SETUP
 #if DEBUG
                                printf("number-%s\n",yytext);
 #endif
+				if(yytext[0]=='0' && strlen(yytext)>1){
+					printf("%s number cannot start with zero",yytext);
+					exit(1);
+				}
                                yylval.yint=atoi(yytext);
                                return(NUM);
                             }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 174 "lex.l"
+#line 178 "lex.l"
 {
 #if DEBUG
 								printf("%s\n",yytext); 
@@ -893,7 +897,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 179 "lex.l"
+#line 183 "lex.l"
 {
 #if DEBUG
 				printf("comment\n");	
@@ -902,17 +906,17 @@ YY_RULE_SETUP
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 184 "lex.l"
+#line 188 "lex.l"
 {
                                printf("Illegal character %s\n",yytext);
                             }  
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 189 "lex.l"
+#line 193 "lex.l"
 ECHO;
 	YY_BREAK
-#line 916 "lex.yy.c"
+#line 920 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1798,7 +1802,7 @@ int main()
 	return 0;
 	}
 #endif
-#line 189 "lex.l"
+#line 193 "lex.l"
 
 
 static char *kid[N]={"return","break","true","false","else","if","int","while"};
