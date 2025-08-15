@@ -7,8 +7,7 @@ void yyerror(char *s);
 int yyparse();
 int yylex();
 
-#define DEBUG 0
-
+#define DEBUG 1
 static symbol *new_num_symbol(int value);
 
 
@@ -60,17 +59,32 @@ METH_LIST            : METH METH_LIST
                      };
 METH            : TYPE ID
 {
+#if DEBUG
+                        printf("Rule #5\n");
+#endif
 			addmethod($2);
 			currentscope($2);
+			cur_param_count=0;
+			mt[currentmethod].has_return=0;
 } 
-		'(' PARAMS ')' BODY
+		'(' PARAMS ')'
                      { 
 #if DEBUG
                         printf("Rule #5\n");
 #endif
-			
+			mt[currentmethod].param_count=cur_param_count;
+ 		}
+			 BODY
+		{
+#if DEBUG
+                        printf("Rule #5\n");
+#endif
+			if(!mt[currentmethod].has_return){
+				printf("method %s doesn't have 								return",mt[currentmethod].name);
+				exit(1);
+			}
 			symbol *temps=new_symbol($2);
-			$$=MkNode(astMethod,temps,$7,NULL,NULL,NULL);
+			$$=MkNode(astMethod,temps,$8,NULL,NULL,NULL);
 			leavescope();
 			};
                 
@@ -80,6 +94,7 @@ PARAMS            : FORMALS TYPE ID
                         printf("Rule #6\n");
 #endif
 			addvariable($3,TRUE_VAL);
+			cur_param_count++;
 			symbol *temps=new_symbol($3);
 			AstNode *parameter=MkNode(astParam,temps,NULL,NULL,NULL,NULL);
 			$$=MkNode(astParam,NULL,$1,parameter,NULL,NULL);
@@ -97,6 +112,7 @@ FORMALS            : FORMALS TYPE ID ','
                         printf("Rule #8\n");
 #endif
 			addvariable($3,TRUE_VAL);
+			cur_param_count++;
 			symbol *temps=new_symbol($3);
 			AstNode *parameter=MkNode(astParam,temps,NULL,NULL,NULL,NULL);
 			$$=MkNode(astParam,NULL,$1,parameter,NULL,NULL);
@@ -176,6 +192,7 @@ VARS            : ',' ID VARS
 #if DEBUG
                         printf("Rule #18\n");
 #endif
+			addvariable($2,FALSE_VAL);
 			symbol *temps=new_symbol($2);
 			AstNode *var=MkNode(astVarList,temps,NULL,NULL,NULL,NULL);
 			$$=MkNode(astDecls,NULL,var,$3,NULL,NULL);
@@ -185,6 +202,7 @@ VARS            : ',' ID VARS
 #if DEBUG
                         printf("Rule #19\n");
 #endif
+			addvariable($2,FALSE_VAL);
 			symbol *temps=new_symbol($2);
 			AstNode *init=MkNode(astAssign,NULL,MkNode(astId, findsymbolinmethod($2), NULL, 					NULL,NULL,NULL),$4,NULL,NULL);
 			AstNode *var=MkNode(astVarList,temps,init,NULL,NULL,NULL);
@@ -202,6 +220,10 @@ STMTS            : STMTS STMT
 #if DEBUG
                         printf("Rule #21\n");
 #endif
+			/* if(ast_returns($1)){
+				printf("cannot reach code after return in method %					s",mt[currentmethod].name);
+				exit(1);
+			} */
 			$$=MkNode(astStmtSeq,NULL,$1,$2,NULL,NULL);
                      }
 		       | 
@@ -216,6 +238,10 @@ STMT            : ASSIGN ';'
 #if DEBUG
                         printf("Rule #23\n");
 #endif
+			if(!is_location($1->pAstNode[0])){
+				printf("assignment target is not a variable\n");
+				exit(1);
+			}
 			$$=MkNode(astExprStmt,NULL,$1,NULL,NULL,NULL);
                      }
 		       | RETURN EXPR ';'
@@ -223,6 +249,11 @@ STMT            : ASSIGN ';'
 #if DEBUG
                         printf("Rule #24\n");
 #endif
+			if(currentmethod==-1){
+				printf("return outside of method\n");
+				exit(1);
+			}
+			mt[currentmethod].has_return=1;
 			$$=MkNode(astReturnStmt,NULL,$2,NULL,NULL,NULL);
                      }
 			| IF '(' EXPR ')' STMT ELSE STMT
@@ -232,18 +263,30 @@ STMT            : ASSIGN ';'
 #endif
 			$$=MkNode(astIfElseStmt,NULL,$3,$5,$7,NULL);
                      }
-			| WHILE '(' EXPR ')' STMT
+			| WHILE '(' EXPR ')' 
 		{ 
 #if DEBUG
                         printf("Rule #26\n");
 #endif
-			$$=MkNode(astWhileStmt,NULL,$3,$5,NULL,NULL);
+			loopdepth++;
+		} 
+			STMT
+		{
+#if DEBUG
+                        printf("Rule #26\n");
+#endif
+			loopdepth--;
+			$$=MkNode(astWhileStmt,NULL,$3,$6,NULL,NULL);
                      }
 			| BREAK ';'
 		{ 
 #if DEBUG
                         printf("Rule #27\n");
 #endif
+			if(loopdepth==0){
+				printf("break outside of a loop\n");
+				exit(1);
+			}
 			$$=MkNode(astBreakStmt,NULL,NULL,NULL,NULL,NULL);
                      }
 			| BLOCK
@@ -281,7 +324,6 @@ LOCATION            : ID
 #endif
 			symbol *temps=findsymbolinmethod($1);
 			$$=MkNode(astId,temps,NULL,NULL,NULL,NULL);
-			findsymbolinmethod($1);
                      };
 METHOD            : ID
                      { 
@@ -289,7 +331,7 @@ METHOD            : ID
                         printf("Rule #33\n");
 #endif
 			if(methodidx($1)==-1){
-				fprintf(stderr,"method %s isn't declared\n",$1);
+				printf("method %s isn't declared\n",$1);
 				exit(1);
 			}
 			symbol *temps=new_symbol($1);
@@ -384,6 +426,10 @@ TERM            : TERM MULOP FACTOR
 #if DEBUG
                         printf("Rule #46\n");
 #endif
+			if($2->NodeType==astDiv && is_zero($3)){
+				printf("division by zero\n");
+				exit(1);
+			}
 			$$=MkNode($2->NodeType,NULL,$1,$3,NULL,NULL);
                      }
 		| FACTOR
@@ -450,6 +496,20 @@ FACTOR            : '(' EXPR ')'
 #if DEBUG
                         printf("Rule #55\n");
 #endif
+			if(!$1 || !$1->SymbolNode){
+				printf("internal: method symbol missing in call\n");
+                           	exit(1);
+			}
+			int mi=methodidx((char*)$1->SymbolNode->name);
+			if(mi==-1){
+				printf("method %s not declared\n",(char*)$1->SymbolNode->name);
+                           	exit(1);
+			}
+			int ca=count_args($3);
+			if(ca != mt[mi].param_count){
+				printf("method %s needs %d arguments but got %d\n",mt[mi].name,mt[mi].param_count,ca);
+                           	exit(1);
+			}
 			$$=MkNode(astCall,NULL,$1,$3,NULL,NULL);
                      };
 ACTUALS            : ARGS EXPR
@@ -499,7 +559,21 @@ void yyerror(char *s)
 
 int main(void)
 {
+   fprintf(stderr, "Starting parse...\n");
+   yyparse();
+   fprintf(stderr, "yyparse() returned %d\n", yyparse());
+
    if(yyparse()==0){
-      printAST(TreeRoot, -3);
+	int mi=methodidx("main");
+	if(mi==-1){
+		printf("need to have a main method\n");
+		exit(1);
+	}
+	if(mt[mi].param_count != 0){
+		printf("main cannot have parameters\n");
+		exit(1);
+	}
+	fflush(stdout);
+	printAST(TreeRoot, -3);
    }
 }

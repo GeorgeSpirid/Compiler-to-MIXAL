@@ -5,6 +5,8 @@ int currentmethod=-1;
 MethodTab mt[MAX_METHOD_NUMBER];
 AstNode *TreeRoot; // poinrter to the root of the AST
 
+int loopdepth=0; // for break checking
+int cur_param_count=0;
 
 void Init_Hash_Table(HASH_TAB *ht)
 {  
@@ -20,7 +22,7 @@ symbol *new_symbol(char *name)
    symbp=(symbol *)malloc(sizeof(symbol));
 
    if(!symbp){
-      fprintf(stderr,"cannot allocate memory for symbp %s\n", name);
+      printf("cannot allocate memory for symbp %s\n", name);
       exit(1);
    }
    memset(symbp,0,sizeof(symbol));
@@ -74,24 +76,30 @@ int methodidx(char *name){
 
 void addmethod(char *name){
    if(methodidx(name)!=-1){
-      fprintf(stderr, "cannot add %s because it has already been defined",name);
+      printf("cannot add %s because it has already been defined",name);
       exit(1);
    }
    if (numbmethods>=MAX_METHOD_NUMBER){
-      fprintf(stderr, "cannot add %s, too many methods",name);
+      printf("cannot add %s, too many methods",name);
       exit(1);
    }
-   strncpy(mt[numbmethods].name,name,NAME_MAX);
+   int len=strlen(name);
+   if(len>NAME_MAX){
+      printf("method name %s is too long, so it is shortened\n", name);
+   }
+   memcpy(mt[numbmethods].name,name,NAME_MAX);
    mt[numbmethods].name[NAME_MAX]='\0';
    Init_Hash_Table(&mt[numbmethods].ht);
    mt[numbmethods].exists=1;
+   mt[numbmethods].param_count=0;
+   mt[numbmethods].has_return=0;
    numbmethods++;
 }
 
 void currentscope(char *name){
    int i=methodidx(name);
    if (i==-1){
-      fprintf(stderr,"%s method isn't registered\n",name);
+      printf("%s method isn't registered\n",name);
       exit(1);
    }
    currentmethod=i;
@@ -103,12 +111,12 @@ void leavescope(void){
 
 void addvariable(char *name, int parameter){
    if(currentmethod==-1){
-      fprintf(stderr,"delaring variable outside of a method\n");
+      printf("delaring variable outside of a method\n");
       exit(1);
    }
    HASH_TAB *tempht = &mt[currentmethod].ht;
    if(findsymb(tempht,name)){
-      fprintf(stderr,"redelaring variable %s in method %s\n",name,mt[currentmethod].name);
+      printf("redelaring variable %s in method %s\n",name,mt[currentmethod].name);
       exit(1);
    }
    symbol *temps = new_symbol(name);
@@ -118,12 +126,12 @@ void addvariable(char *name, int parameter){
 
 symbol* findsymbolinmethod(char *name){
    if(currentmethod==-1){
-      fprintf(stderr,"looking for a variable outside a method\n");
+      printf("looking for a variable outside a method\n");
       exit(1);
    }
    symbol* temps = findsymb(&mt[currentmethod].ht, name);
    if(!temps){
-      fprintf(stderr,"variable %s not found in method %s\n",name,mt[currentmethod].name);
+      printf("variable %s not found in method %s\n",name,mt[currentmethod].name);
       exit(1);
    }
    return temps;
@@ -202,4 +210,51 @@ void printAST(AstNode *p, int n)
         default:             kena(n); printf("UNKNOWN=%d\n", p->NodeType);
     }
     for (int i=0;i<4;i++) if (p->pAstNode[i]) printAST(p->pAstNode[i], n);
+}
+
+AstNode*  mostright(AstNode *p)
+{
+    if (!p) return NULL;
+    if(p->NodeType==astStmtSeq){
+      if(p->pAstNode[3]) {
+        return mostright(p->pAstNode[3]);
+      } else if (p->pAstNode[2]) {
+        return mostright(p->pAstNode[2]);
+      } else if (p->pAstNode[1]) {
+        return mostright(p->pAstNode[1]);
+      } else if (p->pAstNode[0]) {
+        return mostright(p->pAstNode[0]);
+      }
+    }
+    return p;
+}
+
+int ast_returns(AstNode *s){
+   if (!s) return 0;
+   if (s->NodeType == astReturnStmt) return 1;
+   if (s->NodeType==astStmtSeq) return ast_returns(mostright(s));
+   if (s->NodeType==astBlock) return ast_returns(s->pAstNode[0]);
+   if (s->NodeType==astIfElseStmt)
+      return ast_returns(s->pAstNode[1]) && ast_returns(s->pAstNode[2]);
+   return 0;
+}
+
+int count_args(AstNode *s){
+   if(!s) return 0;
+   int count=0;
+   if(s->NodeType==astArgs){
+      if(s->pAstNode[0]) count += count_args(s->pAstNode[0]);
+      if(s->pAstNode[1]) count += count_args(s->pAstNode[1]);
+      if(!s->pAstNode[0] && !s->pAstNode[1]) count++;
+      return count;
+   }
+   return 1;
+}
+
+int is_zero(AstNode *s){
+   return s && s->NodeType==astDecimConst && s->SymbolNode && s->SymbolNode->timi==0;
+}
+
+int is_location(AstNode *s){
+   return s && s->NodeType==astId;
 }

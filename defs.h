@@ -67,6 +67,8 @@ typedef struct method_tab{
    char name[NAME_MAX+1];
    HASH_TAB ht;
    int exists; /* to avoid duplicates */
+   int param_count;
+   int has_return; /* TRUE if we see a return */
 } MethodTab;
 
 typedef struct AstNode_tag {
@@ -80,6 +82,8 @@ extern int numbmethods; /* number of defined methods */
 extern int currentmethod; /* index to mt[] for active spot */
 extern MethodTab mt[MAX_METHOD_NUMBER];
 extern AstNode *TreeRoot; /* AST root for program */
+extern int loopdepth;
+extern int cur_param_count;
 
 AstNode *MkNode(int tipos,symbol *sn,AstNode *z0,AstNode *z1,AstNode *z2,AstNode *z3); /* creates an AST node */
 static void indent(int n); /* spaces for display */
@@ -95,6 +99,11 @@ void currentscope(char *name); /* set currentscope to method with name when ente
 void leavescope(void); /* currentscope=-1, not in a method, there cannnot be nested methods */
 void addvariable(char *name, int parameter); /* create symbol and add it to current methods table */
 symbol* findsymbolinmethod(char *name); /* return symbol if in current methods hash table */
+AstNode* mostright(AstNode *p);
+int ast_returns(AstNode *s);
+int count_args(AstNode *s);
+int is_zero(AstNode *s);
+int is_location(AstNode *s);
 
 
 #endif
