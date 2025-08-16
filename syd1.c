@@ -257,7 +257,7 @@ int is_location(AstNode *s){
 
 void error_message(const char *errortype,const char *msg,const char *extra){
    fprintf(stderr,"|%s| in line %d col %d: %s",errortype,currentline,currentcol,msg);
-   if(extra) fprintf(stderr," (%s)",extra);
+   if(extra) fprintf(stderr," (near %s)",extra);
    fprintf(stderr,"\n");
    exit(1);
 }

@@ -3,20 +3,22 @@
 #include "defs.h" 
 
 
-void yyerror(char *s);
+void yyerror(const char *s);
 int yyparse();
 int yylex();
 
 extern int currLine;
 extern int currCol;
+extern char *yytext;
 
 #define DEBUG 1
-#define YYLTYPE_IS_DECLARED 1
 
 static symbol *new_num_symbol(int value);
 
 
 %}
+
+%define parse.error verbose /* for better error messages */
 
 %union /* all types a grammar symbol can carry */
 {
@@ -560,7 +562,7 @@ static symbol *new_num_symbol(int value) {
 }
 
 
-void yyerror(char *s)
+void yyerror(const char *s)
 {
    error_message("Syntax Error",s,NULL);
 }

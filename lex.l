@@ -20,6 +20,7 @@ int currentcol=1;
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
+				currentcol+=yyleng;
                                strcpy(yylval.ystr,yytext);
                                return('*');
 			    }
@@ -27,6 +28,7 @@ int currentcol=1;
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
+				currentcol+=yyleng;
                                strcpy(yylval.ystr,yytext);
                                return('/');
 			    }
@@ -34,6 +36,7 @@ int currentcol=1;
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
+				currentcol+=yyleng;
                                strcpy(yylval.ystr,yytext);
                                return('%');
 			}
@@ -41,6 +44,7 @@ int currentcol=1;
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
+				currentcol+=yyleng;
                                strcpy(yylval.ystr,yytext);
                                return('+');
 			}
@@ -48,6 +52,7 @@ int currentcol=1;
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
+				currentcol+=yyleng;
                                strcpy(yylval.ystr,yytext);
                                return('-');
 			}
@@ -55,6 +60,7 @@ int currentcol=1;
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
+				currentcol+=yyleng;
                                strcpy(yylval.ystr,yytext);
                                return('=');
 			}
@@ -62,6 +68,7 @@ int currentcol=1;
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
+				currentcol+=yyleng;
                                strcpy(yylval.ystr,yytext);
                                return(GT);
 			}
@@ -69,6 +76,7 @@ int currentcol=1;
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
+				currentcol+=yyleng;
                                strcpy(yylval.ystr,yytext);
                                return(GE);
 			}
@@ -76,6 +84,7 @@ int currentcol=1;
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
+				currentcol+=yyleng;
                                strcpy(yylval.ystr,yytext);
                                return(LT);
 			}
@@ -83,6 +92,7 @@ int currentcol=1;
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
+				currentcol+=yyleng;
                                strcpy(yylval.ystr,yytext);
                                return(LE);
 			}
@@ -90,6 +100,7 @@ int currentcol=1;
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
+				currentcol+=yyleng;
                                strcpy(yylval.ystr,yytext);
                                return(EQ);
 			}
@@ -97,6 +108,7 @@ int currentcol=1;
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
+				currentcol+=yyleng;
                                strcpy(yylval.ystr,yytext);
                                return(NE);
 			}
@@ -104,6 +116,7 @@ int currentcol=1;
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
+				currentcol+=yyleng;
                                strcpy(yylval.ystr,yytext);
                                return('(');
 			}
@@ -111,6 +124,7 @@ int currentcol=1;
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
+				currentcol+=yyleng;
                                strcpy(yylval.ystr,yytext);
                                return(')');
 			}
@@ -118,6 +132,7 @@ int currentcol=1;
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
+				currentcol+=yyleng;
                                strcpy(yylval.ystr,yytext);
                                return('{');
 			}
@@ -125,6 +140,7 @@ int currentcol=1;
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
+				currentcol+=yyleng;
                                strcpy(yylval.ystr,yytext);
                                return('}');
 			}
@@ -132,6 +148,7 @@ int currentcol=1;
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
+				currentcol+=yyleng;
                                strcpy(yylval.ystr,yytext);
                                return(',');
 			}
@@ -139,6 +156,7 @@ int currentcol=1;
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
+				currentcol+=yyleng;
                                strcpy(yylval.ystr,yytext);
                                return(';');
 			}
@@ -146,6 +164,7 @@ int currentcol=1;
 #if DEBUG
 				printf("%s\n",yytext);
 #endif
+				currentcol+=yyleng;
 				yylval.yint=1;
 				return(TRUE);
 			    }
@@ -153,6 +172,7 @@ int currentcol=1;
 #if DEBUG
 				printf("%s\n",yytext);
 #endif
+				currentcol+=yyleng;
 				yylval.yint=0;
 				return(FALSE);
 			    }
@@ -160,6 +180,7 @@ int currentcol=1;
 #if DEBUG
                                printf("id or keyword-%s\n",yytext);
 #endif
+				currentcol+=yyleng;
                                i=id_or_keyword(yytext);
                                if(i==ID) 
                                   strcpy(yylval.ystr,yytext);
@@ -171,6 +192,7 @@ int currentcol=1;
 #if DEBUG
                                printf("number-%s\n",yytext);
 #endif
+				currentcol+=yyleng;
 				if(yytext[0]=='0' && strlen(yytext)>1){
 					printf("%s number cannot start with zero",yytext);
 					exit(1);
@@ -183,15 +205,21 @@ int currentcol=1;
 #if DEBUG
 								printf("%s\n",yytext); 
 #endif
-							}
+				currentcol+=yyleng;
+			}
+\n 			{
+				currentline++;
+				currentcol=1;
+			}
 "//".* 		  	    {
 #if DEBUG
 				printf("comment\n");	
 #endif
+				currentcol+=yyleng;
 			    }
 .                           {
 				currentcol++;
-                               printf("Illegal character %s\n",yytext);
+                               fprintf(stderr,"Lexical Error in line %d col %d: illegal 				char - %s\n",currentline,currentcol,yytext);
                             }  
     
 

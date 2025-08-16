@@ -282,14 +282,14 @@ static void yy_fatal_error YY_PROTO(( yyconst char msg[] ));
 	*yy_cp = '\0'; \
 	yy_c_buf_p = yy_cp;
 
-#define YY_NUM_RULES 26
-#define YY_END_OF_BUFFER 27
+#define YY_NUM_RULES 27
+#define YY_END_OF_BUFFER 28
 static yyconst short int yy_accept[43] =
     {   0,
-        0,    0,   27,   25,   23,   26,   25,    3,   13,   14,
+        0,    0,   28,   26,   23,   24,   26,    3,   13,   14,
         1,    4,   17,    5,    2,   22,   18,    9,    6,    7,
-       21,   21,   21,   15,   16,   23,   12,   24,   22,   10,
-       11,    8,   21,   21,   21,   24,   21,   21,   21,   19,
+       21,   21,   21,   15,   16,   23,   12,   25,   22,   10,
+       11,    8,   21,   21,   21,   25,   21,   21,   21,   19,
        20,    0
     } ;
 
@@ -645,226 +645,247 @@ YY_RULE_SETUP
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
+				currentcol+=yyleng;
                                strcpy(yylval.ystr,yytext);
                                return('*');
 			    }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 26 "lex.l"
+#line 27 "lex.l"
 {
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
+				currentcol+=yyleng;
                                strcpy(yylval.ystr,yytext);
                                return('/');
 			    }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 33 "lex.l"
+#line 35 "lex.l"
 {
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
+				currentcol+=yyleng;
                                strcpy(yylval.ystr,yytext);
                                return('%');
 			}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 40 "lex.l"
+#line 43 "lex.l"
 {
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
+				currentcol+=yyleng;
                                strcpy(yylval.ystr,yytext);
                                return('+');
 			}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 47 "lex.l"
+#line 51 "lex.l"
 {
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
+				currentcol+=yyleng;
                                strcpy(yylval.ystr,yytext);
                                return('-');
 			}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 54 "lex.l"
+#line 59 "lex.l"
 {
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
+				currentcol+=yyleng;
                                strcpy(yylval.ystr,yytext);
                                return('=');
 			}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 61 "lex.l"
+#line 67 "lex.l"
 {
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
+				currentcol+=yyleng;
                                strcpy(yylval.ystr,yytext);
                                return(GT);
 			}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 68 "lex.l"
+#line 75 "lex.l"
 {
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
+				currentcol+=yyleng;
                                strcpy(yylval.ystr,yytext);
                                return(GE);
 			}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 75 "lex.l"
+#line 83 "lex.l"
 {
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
+				currentcol+=yyleng;
                                strcpy(yylval.ystr,yytext);
                                return(LT);
 			}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 82 "lex.l"
+#line 91 "lex.l"
 {
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
+				currentcol+=yyleng;
                                strcpy(yylval.ystr,yytext);
                                return(LE);
 			}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 89 "lex.l"
+#line 99 "lex.l"
 {
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
+				currentcol+=yyleng;
                                strcpy(yylval.ystr,yytext);
                                return(EQ);
 			}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 96 "lex.l"
+#line 107 "lex.l"
 {
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
+				currentcol+=yyleng;
                                strcpy(yylval.ystr,yytext);
                                return(NE);
 			}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 103 "lex.l"
+#line 115 "lex.l"
 {
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
+				currentcol+=yyleng;
                                strcpy(yylval.ystr,yytext);
                                return('(');
 			}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 110 "lex.l"
+#line 123 "lex.l"
 {
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
+				currentcol+=yyleng;
                                strcpy(yylval.ystr,yytext);
                                return(')');
 			}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 117 "lex.l"
+#line 131 "lex.l"
 {
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
+				currentcol+=yyleng;
                                strcpy(yylval.ystr,yytext);
                                return('{');
 			}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 124 "lex.l"
+#line 139 "lex.l"
 {
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
+				currentcol+=yyleng;
                                strcpy(yylval.ystr,yytext);
                                return('}');
 			}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 131 "lex.l"
+#line 147 "lex.l"
 {
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
+				currentcol+=yyleng;
                                strcpy(yylval.ystr,yytext);
                                return(',');
 			}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 138 "lex.l"
+#line 155 "lex.l"
 {
 #if DEBUG
                                printf("%s\n",yytext);
 #endif
+				currentcol+=yyleng;
                                strcpy(yylval.ystr,yytext);
                                return(';');
 			}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 145 "lex.l"
+#line 163 "lex.l"
 {
 #if DEBUG
 				printf("%s\n",yytext);
 #endif
+				currentcol+=yyleng;
 				yylval.yint=1;
 				return(TRUE);
 			    }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 152 "lex.l"
+#line 171 "lex.l"
 {
 #if DEBUG
 				printf("%s\n",yytext);
 #endif
+				currentcol+=yyleng;
 				yylval.yint=0;
 				return(FALSE);
 			    }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 159 "lex.l"
+#line 179 "lex.l"
 {  int i;
 #if DEBUG
                                printf("id or keyword-%s\n",yytext);
 #endif
+				currentcol+=yyleng;
                                i=id_or_keyword(yytext);
                                if(i==ID) 
                                   strcpy(yylval.ystr,yytext);
@@ -875,11 +896,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 170 "lex.l"
+#line 191 "lex.l"
 {
 #if DEBUG
                                printf("number-%s\n",yytext);
 #endif
+				currentcol+=yyleng;
 				if(yytext[0]=='0' && strlen(yytext)>1){
 					printf("%s number cannot start with zero",yytext);
 					exit(1);
@@ -890,36 +912,46 @@ YY_RULE_SETUP
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 182 "lex.l"
+#line 204 "lex.l"
 {
 #if DEBUG
 								printf("%s\n",yytext); 
 #endif
-							}
+				currentcol+=yyleng;
+			}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 187 "lex.l"
+#line 210 "lex.l"
+{
+				currentline++;
+				currentcol=1;
+			}
+	YY_BREAK
+case 25:
+YY_RULE_SETUP
+#line 214 "lex.l"
 {
 #if DEBUG
 				printf("comment\n");	
 #endif
+				currentcol+=yyleng;
 			    }
-	YY_BREAK
-case 25:
-YY_RULE_SETUP
-#line 192 "lex.l"
-{
-				currentcol++;
-                               printf("Illegal character %s\n",yytext);
-                            }  
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 198 "lex.l"
+#line 220 "lex.l"
+{
+				currentcol++;
+                               fprintf(stderr,"Lexical Error in line %d col %d: illegal 				char - %s\n",currentline,currentcol,yytext);
+                            }  
+	YY_BREAK
+case 27:
+YY_RULE_SETUP
+#line 226 "lex.l"
 ECHO;
 	YY_BREAK
-#line 923 "lex.yy.c"
+#line 955 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1805,7 +1837,7 @@ int main()
 	return 0;
 	}
 #endif
-#line 198 "lex.l"
+#line 226 "lex.l"
 
 
 static char *kid[N]={"return","break","true","false","else","if","int","while"};
