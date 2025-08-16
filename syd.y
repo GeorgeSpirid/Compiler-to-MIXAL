@@ -100,7 +100,7 @@ PARAMS            : FORMALS TYPE ID
                         printf("Rule #6\n");
 #endif
 			if(findsymb(&mt[currentmethod].ht,$3)){
-				error_message("Semantic Erro","duplicate parameter in method",$3);
+				error_message("Semantic Error","duplicate parameter in 					method",$3);
 			}
 			addvariable($3,TRUE_VAL);
 			cur_param_count++;
@@ -230,8 +230,7 @@ STMTS            : STMTS STMT
                         printf("Rule #21\n");
 #endif
 			if(ast_returns($1)){
-				printf("cannot reach code after return in method %					s",mt[currentmethod].name);
-				exit(1);
+				error_message("Semantic Error","cannot reach code after 				return",mt[currentmethod].name);
 			}
 			$$=MkNode(astStmtSeq,NULL,$1,$2,NULL,NULL);
                      }
@@ -248,8 +247,7 @@ STMT            : ASSIGN ';'
                         printf("Rule #23\n");
 #endif
 			if(!$1 || !is_location($1->pAstNode[0])){
-				printf("assignment target is not a variable\n");
-				exit(1);
+				error_message("Semantic Error","assignment target is not a 				variable",NULL);
 			}
 			$$=MkNode(astExprStmt,NULL,$1,NULL,NULL,NULL);
                      }
@@ -338,8 +336,7 @@ METHOD            : ID
                         printf("Rule #33\n");
 #endif
 			if(methodidx($1)==-1){
-				printf("method %s isn't declared\n",$1);
-				exit(1);
+				error_message("Semantic Error","undeclared 						method",$1);
 			}
 			symbol *temps=new_symbol($1);
 			$$=MkNode(astId,temps,NULL,NULL,NULL,NULL);
@@ -503,13 +500,11 @@ FACTOR            : '(' EXPR ')'
                         printf("Rule #55\n");
 #endif
 			if(!$1 || !$1->SymbolNode){
-				printf("internal: method symbol missing in call\n");
-                           	exit(1);
+				error_message("Semantic Error","method symbol missing in 				call",(char*)$1->SymbolNode->name);
 			}
 			int mi=methodidx((char*)$1->SymbolNode->name);
 			if(mi==-1){
-				printf("method %s not declared\n",(char*)$1->SymbolNode->name);
-                           	exit(1);
+				error_message("Semantic Error","undeclared 						method",(char*)$1->SymbolNode->name);
 			}
 			int ca=count_args($3);
 			if(ca != mt[mi].param_count){
