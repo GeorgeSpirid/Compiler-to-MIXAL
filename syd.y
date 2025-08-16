@@ -7,7 +7,12 @@ void yyerror(char *s);
 int yyparse();
 int yylex();
 
+extern int currLine;
+extern int currCol;
+
 #define DEBUG 1
+#define YYLTYPE_IS_DECLARED 1
+
 static symbol *new_num_symbol(int value);
 
 
@@ -80,8 +85,7 @@ METH            : TYPE ID
                         printf("Rule #5\n");
 #endif
 			if(!mt[currentmethod].has_return){
-				printf("method %s doesn't have return",mt[currentmethod].name);
-				exit(1);
+				error_message("Semantic Error","method doesn't have return 								value",mt[currentmethod].name);
 			}
 			symbol *temps=new_symbol($2);
 			$$=MkNode(astMethod,temps,$8,NULL,NULL,NULL);
@@ -94,8 +98,7 @@ PARAMS            : FORMALS TYPE ID
                         printf("Rule #6\n");
 #endif
 			if(findsymb(&mt[currentmethod].ht,$3)){
-				printf("duplicate parameter %s in method %s\n",$3,mt[currentmethod].name);
-				exit(1);
+				error_message("Semantic Erro","duplicate parameter in method",$3);
 			}
 			addvariable($3,TRUE_VAL);
 			cur_param_count++;
@@ -254,8 +257,7 @@ STMT            : ASSIGN ';'
                         printf("Rule #24\n");
 #endif
 			if(currentmethod==-1){
-				printf("return outside of method\n");
-				exit(1);
+				error_message("Semantic Error","return outside of a method",NULL);
 			}			
 			mt[currentmethod].has_return=1;
 			$$=MkNode(astReturnStmt,NULL,$2,NULL,NULL,NULL);
@@ -288,8 +290,7 @@ STMT            : ASSIGN ';'
                         printf("Rule #27\n");
 #endif
 			if(loopdepth==0){
-				printf("break outside of a loop\n");
-				exit(1);
+				error_message("Semantic Error","break outside of loop",NULL);
 			}
 			$$=MkNode(astBreakStmt,NULL,NULL,NULL,NULL,NULL);
                      }
@@ -431,8 +432,7 @@ TERM            : TERM MULOP FACTOR
                         printf("Rule #46\n");
 #endif
 			if($2->NodeType==astDiv && is_zero($3)){
-				printf("division by zero\n");
-				exit(1);
+				error_message("Semantic Error","division by zero",NULL);
 			}
 			$$=MkNode($2->NodeType,NULL,$1,$3,NULL,NULL);
                      }
@@ -562,7 +562,7 @@ static symbol *new_num_symbol(int value) {
 
 void yyerror(char *s)
 {
-   fputs(s,stderr); putc('\n',stderr);
+   error_message("Syntax Error",s,NULL);
 }
 
 int main(void)

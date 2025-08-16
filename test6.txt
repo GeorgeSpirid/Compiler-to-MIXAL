@@ -1,9 +1,4 @@
-int main() {
-    int x;
-    x = 5;
-}
-
-int main() {
-    int y;
-    y = 10;
+int main(){
+int x;
+x=y;
 }

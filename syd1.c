@@ -8,6 +8,9 @@ AstNode *TreeRoot; // poinrter to the root of the AST
 int loopdepth=0; // for break checking
 int cur_param_count=0;
 
+extern int currentline;
+extern int currentcol;
+
 void Init_Hash_Table(HASH_TAB *ht)
 {  
    ht->numbsymbols=0;
@@ -250,4 +253,11 @@ int is_zero(AstNode *s){
 
 int is_location(AstNode *s){
    return s && s->NodeType==astId;
+}
+
+void error_message(const char *errortype,const char *msg,const char *extra){
+   fprintf(stderr,"|%s| in line %d col %d: %s",errortype,currentline,currentcol,msg);
+   if(extra) fprintf(stderr," (%s)",extra);
+   fprintf(stderr,"\n");
+   exit(1);
 }

@@ -84,6 +84,8 @@ extern MethodTab mt[MAX_METHOD_NUMBER];
 extern AstNode *TreeRoot; /* AST root for program */
 extern int loopdepth;
 extern int cur_param_count;
+extern int currentline;
+extern int currentcol;
 
 AstNode *MkNode(int tipos,symbol *sn,AstNode *z0,AstNode *z1,AstNode *z2,AstNode *z3); /* creates an AST node */
 static void indent(int n); /* spaces for display */
@@ -104,7 +106,7 @@ int ast_returns(AstNode *s);
 int count_args(AstNode *s);
 int is_zero(AstNode *s);
 int is_location(AstNode *s);
-
+void error_message(const char *errortype,const char *msg,const char *extra);
 
 #endif
 

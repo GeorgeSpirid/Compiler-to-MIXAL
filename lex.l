@@ -8,6 +8,10 @@
 #define DEBUG 0
 
 int id_or_keyword(char *s);
+
+int currentline=1;
+int currentcol=1;
+
 %}
 
 %%
@@ -175,7 +179,7 @@ int id_or_keyword(char *s);
                                return(NUM);
                             }
 
-[ \f\n\r\t]+                {
+[ \f\r\t]+                {
 #if DEBUG
 								printf("%s\n",yytext); 
 #endif
@@ -186,6 +190,7 @@ int id_or_keyword(char *s);
 #endif
 			    }
 .                           {
+				currentcol++;
                                printf("Illegal character %s\n",yytext);
                             }  
     
