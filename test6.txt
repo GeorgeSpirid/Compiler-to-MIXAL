@@ -8,8 +8,14 @@ b = (a+10);
 a = (a-1);
 break;
 }
-break;
 return b;
+}
+int method2(int c, int d)
+{
+int e;
+e = method1(c);
+e = e + d;
+return e;
 }
 int main()
 {

@@ -10,6 +10,7 @@ int cur_param_count=0;
 
 extern int currentline;
 extern int currentcol;
+extern int error_count;
 
 void Init_Hash_Table(HASH_TAB *ht)
 {  
@@ -79,12 +80,10 @@ int methodidx(char *name){
 
 void addmethod(char *name){
    if(methodidx(name)!=-1){
-      printf("cannot add %s because it has already been defined",name);
-      exit(1);
+      error_message("Semantic Error","cannot add method",name);
    }
    if (numbmethods>=MAX_METHOD_NUMBER){
-      printf("cannot add %s, too many methods",name);
-      exit(1);
+      error_message("Semantic Error","cannot add method, too many methods",name);
    }
    int len=strlen(name);
    if(len>NAME_MAX){
@@ -102,8 +101,7 @@ void addmethod(char *name){
 void currentscope(char *name){
    int i=methodidx(name);
    if (i==-1){
-      printf("%s method isn't registered\n",name);
-      exit(1);
+      error_message("Semantic Error","method isn't registered",name);
    }
    currentmethod=i;
 }
@@ -114,13 +112,11 @@ void leavescope(void){
 
 void addvariable(char *name, int parameter){
    if(currentmethod==-1){
-      printf("delaring variable outside of a method\n");
-      exit(1);
+      error_message("Semantic Error","declaring variable outside of a method",name);
    }
    HASH_TAB *tempht = &mt[currentmethod].ht;
    if(findsymb(tempht,name)){
-      printf("redelaring variable %s in method %s\n",name,mt[currentmethod].name);
-      exit(1);
+      error_message("Semantic Error","redeclaring variable",name);
    }
    symbol *temps = new_symbol(name);
    temps->parameter=parameter?1:0;
@@ -129,13 +125,11 @@ void addvariable(char *name, int parameter){
 
 symbol* findsymbolinmethod(char *name){
    if(currentmethod==-1){
-      printf("looking for a variable outside a method\n");
-      exit(1);
+      error_message("Semantic Error","looking for a variable outside a method",name);
    }
    symbol* temps = findsymb(&mt[currentmethod].ht, name);
    if(!temps){
-      printf("variable %s not found in method %s\n",name,mt[currentmethod].name);
-      exit(1);
+      error_message("Semantic Error","variable not found in method",name);
    }
    return temps;
 }

@@ -86,6 +86,7 @@ extern int loopdepth;
 extern int cur_param_count;
 extern int currentline;
 extern int currentcol;
+extern int error_count;
 
 AstNode *MkNode(int tipos,symbol *sn,AstNode *z0,AstNode *z1,AstNode *z2,AstNode *z3); /* creates an AST node */
 static void indent(int n); /* spaces for display */

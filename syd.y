@@ -2,6 +2,7 @@
 
 #include "defs.h" 
 
+int error_count=0;
 
 void yyerror(const char *s);
 int yyparse();
@@ -508,8 +509,7 @@ FACTOR            : '(' EXPR ')'
 			}
 			int ca=count_args($3);
 			if(ca != mt[mi].param_count){
-				printf("method %s needs %d arguments but got %d										\n",mt[mi].name,mt[mi].param_count,ca);
-                           	exit(1);
+				error_message("Syntax Error","method needs different type 				of arguments",mt[mi].name);
 			}
 			$$=MkNode(astCall,NULL,$1,$3,NULL,NULL);
                      };
@@ -567,12 +567,10 @@ int main(void)
    if(yyparse()==0){
 	int mi=methodidx("main");
 	if(mi==-1){
-		printf("need to have a main method\n");
-		exit(1);
+		error_message("Syntax Error","need to have main method",NULL);
 	}
 	if(mt[mi].param_count != 0){
-		printf("main cannot have parameters\n");
-		exit(1);
+		error_message("Syntax Error","main cannot have parameters",NULL);
 	}
 	fflush(stdout);
 	printAST(TreeRoot, -3);
