@@ -64,7 +64,12 @@ METH_LIST            : METH METH_LIST
                         printf("Rule #4\n");
 #endif
 			$$=MkNode(astMethList,NULL,$1,NULL,NULL,NULL);
-                     };
+                     }
+		| error '}'
+		{
+			error_message("Syntax Error","skipping to end of method",NULL);
+			yyerrok;
+		};
 METH            : TYPE ID
 {
 #if DEBUG
@@ -308,7 +313,12 @@ STMT            : ASSIGN ';'
                         printf("Rule #29\n");
 #endif
 			$$=MkNode(astNullStmt,NULL,NULL,NULL,NULL,NULL);
-                     };
+                     }
+		| error ';'
+		{
+			error_message("Syntax Error","skipping invalid statement",NULL);
+			yyerrok;
+		};
 BLOCK            : '{' STMTS '}'
                      { 
 #if DEBUG
@@ -564,7 +574,7 @@ void yyerror(const char *s)
 
 int main(void)
 {
-   if(yyparse()==0){
+   if(yyparse()==0 && error_count==0){
 	int mi=methodidx("main");
 	if(mi==-1){
 		error_message("Syntax Error","need to have main method",NULL);
@@ -574,5 +584,7 @@ int main(void)
 	}
 	fflush(stdout);
 	printAST(TreeRoot, -3);
+   } else {
+	fprintf(stderr,"Parsing finished with %d errors\n",error_count);
    }
 }
