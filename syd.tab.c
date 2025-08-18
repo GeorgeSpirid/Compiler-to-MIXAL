@@ -67,12 +67,12 @@
 
 
 /* First part of user prologue.  */
-#line 2 "syd.y"
+#line 1 "syd.y"
 
 
 #include "defs.h" 
 
-extern int error_count;
+int error_count=0;
 
 void yyerror(const char *s);
 int yyparse();
@@ -137,17 +137,10 @@ enum yysymbol_kind_t
   YYSYMBOL_NUM = 18,                       /* NUM  */
   YYSYMBOL_19_ = 19,                       /* '('  */
   YYSYMBOL_20_ = 20,                       /* ')'  */
-<<<<<<< HEAD
-  YYSYMBOL_21_ = 21,                       /* ';'  */
-  YYSYMBOL_22_ = 22,                       /* ','  */
-  YYSYMBOL_23_ = 23,                       /* '{'  */
-  YYSYMBOL_24_ = 24,                       /* '}'  */
-=======
   YYSYMBOL_21_ = 21,                       /* ','  */
   YYSYMBOL_22_ = 22,                       /* '{'  */
   YYSYMBOL_23_ = 23,                       /* '}'  */
   YYSYMBOL_24_ = 24,                       /* ';'  */
->>>>>>> parent of 62ac46c (some error recovery not perfect)
   YYSYMBOL_25_ = 25,                       /* '='  */
   YYSYMBOL_26_ = 26,                       /* '+'  */
   YYSYMBOL_27_ = 27,                       /* '-'  */
@@ -510,26 +503,16 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  6
 /* YYLAST -- Last index in YYTABLE.  */
-<<<<<<< HEAD
-#define YYLAST   122
-=======
 #define YYLAST   100
->>>>>>> parent of 62ac46c (some error recovery not perfect)
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  30
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  30
 /* YYNRULES -- Number of rules.  */
-<<<<<<< HEAD
-#define YYNRULES  65
-/* YYNSTATES -- Number of states.  */
-#define YYNSTATES  109
-=======
 #define YYNRULES  62
 /* YYNSTATES -- Number of states.  */
 #define YYNSTATES  103
->>>>>>> parent of 62ac46c (some error recovery not perfect)
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   273
@@ -550,24 +533,15 @@ static const yytype_int8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-<<<<<<< HEAD
-      19,    20,    28,    26,    22,    27,     2,    29,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,    21,
-=======
       19,    20,    28,    26,    21,    27,     2,    29,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,    24,
->>>>>>> parent of 62ac46c (some error recovery not perfect)
        2,    25,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-<<<<<<< HEAD
-       2,     2,     2,    23,     2,    24,     2,     2,     2,     2,
-=======
        2,     2,     2,    22,     2,    23,     2,     2,     2,     2,
->>>>>>> parent of 62ac46c (some error recovery not perfect)
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -589,15 +563,6 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-<<<<<<< HEAD
-       0,    46,    46,    55,    62,    70,    80,    69,    99,   114,
-     120,   125,   137,   143,   149,   156,   165,   171,   179,   185,
-     195,   206,   216,   228,   234,   245,   251,   256,   266,   277,
-     285,   284,   299,   309,   316,   323,   330,   337,   345,   356,
-     363,   370,   377,   384,   391,   398,   405,   412,   419,   426,
-     433,   440,   450,   457,   464,   471,   478,   485,   493,   501,
-     509,   527,   539,   545,   553,   559
-=======
        0,    45,    45,    54,    61,    69,    79,    68,    98,   113,
      119,   131,   137,   143,   150,   159,   165,   173,   179,   189,
      200,   210,   222,   228,   239,   245,   255,   266,   274,   273,
@@ -605,7 +570,6 @@ static const yytype_int16 yyrline[] =
      366,   373,   380,   387,   394,   401,   408,   415,   422,   429,
      439,   446,   453,   460,   467,   474,   482,   490,   498,   516,
      528,   534,   542
->>>>>>> parent of 62ac46c (some error recovery not perfect)
 };
 #endif
 
@@ -623,11 +587,7 @@ static const char *const yytname[] =
 {
   "\"end of file\"", "error", "\"invalid token\"", "RETURN", "BREAK",
   "ELSE", "IF", "INT", "WHILE", "TRUE", "FALSE", "GT", "LT", "GE", "LE",
-<<<<<<< HEAD
-  "EQ", "NE", "ID", "NUM", "'('", "')'", "';'", "','", "'{'", "'}'", "'='",
-=======
   "EQ", "NE", "ID", "NUM", "'('", "')'", "','", "'{'", "'}'", "';'", "'='",
->>>>>>> parent of 62ac46c (some error recovery not perfect)
   "'+'", "'-'", "'*'", "'/'", "$accept", "PROGRAM", "METH_LIST", "METH",
   "$@1", "$@2", "PARAMS", "FORMALS", "TYPE", "BODY", "DECLS", "DECL_LIST",
   "DECL", "VARS", "STMTS", "STMT", "$@3", "BLOCK", "ASSIGN", "LOCATION",
@@ -642,20 +602,12 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-<<<<<<< HEAD
-#define YYPACT_NINF (-81)
-=======
 #define YYPACT_NINF (-61)
->>>>>>> parent of 62ac46c (some error recovery not perfect)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
 
-<<<<<<< HEAD
-#define YYTABLE_NINF (-65)
-=======
 #define YYTABLE_NINF (-61)
->>>>>>> parent of 62ac46c (some error recovery not perfect)
 
 #define yytable_value_is_error(Yyn) \
   0
@@ -664,19 +616,6 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-<<<<<<< HEAD
-      16,   -81,    28,   -81,    16,    23,   -81,   -81,   -81,    14,
-      19,    20,    26,    16,   -81,   -81,    30,    29,    32,    49,
-     -81,   -81,    13,    16,    37,    21,    42,    53,   -81,    99,
-      41,    44,    46,   -81,   -81,    13,   -81,   -81,   -81,    45,
-      56,   -18,   -81,   -81,    50,   -81,    99,   -81,    55,    57,
-      88,   -23,   -81,   -81,    99,    99,    47,   -81,    99,    65,
-      99,    62,    64,    78,   -81,   -81,   -81,   -81,   -81,   -81,
-     -81,   -81,   -81,    99,    99,   -81,   -81,    99,    71,    73,
-     -81,   -81,    10,    63,   -81,   -81,    74,    85,    99,   -15,
-     -23,   -81,    69,   -81,    99,   -81,    68,   -81,   -81,    84,
-     102,    69,    63,   -81,   -81,    69,   -81,   -81,   -81
-=======
       -3,   -61,     6,   -61,    -3,     3,   -61,   -61,   -61,    -5,
       19,     8,    -3,   -61,    14,    12,    20,    40,   -61,   -61,
      -61,    -3,    -1,    32,    54,    57,    26,    44,    52,   -61,
@@ -688,7 +627,6 @@ static const yytype_int8 yypact[] =
      -61,   -61,    71,    57,    13,   -17,   -61,    29,   -61,    57,
      -61,    72,   -61,    73,    87,    29,    64,   -61,   -61,    29,
      -61,   -61,   -61
->>>>>>> parent of 62ac46c (some error recovery not perfect)
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -696,19 +634,6 @@ static const yytype_int8 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-<<<<<<< HEAD
-       0,    13,     0,     2,     4,     0,     1,     3,     5,     0,
-       0,     0,     0,     0,    10,     6,     0,     0,     8,    16,
-       7,    11,     0,     0,     0,     0,     0,    15,    26,     0,
-       0,     0,     0,    37,    34,     0,    14,    24,    33,     0,
-       0,    23,    58,    59,    37,    57,     0,    56,     0,     0,
-      40,    48,    52,    32,     0,     0,     0,    27,     0,     0,
-       0,     0,     0,     0,    28,    43,    42,    44,    41,    45,
-      46,    49,    50,     0,     0,    53,    54,     0,     0,     0,
-      35,    36,    23,    23,    19,    55,     0,     0,     0,    39,
-      47,    51,     0,    30,     0,    21,     0,    65,    60,    61,
-       0,     0,    23,    20,    63,     0,    31,    22,    29
-=======
        0,    12,     0,     2,     4,     0,     1,     3,     5,     0,
        9,     0,     0,     6,     0,     0,     8,    15,     7,    10,
       24,     0,     0,     0,    14,     0,     0,     0,     0,    35,
@@ -720,35 +645,22 @@ static const yytype_int8 yydefact[] =
       18,    53,     0,     0,    37,    45,    49,     0,    28,     0,
       20,     0,    58,    59,     0,     0,    22,    19,    61,     0,
       29,    21,    27
->>>>>>> parent of 62ac46c (some error recovery not perfect)
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-<<<<<<< HEAD
-     -81,   -81,   106,   -81,   -81,   -81,   -81,   -81,    -5,   -81,
-     -81,   -81,   -81,   -80,    76,   -44,   -81,   -81,   -81,   -25,
-     -81,   -45,   -81,    39,   -81,    48,   -81,    36,   -81,   -81
-=======
      -61,   -61,    89,   -61,   -61,   -61,   -61,   -61,    -4,   -61,
      -61,   -61,   -61,   -60,    67,   -35,   -61,   -61,   -61,   -22,
      -61,   -41,   -61,    30,   -61,    25,   -61,    27,   -61,   -61
->>>>>>> parent of 62ac46c (some error recovery not perfect)
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-<<<<<<< HEAD
-       0,     2,     3,     4,     9,    17,    12,    13,     5,    20,
-      22,    23,    27,    61,    25,    37,   101,    38,    39,    47,
-      48,    49,    73,    50,    74,    51,    77,    52,    87,    88
-=======
        0,     2,     3,     4,     9,    15,    11,    12,     5,    18,
       20,    21,    24,    57,    22,    33,    95,    34,    35,    43,
       44,    45,    69,    46,    70,    47,    73,    48,    82,    83
->>>>>>> parent of 62ac46c (some error recovery not perfect)
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -756,21 +668,6 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-<<<<<<< HEAD
-      40,    62,    95,    96,    59,    75,    76,    60,    16,    78,
-      79,    71,    72,    81,    24,    83,   -25,   -25,    26,   -25,
-      11,   -25,   107,     1,    29,    30,   -12,    31,     6,    32,
-     -25,    40,    59,    10,   -25,    94,   -25,   -25,    33,    -9,
-       8,    14,    34,    99,    35,    36,    15,    18,   100,   102,
-      29,    30,    19,    31,    21,    32,   -18,   106,    28,    41,
-     -17,   108,    53,    54,    33,    55,    57,    40,    34,   -38,
-      35,    80,    29,    30,    63,    31,    40,    32,    64,    86,
-      40,    58,    82,    84,    85,    59,    33,   -64,   -64,   103,
-      34,    92,    35,    93,    97,   -64,   -64,   -64,   -62,    65,
-      66,    67,    68,    69,    70,    98,   104,   105,    42,    43,
-       7,    56,    89,    91,    71,    72,    44,    45,    46,     0,
-       0,     0,    90
-=======
       36,    58,    25,    26,     1,    27,     6,    28,    14,    74,
       75,    71,    72,    77,    10,    79,    29,    23,    90,    91,
        8,    30,    31,    32,    25,    26,   -11,    27,    13,    28,
@@ -782,26 +679,10 @@ static const yytype_int8 yytable[] =
      -36,    59,    78,    89,    60,    55,    81,    80,   -60,    87,
       88,    92,    99,     7,    98,    85,    97,    52,     0,    84,
       86
->>>>>>> parent of 62ac46c (some error recovery not perfect)
 };
 
 static const yytype_int8 yycheck[] =
 {
-<<<<<<< HEAD
-      25,    46,    82,    83,    22,    28,    29,    25,    13,    54,
-      55,    26,    27,    58,     1,    60,     3,     4,    23,     6,
-       1,     8,   102,     7,     3,     4,     7,     6,     0,     8,
-      17,    56,    22,    19,    21,    25,    23,    24,    17,    20,
-      17,    21,    21,    88,    23,    24,    20,    17,    92,    94,
-       3,     4,    23,     6,    22,     8,     7,   101,    21,    17,
-       7,   105,    21,    19,    17,    19,    21,    92,    21,    19,
-      23,    24,     3,     4,    19,     6,   101,     8,    21,     1,
-     105,    25,    17,    21,    20,    22,    17,     9,    10,    21,
-      21,    20,    23,    20,    20,    17,    18,    19,    20,    11,
-      12,    13,    14,    15,    16,    20,    22,     5,     9,    10,
-       4,    35,    73,    77,    26,    27,    17,    18,    19,    -1,
-      -1,    -1,    74
-=======
       22,    42,     3,     4,     7,     6,     0,     8,    12,    50,
       51,    28,    29,    54,    19,    56,    17,    21,    78,    79,
       17,    22,    23,    24,     3,     4,     7,     6,    20,     8,
@@ -813,7 +694,6 @@ static const yytype_int8 yycheck[] =
       19,    19,    17,    25,    24,    21,    20,    24,    20,    20,
       20,    20,     5,     4,    21,    70,    24,    30,    -1,    69,
       73
->>>>>>> parent of 62ac46c (some error recovery not perfect)
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
@@ -821,18 +701,6 @@ static const yytype_int8 yycheck[] =
 static const yytype_int8 yystos[] =
 {
        0,     7,    31,    32,    33,    38,     0,    32,    17,    34,
-<<<<<<< HEAD
-      19,     1,    36,    37,    21,    20,    38,    35,    17,    23,
-      39,    22,    40,    41,     1,    44,    38,    42,    21,     3,
-       4,     6,     8,    17,    21,    23,    24,    45,    47,    48,
-      49,    17,     9,    10,    17,    18,    19,    49,    50,    51,
-      53,    55,    57,    21,    19,    19,    44,    21,    25,    22,
-      25,    43,    51,    19,    21,    11,    12,    13,    14,    15,
-      16,    26,    27,    52,    54,    28,    29,    56,    51,    51,
-      24,    51,    17,    51,    21,    20,     1,    58,    59,    53,
-      55,    57,    20,    20,    25,    43,    43,    20,    20,    51,
-      45,    46,    51,    21,    22,     5,    45,    43,    45
-=======
       19,    36,    37,    20,    38,    35,    17,    22,    39,    21,
       40,    41,    44,    38,    42,     3,     4,     6,     8,    17,
       22,    23,    24,    45,    47,    48,    49,    17,     9,    10,
@@ -843,49 +711,30 @@ static const yytype_int8 yystos[] =
       24,    20,    58,    59,    53,    55,    57,    20,    20,    25,
       43,    43,    20,    51,    45,    46,    51,    24,    21,     5,
       45,    43,    45
->>>>>>> parent of 62ac46c (some error recovery not perfect)
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
        0,    30,    31,    32,    32,    34,    35,    33,    36,    36,
-<<<<<<< HEAD
-      36,    37,    37,    38,    39,    40,    40,    41,    41,    42,
-      42,    43,    43,    43,    44,    44,    44,    45,    45,    45,
-      46,    45,    45,    45,    45,    47,    48,    49,    50,    51,
-      51,    52,    52,    52,    52,    52,    52,    53,    53,    54,
-      54,    55,    55,    56,    56,    57,    57,    57,    57,    57,
-      57,    58,    58,    59,    59,    59
-=======
       37,    37,    38,    39,    40,    40,    41,    41,    42,    42,
       43,    43,    43,    44,    44,    45,    45,    45,    46,    45,
       45,    45,    45,    47,    48,    49,    50,    51,    51,    52,
       52,    52,    52,    52,    52,    53,    53,    54,    54,    55,
       55,    56,    56,    57,    57,    57,    57,    57,    57,    58,
       58,    59,    59
->>>>>>> parent of 62ac46c (some error recovery not perfect)
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
        0,     2,     1,     2,     1,     0,     0,     8,     3,     0,
-<<<<<<< HEAD
-       2,     4,     0,     1,     4,     2,     0,     2,     0,     4,
-       6,     3,     5,     0,     2,     0,     2,     2,     3,     7,
-       0,     6,     2,     1,     1,     3,     3,     1,     1,     3,
-       1,     1,     1,     1,     1,     1,     1,     3,     1,     1,
-       1,     3,     1,     1,     1,     3,     1,     1,     1,     1,
-       4,     2,     0,     3,     0,     2
-=======
        4,     0,     1,     4,     2,     0,     2,     0,     4,     6,
        3,     5,     0,     2,     0,     2,     3,     7,     0,     6,
        2,     1,     1,     3,     3,     1,     1,     3,     1,     1,
        1,     1,     1,     1,     1,     3,     1,     1,     1,     3,
        1,     1,     1,     3,     1,     1,     1,     1,     4,     2,
        0,     3,     0
->>>>>>> parent of 62ac46c (some error recovery not perfect)
 };
 
 
@@ -1619,7 +1468,7 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* PROGRAM: METH_LIST  */
-#line 47 "syd.y"
+#line 46 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #1\n");
@@ -1627,37 +1476,33 @@ yyreduce:
 			TreeRoot=MkNode(astProgram,NULL,(yyvsp[0].stnode),NULL,NULL,NULL);
 			(yyval.stnode)=TreeRoot;
                      }
-#line 1484 "syd.tab.c"
+#line 1480 "syd.tab.c"
     break;
 
   case 3: /* METH_LIST: METH METH_LIST  */
-#line 56 "syd.y"
+#line 55 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #3\n");
 #endif 
 			(yyval.stnode)=MkNode(astMethList,NULL,(yyvsp[-1].stnode),(yyvsp[0].stnode),NULL,NULL);
                      }
-#line 1495 "syd.tab.c"
+#line 1491 "syd.tab.c"
     break;
 
   case 4: /* METH_LIST: METH  */
-#line 63 "syd.y"
+#line 62 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #4\n");
 #endif
 			(yyval.stnode)=MkNode(astMethList,NULL,(yyvsp[0].stnode),NULL,NULL,NULL);
                      }
-#line 1506 "syd.tab.c"
+#line 1502 "syd.tab.c"
     break;
 
   case 5: /* $@1: %empty  */
-<<<<<<< HEAD
-#line 70 "syd.y"
-=======
 #line 69 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
 {
 #if DEBUG
                         printf("Rule #5\n");
@@ -1667,38 +1512,22 @@ yyreduce:
 			cur_param_count=0;
 			mt[currentmethod].has_return=0;
 }
-<<<<<<< HEAD
-#line 1520 "syd.tab.c"
-    break;
-
-  case 6: /* $@2: %empty  */
-#line 80 "syd.y"
-=======
 #line 1516 "syd.tab.c"
     break;
 
   case 6: /* $@2: %empty  */
 #line 79 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #5\n");
 #endif
 			mt[currentmethod].param_count=cur_param_count;
  		}
-<<<<<<< HEAD
-#line 1531 "syd.tab.c"
-    break;
-
-  case 7: /* METH: TYPE ID $@1 '(' PARAMS ')' $@2 BODY  */
-#line 87 "syd.y"
-=======
 #line 1527 "syd.tab.c"
     break;
 
   case 7: /* METH: TYPE ID $@1 '(' PARAMS ')' $@2 BODY  */
 #line 86 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                 {
 #if DEBUG
                         printf("Rule #5\n");
@@ -1710,19 +1539,11 @@ yyreduce:
 			(yyval.stnode)=MkNode(astMethod,temps,(yyvsp[0].stnode),NULL,NULL,NULL);
 			leavescope();
 			}
-<<<<<<< HEAD
-#line 1547 "syd.tab.c"
-    break;
-
-  case 8: /* PARAMS: FORMALS TYPE ID  */
-#line 100 "syd.y"
-=======
 #line 1543 "syd.tab.c"
     break;
 
   case 8: /* PARAMS: FORMALS TYPE ID  */
 #line 99 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #6\n");
@@ -1736,47 +1557,22 @@ yyreduce:
 			AstNode *parameter=MkNode(astParam,temps,NULL,NULL,NULL,NULL);
 			(yyval.stnode)=MkNode(astParam,NULL,(yyvsp[-2].stnode),parameter,NULL,NULL);
                      }
-<<<<<<< HEAD
-#line 1565 "syd.tab.c"
-    break;
-
-  case 9: /* PARAMS: %empty  */
-#line 114 "syd.y"
-=======
 #line 1561 "syd.tab.c"
     break;
 
   case 9: /* PARAMS: %empty  */
 #line 113 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #7\n");
 #endif
 			(yyval.stnode)=MkNode(astParams,NULL,NULL,NULL,NULL,NULL);
                      }
-<<<<<<< HEAD
-#line 1576 "syd.tab.c"
-    break;
-
-  case 10: /* PARAMS: error ';'  */
-#line 121 "syd.y"
-                {
-			error_message("Syntax Error","skipping invalid parameter list",NULL);
-			yyerrok;
-		}
-#line 1585 "syd.tab.c"
-    break;
-
-  case 11: /* FORMALS: FORMALS TYPE ID ','  */
-#line 126 "syd.y"
-=======
 #line 1572 "syd.tab.c"
     break;
 
   case 10: /* FORMALS: FORMALS TYPE ID ','  */
 #line 120 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #8\n");
@@ -1787,75 +1583,43 @@ yyreduce:
 			AstNode *parameter=MkNode(astParam,temps,NULL,NULL,NULL,NULL);
 			(yyval.stnode)=MkNode(astParam,NULL,(yyvsp[-3].stnode),parameter,NULL,NULL);
                      }
-<<<<<<< HEAD
-#line 1600 "syd.tab.c"
-    break;
-
-  case 12: /* FORMALS: %empty  */
-#line 137 "syd.y"
-=======
 #line 1587 "syd.tab.c"
     break;
 
   case 11: /* FORMALS: %empty  */
 #line 131 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #9\n");
 #endif
 			(yyval.stnode)=NULL;
                      }
-<<<<<<< HEAD
-#line 1611 "syd.tab.c"
-    break;
-
-  case 13: /* TYPE: INT  */
-#line 144 "syd.y"
-=======
 #line 1598 "syd.tab.c"
     break;
 
   case 12: /* TYPE: INT  */
 #line 138 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #10\n");
 #endif
                      }
-<<<<<<< HEAD
-#line 1621 "syd.tab.c"
-    break;
-
-  case 14: /* BODY: '{' DECLS STMTS '}'  */
-#line 150 "syd.y"
-=======
 #line 1608 "syd.tab.c"
     break;
 
   case 13: /* BODY: '{' DECLS STMTS '}'  */
 #line 144 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #11\n");
 #endif
 			(yyval.stnode)=MkNode(astBody,NULL,(yyvsp[-2].stnode),(yyvsp[-1].stnode),NULL,NULL);
                      }
-<<<<<<< HEAD
-#line 1632 "syd.tab.c"
-    break;
-
-  case 15: /* DECLS: DECL_LIST DECL  */
-#line 157 "syd.y"
-=======
 #line 1619 "syd.tab.c"
     break;
 
   case 14: /* DECLS: DECL_LIST DECL  */
 #line 151 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #12\n");
@@ -1863,76 +1627,44 @@ yyreduce:
 			(yyval.stnode)=MkNode(astBody,NULL,(yyvsp[-1].stnode),(yyvsp[0].stnode),NULL,NULL);
 
                      }
-<<<<<<< HEAD
-#line 1644 "syd.tab.c"
-    break;
-
-  case 16: /* DECLS: %empty  */
-#line 165 "syd.y"
-=======
 #line 1631 "syd.tab.c"
     break;
 
   case 15: /* DECLS: %empty  */
 #line 159 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #13\n");
 #endif
 			(yyval.stnode)=MkNode(astBody,NULL,NULL,NULL,NULL,NULL);
                      }
-<<<<<<< HEAD
-#line 1655 "syd.tab.c"
-    break;
-
-  case 17: /* DECL_LIST: DECL_LIST DECL  */
-#line 172 "syd.y"
-=======
 #line 1642 "syd.tab.c"
     break;
 
   case 16: /* DECL_LIST: DECL_LIST DECL  */
 #line 166 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #14\n");
 #endif
 			(yyval.stnode)=MkNode(astDecls,NULL,(yyvsp[-1].stnode),(yyvsp[0].stnode),NULL,NULL);
                      }
-<<<<<<< HEAD
-#line 1666 "syd.tab.c"
-    break;
-
-  case 18: /* DECL_LIST: %empty  */
-#line 179 "syd.y"
-=======
 #line 1653 "syd.tab.c"
     break;
 
   case 17: /* DECL_LIST: %empty  */
 #line 173 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #15\n");
 #endif
 			(yyval.stnode)=NULL;
                      }
-<<<<<<< HEAD
-#line 1677 "syd.tab.c"
-    break;
-
-  case 19: /* DECL: TYPE ID VARS ';'  */
-#line 186 "syd.y"
-=======
 #line 1664 "syd.tab.c"
     break;
 
   case 18: /* DECL: TYPE ID VARS ';'  */
 #line 180 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #16\n");
@@ -1942,19 +1674,11 @@ yyreduce:
 			AstNode *var=MkNode(astVarList,temps,NULL,NULL,NULL,NULL);
 			(yyval.stnode)=MkNode(astDecls,NULL,var,(yyvsp[-1].stnode),NULL,NULL);
                      }
-<<<<<<< HEAD
-#line 1691 "syd.tab.c"
-    break;
-
-  case 20: /* DECL: TYPE ID '=' EXPR VARS ';'  */
-#line 196 "syd.y"
-=======
 #line 1678 "syd.tab.c"
     break;
 
   case 19: /* DECL: TYPE ID '=' EXPR VARS ';'  */
 #line 190 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #17\n");
@@ -1965,19 +1689,11 @@ yyreduce:
 			AstNode *var=MkNode(astVarList,temps,init,NULL,NULL,NULL);
 			(yyval.stnode)=MkNode(astDecls,NULL,var,(yyvsp[-1].stnode),NULL,NULL);
                      }
-<<<<<<< HEAD
-#line 1706 "syd.tab.c"
-    break;
-
-  case 21: /* VARS: ',' ID VARS  */
-#line 207 "syd.y"
-=======
 #line 1693 "syd.tab.c"
     break;
 
   case 20: /* VARS: ',' ID VARS  */
 #line 201 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #18\n");
@@ -1987,19 +1703,11 @@ yyreduce:
 			AstNode *var=MkNode(astVarList,temps,NULL,NULL,NULL,NULL);
 			(yyval.stnode)=MkNode(astDecls,NULL,var,(yyvsp[0].stnode),NULL,NULL);
                      }
-<<<<<<< HEAD
-#line 1720 "syd.tab.c"
-    break;
-
-  case 22: /* VARS: ',' ID '=' EXPR VARS  */
-#line 217 "syd.y"
-=======
 #line 1707 "syd.tab.c"
     break;
 
   case 21: /* VARS: ',' ID '=' EXPR VARS  */
 #line 211 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #19\n");
@@ -2010,38 +1718,22 @@ yyreduce:
 			AstNode *var=MkNode(astVarList,temps,init,NULL,NULL,NULL);
 			(yyval.stnode)=MkNode(astDecls,NULL,var,(yyvsp[0].stnode),NULL,NULL);
                      }
-<<<<<<< HEAD
-#line 1735 "syd.tab.c"
-    break;
-
-  case 23: /* VARS: %empty  */
-#line 228 "syd.y"
-=======
 #line 1722 "syd.tab.c"
     break;
 
   case 22: /* VARS: %empty  */
 #line 222 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #20\n");
 #endif
 			(yyval.stnode)=NULL;
                      }
-<<<<<<< HEAD
-#line 1746 "syd.tab.c"
-    break;
-
-  case 24: /* STMTS: STMTS STMT  */
-#line 235 "syd.y"
-=======
 #line 1733 "syd.tab.c"
     break;
 
   case 23: /* STMTS: STMTS STMT  */
 #line 229 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #21\n");
@@ -2051,47 +1743,22 @@ yyreduce:
 			}
 			(yyval.stnode)=MkNode(astStmtSeq,NULL,(yyvsp[-1].stnode),(yyvsp[0].stnode),NULL,NULL);
                      }
-<<<<<<< HEAD
-#line 1760 "syd.tab.c"
-    break;
-
-  case 25: /* STMTS: %empty  */
-#line 245 "syd.y"
-=======
 #line 1747 "syd.tab.c"
     break;
 
   case 24: /* STMTS: %empty  */
 #line 239 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #22\n");
 #endif
 			(yyval.stnode)=MkNode(astStmtSeq,NULL,NULL,NULL,NULL,NULL);
                      }
-<<<<<<< HEAD
-#line 1771 "syd.tab.c"
-    break;
-
-  case 26: /* STMTS: error ';'  */
-#line 252 "syd.y"
-                {
-			error_message("Syntax Error","skipping invalid statement",NULL);
-			yyerrok;
-		}
-#line 1780 "syd.tab.c"
-    break;
-
-  case 27: /* STMT: ASSIGN ';'  */
-#line 257 "syd.y"
-=======
 #line 1758 "syd.tab.c"
     break;
 
   case 25: /* STMT: ASSIGN ';'  */
 #line 246 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #23\n");
@@ -2101,19 +1768,11 @@ yyreduce:
 			}
 			(yyval.stnode)=MkNode(astExprStmt,NULL,(yyvsp[-1].stnode),NULL,NULL,NULL);
                      }
-<<<<<<< HEAD
-#line 1794 "syd.tab.c"
-    break;
-
-  case 28: /* STMT: RETURN EXPR ';'  */
-#line 267 "syd.y"
-=======
 #line 1772 "syd.tab.c"
     break;
 
   case 26: /* STMT: RETURN EXPR ';'  */
 #line 256 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                 { 
 #if DEBUG
                         printf("Rule #24\n");
@@ -2124,57 +1783,33 @@ yyreduce:
 			mt[currentmethod].has_return=1;
 			(yyval.stnode)=MkNode(astReturnStmt,NULL,(yyvsp[-1].stnode),NULL,NULL,NULL);
                      }
-<<<<<<< HEAD
-#line 1809 "syd.tab.c"
-    break;
-
-  case 29: /* STMT: IF '(' EXPR ')' STMT ELSE STMT  */
-#line 278 "syd.y"
-=======
 #line 1787 "syd.tab.c"
     break;
 
   case 27: /* STMT: IF '(' EXPR ')' STMT ELSE STMT  */
 #line 267 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                 { 
 #if DEBUG
                         printf("Rule #25\n");
 #endif
 			(yyval.stnode)=MkNode(astIfElseStmt,NULL,(yyvsp[-4].stnode),(yyvsp[-2].stnode),(yyvsp[0].stnode),NULL);
                      }
-<<<<<<< HEAD
-#line 1820 "syd.tab.c"
-    break;
-
-  case 30: /* $@3: %empty  */
-#line 285 "syd.y"
-=======
 #line 1798 "syd.tab.c"
     break;
 
   case 28: /* $@3: %empty  */
 #line 274 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                 { 
 #if DEBUG
                         printf("Rule #26\n");
 #endif
 			loopdepth++;
 		}
-<<<<<<< HEAD
-#line 1831 "syd.tab.c"
-    break;
-
-  case 31: /* STMT: WHILE '(' EXPR ')' $@3 STMT  */
-#line 292 "syd.y"
-=======
 #line 1809 "syd.tab.c"
     break;
 
   case 29: /* STMT: WHILE '(' EXPR ')' $@3 STMT  */
 #line 281 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                 {
 #if DEBUG
                         printf("Rule #26\n");
@@ -2182,19 +1817,11 @@ yyreduce:
 			loopdepth--;
 			(yyval.stnode)=MkNode(astWhileStmt,NULL,(yyvsp[-3].stnode),(yyvsp[0].stnode),NULL,NULL);
                      }
-<<<<<<< HEAD
-#line 1843 "syd.tab.c"
-    break;
-
-  case 32: /* STMT: BREAK ';'  */
-#line 300 "syd.y"
-=======
 #line 1821 "syd.tab.c"
     break;
 
   case 30: /* STMT: BREAK ';'  */
 #line 289 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                 { 
 #if DEBUG
                         printf("Rule #27\n");
@@ -2204,95 +1831,55 @@ yyreduce:
 			}
 			(yyval.stnode)=MkNode(astBreakStmt,NULL,NULL,NULL,NULL,NULL);
                      }
-<<<<<<< HEAD
-#line 1857 "syd.tab.c"
-    break;
-
-  case 33: /* STMT: BLOCK  */
-#line 310 "syd.y"
-=======
 #line 1835 "syd.tab.c"
     break;
 
   case 31: /* STMT: BLOCK  */
 #line 299 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                 { 
 #if DEBUG
                         printf("Rule #28\n");
 #endif
 			(yyval.stnode)=(yyvsp[0].stnode);
                      }
-<<<<<<< HEAD
-#line 1868 "syd.tab.c"
-    break;
-
-  case 34: /* STMT: ';'  */
-#line 317 "syd.y"
-=======
 #line 1846 "syd.tab.c"
     break;
 
   case 32: /* STMT: ';'  */
 #line 306 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #29\n");
 #endif
 			(yyval.stnode)=MkNode(astNullStmt,NULL,NULL,NULL,NULL,NULL);
                      }
-<<<<<<< HEAD
-#line 1879 "syd.tab.c"
-    break;
-
-  case 35: /* BLOCK: '{' STMTS '}'  */
-#line 324 "syd.y"
-=======
 #line 1857 "syd.tab.c"
     break;
 
   case 33: /* BLOCK: '{' STMTS '}'  */
 #line 313 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #30\n");
 #endif
 			(yyval.stnode)=MkNode(astBlock,NULL,(yyvsp[-1].stnode),NULL,NULL,NULL);
                      }
-<<<<<<< HEAD
-#line 1890 "syd.tab.c"
-    break;
-
-  case 36: /* ASSIGN: LOCATION '=' EXPR  */
-#line 331 "syd.y"
-=======
 #line 1868 "syd.tab.c"
     break;
 
   case 34: /* ASSIGN: LOCATION '=' EXPR  */
 #line 320 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #31\n");
 #endif
 			(yyval.stnode)=MkNode(astAssign,NULL,(yyvsp[-2].stnode),(yyvsp[0].stnode),NULL,NULL);
                      }
-<<<<<<< HEAD
-#line 1901 "syd.tab.c"
-    break;
-
-  case 37: /* LOCATION: ID  */
-#line 338 "syd.y"
-=======
 #line 1879 "syd.tab.c"
     break;
 
   case 35: /* LOCATION: ID  */
 #line 327 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #32\n");
@@ -2300,19 +1887,11 @@ yyreduce:
 			symbol *temps=findsymbolinmethod((yyvsp[0].ystr));
 			(yyval.stnode)=MkNode(astId,temps,NULL,NULL,NULL,NULL);
                      }
-<<<<<<< HEAD
-#line 1913 "syd.tab.c"
-    break;
-
-  case 38: /* METHOD: ID  */
-#line 346 "syd.y"
-=======
 #line 1891 "syd.tab.c"
     break;
 
   case 36: /* METHOD: ID  */
 #line 335 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #33\n");
@@ -2323,247 +1902,143 @@ yyreduce:
 			symbol *temps=new_symbol((yyvsp[0].ystr));
 			(yyval.stnode)=MkNode(astId,temps,NULL,NULL,NULL,NULL);
                      }
-<<<<<<< HEAD
-#line 1928 "syd.tab.c"
-    break;
-
-  case 39: /* EXPR: ADD_EXPR RELOP ADD_EXPR  */
-#line 357 "syd.y"
-=======
 #line 1906 "syd.tab.c"
     break;
 
   case 37: /* EXPR: ADD_EXPR RELOP ADD_EXPR  */
 #line 346 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #34\n");
 #endif
 			(yyval.stnode)=MkNode((yyvsp[-1].stnode)->NodeType,NULL,(yyvsp[-2].stnode),(yyvsp[0].stnode),NULL,NULL);
                      }
-<<<<<<< HEAD
-#line 1939 "syd.tab.c"
-    break;
-
-  case 40: /* EXPR: ADD_EXPR  */
-#line 364 "syd.y"
-=======
 #line 1917 "syd.tab.c"
     break;
 
   case 38: /* EXPR: ADD_EXPR  */
 #line 353 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #35\n");
 #endif
 			(yyval.stnode)=(yyvsp[0].stnode);
                      }
-<<<<<<< HEAD
-#line 1950 "syd.tab.c"
-    break;
-
-  case 41: /* RELOP: LE  */
-#line 371 "syd.y"
-=======
 #line 1928 "syd.tab.c"
     break;
 
   case 39: /* RELOP: LE  */
 #line 360 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #36\n");
 #endif
 			(yyval.stnode)=MkNode(astLeEq,NULL,NULL,NULL,NULL,NULL);
                      }
-<<<<<<< HEAD
-#line 1961 "syd.tab.c"
-    break;
-
-  case 42: /* RELOP: LT  */
-#line 378 "syd.y"
-=======
 #line 1939 "syd.tab.c"
     break;
 
   case 40: /* RELOP: LT  */
 #line 367 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #37\n");
 #endif
 			(yyval.stnode)=MkNode(astLess,NULL,NULL,NULL,NULL,NULL);
                      }
-<<<<<<< HEAD
-#line 1972 "syd.tab.c"
-    break;
-
-  case 43: /* RELOP: GT  */
-#line 385 "syd.y"
-=======
 #line 1950 "syd.tab.c"
     break;
 
   case 41: /* RELOP: GT  */
 #line 374 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #38\n");
 #endif
 			(yyval.stnode)=MkNode(astGreater,NULL,NULL,NULL,NULL,NULL);
                      }
-<<<<<<< HEAD
-#line 1983 "syd.tab.c"
-    break;
-
-  case 44: /* RELOP: GE  */
-#line 392 "syd.y"
-=======
 #line 1961 "syd.tab.c"
     break;
 
   case 42: /* RELOP: GE  */
 #line 381 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #39\n");
 #endif
 			(yyval.stnode)=MkNode(astGrEq,NULL,NULL,NULL,NULL,NULL);
                      }
-<<<<<<< HEAD
-#line 1994 "syd.tab.c"
-    break;
-
-  case 45: /* RELOP: EQ  */
-#line 399 "syd.y"
-=======
 #line 1972 "syd.tab.c"
     break;
 
   case 43: /* RELOP: EQ  */
 #line 388 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #40\n");
 #endif
 			(yyval.stnode)=MkNode(astEq,NULL,NULL,NULL,NULL,NULL);
                      }
-<<<<<<< HEAD
-#line 2005 "syd.tab.c"
-    break;
-
-  case 46: /* RELOP: NE  */
-#line 406 "syd.y"
-=======
 #line 1983 "syd.tab.c"
     break;
 
   case 44: /* RELOP: NE  */
 #line 395 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #41\n");
 #endif
 			(yyval.stnode)=MkNode(astNotEq,NULL,NULL,NULL,NULL,NULL);
                      }
-<<<<<<< HEAD
-#line 2016 "syd.tab.c"
-    break;
-
-  case 47: /* ADD_EXPR: ADD_EXPR ADDOP TERM  */
-#line 413 "syd.y"
-=======
 #line 1994 "syd.tab.c"
     break;
 
   case 45: /* ADD_EXPR: ADD_EXPR ADDOP TERM  */
 #line 402 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #42\n");
 #endif
 			(yyval.stnode)=MkNode((yyvsp[-1].stnode)->NodeType,NULL,(yyvsp[-2].stnode),(yyvsp[0].stnode),NULL,NULL);
                      }
-<<<<<<< HEAD
-#line 2027 "syd.tab.c"
-    break;
-
-  case 48: /* ADD_EXPR: TERM  */
-#line 420 "syd.y"
-=======
 #line 2005 "syd.tab.c"
     break;
 
   case 46: /* ADD_EXPR: TERM  */
 #line 409 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #43\n");
 #endif
 			(yyval.stnode)=(yyvsp[0].stnode);
                      }
-<<<<<<< HEAD
-#line 2038 "syd.tab.c"
-    break;
-
-  case 49: /* ADDOP: '+'  */
-#line 427 "syd.y"
-=======
 #line 2016 "syd.tab.c"
     break;
 
   case 47: /* ADDOP: '+'  */
 #line 416 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #44\n");
 #endif
 			(yyval.stnode)=MkNode(astAdd,NULL,NULL,NULL,NULL,NULL);
                      }
-<<<<<<< HEAD
-#line 2049 "syd.tab.c"
-    break;
-
-  case 50: /* ADDOP: '-'  */
-#line 434 "syd.y"
-=======
 #line 2027 "syd.tab.c"
     break;
 
   case 48: /* ADDOP: '-'  */
 #line 423 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #45\n");
 #endif
 			(yyval.stnode)=MkNode(astSub,NULL,NULL,NULL,NULL,NULL);
                      }
-<<<<<<< HEAD
-#line 2060 "syd.tab.c"
-    break;
-
-  case 51: /* TERM: TERM MULOP FACTOR  */
-#line 441 "syd.y"
-=======
 #line 2038 "syd.tab.c"
     break;
 
   case 49: /* TERM: TERM MULOP FACTOR  */
 #line 430 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #46\n");
@@ -2573,114 +2048,66 @@ yyreduce:
 			}
 			(yyval.stnode)=MkNode((yyvsp[-1].stnode)->NodeType,NULL,(yyvsp[-2].stnode),(yyvsp[0].stnode),NULL,NULL);
                      }
-<<<<<<< HEAD
-#line 2074 "syd.tab.c"
-    break;
-
-  case 52: /* TERM: FACTOR  */
-#line 451 "syd.y"
-=======
 #line 2052 "syd.tab.c"
     break;
 
   case 50: /* TERM: FACTOR  */
 #line 440 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #47\n");
 #endif
 			(yyval.stnode)=(yyvsp[0].stnode);
                      }
-<<<<<<< HEAD
-#line 2085 "syd.tab.c"
-    break;
-
-  case 53: /* MULOP: '*'  */
-#line 458 "syd.y"
-=======
 #line 2063 "syd.tab.c"
     break;
 
   case 51: /* MULOP: '*'  */
 #line 447 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #48\n");
 #endif
 			(yyval.stnode)=MkNode(astMult,NULL,NULL,NULL,NULL,NULL);
                      }
-<<<<<<< HEAD
-#line 2096 "syd.tab.c"
-    break;
-
-  case 54: /* MULOP: '/'  */
-#line 465 "syd.y"
-=======
 #line 2074 "syd.tab.c"
     break;
 
   case 52: /* MULOP: '/'  */
 #line 454 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #49\n");
 #endif
 			(yyval.stnode)=MkNode(astDiv,NULL,NULL,NULL,NULL,NULL);
                      }
-<<<<<<< HEAD
-#line 2107 "syd.tab.c"
-    break;
-
-  case 55: /* FACTOR: '(' EXPR ')'  */
-#line 472 "syd.y"
-=======
 #line 2085 "syd.tab.c"
     break;
 
   case 53: /* FACTOR: '(' EXPR ')'  */
 #line 461 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #50\n");
 #endif
 			(yyval.stnode)=(yyvsp[-1].stnode);
                      }
-<<<<<<< HEAD
-#line 2118 "syd.tab.c"
-    break;
-
-  case 56: /* FACTOR: LOCATION  */
-#line 479 "syd.y"
-=======
 #line 2096 "syd.tab.c"
     break;
 
   case 54: /* FACTOR: LOCATION  */
 #line 468 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #51\n");
 #endif
 			(yyval.stnode)=(yyvsp[0].stnode);
                      }
-<<<<<<< HEAD
-#line 2129 "syd.tab.c"
-    break;
-
-  case 57: /* FACTOR: NUM  */
-#line 486 "syd.y"
-=======
 #line 2107 "syd.tab.c"
     break;
 
   case 55: /* FACTOR: NUM  */
 #line 475 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #52\n");
@@ -2688,19 +2115,11 @@ yyreduce:
 			symbol *temps=new_num_symbol((yyvsp[0].yint));
 			(yyval.stnode)=MkNode(astDecimConst,temps,NULL,NULL,NULL,NULL);
                      }
-<<<<<<< HEAD
-#line 2141 "syd.tab.c"
-    break;
-
-  case 58: /* FACTOR: TRUE  */
-#line 494 "syd.y"
-=======
 #line 2119 "syd.tab.c"
     break;
 
   case 56: /* FACTOR: TRUE  */
 #line 483 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #53\n");
@@ -2708,19 +2127,11 @@ yyreduce:
 			symbol *temps=new_num_symbol(1);
 			(yyval.stnode)=MkNode(astDecimConst,temps,NULL,NULL,NULL,NULL);
                      }
-<<<<<<< HEAD
-#line 2153 "syd.tab.c"
-    break;
-
-  case 59: /* FACTOR: FALSE  */
-#line 502 "syd.y"
-=======
 #line 2131 "syd.tab.c"
     break;
 
   case 57: /* FACTOR: FALSE  */
 #line 491 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #54\n");
@@ -2728,19 +2139,11 @@ yyreduce:
 			symbol *temps=new_num_symbol(0);
 			(yyval.stnode)=MkNode(astDecimConst,temps,NULL,NULL,NULL,NULL);
                      }
-<<<<<<< HEAD
-#line 2165 "syd.tab.c"
-    break;
-
-  case 60: /* FACTOR: METHOD '(' ACTUALS ')'  */
-#line 510 "syd.y"
-=======
 #line 2143 "syd.tab.c"
     break;
 
   case 58: /* FACTOR: METHOD '(' ACTUALS ')'  */
 #line 499 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #55\n");
@@ -2758,19 +2161,11 @@ yyreduce:
 			}
 			(yyval.stnode)=MkNode(astCall,NULL,(yyvsp[-3].stnode),(yyvsp[-1].stnode),NULL,NULL);
                      }
-<<<<<<< HEAD
-#line 2187 "syd.tab.c"
-    break;
-
-  case 61: /* ACTUALS: ARGS EXPR  */
-#line 528 "syd.y"
-=======
 #line 2165 "syd.tab.c"
     break;
 
   case 59: /* ACTUALS: ARGS EXPR  */
 #line 517 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #56\n");
@@ -2781,85 +2176,44 @@ yyreduce:
 			        (yyval.stnode) = MkNode(astArgs, NULL, (yyvsp[-1].stnode), MkNode(astArgs, NULL, (yyvsp[0].stnode), 				NULL, NULL, NULL), NULL, NULL);
 			}
                      }
-<<<<<<< HEAD
-#line 2202 "syd.tab.c"
-    break;
-
-  case 62: /* ACTUALS: %empty  */
-#line 539 "syd.y"
-=======
 #line 2180 "syd.tab.c"
     break;
 
   case 60: /* ACTUALS: %empty  */
 #line 528 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #57\n");
 #endif
 			(yyval.stnode)=NULL;
                      }
-<<<<<<< HEAD
-#line 2213 "syd.tab.c"
-    break;
-
-  case 63: /* ARGS: ARGS EXPR ','  */
-#line 546 "syd.y"
-=======
 #line 2191 "syd.tab.c"
     break;
 
   case 61: /* ARGS: ARGS EXPR ','  */
 #line 535 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                      { 
 #if DEBUG
                         printf("Rule #58\n");
 #endif
 			(yyval.stnode)=MkNode(astArgs,NULL,(yyvsp[-2].stnode),MkNode(astArgs,NULL,(yyvsp[-1].stnode),NULL,NULL,NULL),NULL,NULL);
                      }
-<<<<<<< HEAD
-#line 2224 "syd.tab.c"
-    break;
-
-  case 64: /* ARGS: %empty  */
-#line 553 "syd.y"
-=======
 #line 2202 "syd.tab.c"
     break;
 
   case 62: /* ARGS: %empty  */
 #line 542 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
                         { 
 #if DEBUG
                         printf("Rule #59\n");
 #endif
 			(yyval.stnode)=NULL;
                      }
-<<<<<<< HEAD
-#line 2235 "syd.tab.c"
-    break;
-
-  case 65: /* ARGS: error ')'  */
-#line 560 "syd.y"
-                {
-			error_message("Syntax Error","skipping invalid argument list",NULL);
-			yyerrok;
-		}
-#line 2244 "syd.tab.c"
-    break;
-
-
-#line 2248 "syd.tab.c"
-=======
 #line 2213 "syd.tab.c"
     break;
 
 
 #line 2217 "syd.tab.c"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
 
       default: break;
     }
@@ -3083,11 +2437,7 @@ yyreturnlab:
   return yyresult;
 }
 
-<<<<<<< HEAD
-#line 564 "syd.y"
-=======
 #line 548 "syd.y"
->>>>>>> parent of 62ac46c (some error recovery not perfect)
 
 
 /* creates symbols with int instead of char* */
@@ -3102,7 +2452,7 @@ static symbol *new_num_symbol(int value) {
 
 void yyerror(const char *s)
 {
-   error_message("Syntax Error",s,yytext);
+   error_message("Syntax Error",s,NULL);
 }
 
 int main(void)
@@ -3117,12 +2467,5 @@ int main(void)
 	}
 	fflush(stdout);
 	printAST(TreeRoot, -3);
-<<<<<<< HEAD
-   } else {
-	fflush(stdout);
-	fprintf(stderr,"Parsing has errors, fix them to print AST.\n");
-	fflush(stdout);
-=======
->>>>>>> parent of 62ac46c (some error recovery not perfect)
    }
 }

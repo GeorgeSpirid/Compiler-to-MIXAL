@@ -1,9 +1,8 @@
-
 %{
 
 #include "defs.h" 
 
-extern int error_count;
+int error_count=0;
 
 void yyerror(const char *s);
 int yyparse();
@@ -116,12 +115,7 @@ PARAMS            : FORMALS TYPE ID
                         printf("Rule #7\n");
 #endif
 			$$=MkNode(astParams,NULL,NULL,NULL,NULL,NULL);
-                     }
-		| error ';'
-		{
-			error_message("Syntax Error","skipping invalid parameter list",NULL);
-			yyerrok;
-		};
+                     };
 FORMALS            : FORMALS TYPE ID ','
                      { 
 #if DEBUG
@@ -247,12 +241,7 @@ STMTS            : STMTS STMT
                         printf("Rule #22\n");
 #endif
 			$$=MkNode(astStmtSeq,NULL,NULL,NULL,NULL,NULL);
-                     }
-		| error ';'
-		{
-			error_message("Syntax Error","skipping invalid statement",NULL);
-			yyerrok;
-		};
+                     };
 STMT            : ASSIGN ';'
                      { 
 #if DEBUG
@@ -555,12 +544,7 @@ ARGS            : ARGS EXPR ','
                         printf("Rule #59\n");
 #endif
 			$$=NULL;
-                     }
-		| error ')'
-		{
-			error_message("Syntax Error","skipping invalid argument list",NULL);
-			yyerrok;
-		};
+                     };
 %%
 
 /* creates symbols with int instead of char* */
@@ -575,7 +559,7 @@ static symbol *new_num_symbol(int value) {
 
 void yyerror(const char *s)
 {
-   error_message("Syntax Error",s,yytext);
+   error_message("Syntax Error",s,NULL);
 }
 
 int main(void)

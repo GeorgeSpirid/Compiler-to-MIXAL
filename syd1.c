@@ -1,4 +1,3 @@
-
 #include "defs.h"
 
 int numbmethods=0;
@@ -11,7 +10,7 @@ int cur_param_count=0;
 
 extern int currentline;
 extern int currentcol;
-int error_count=0;
+extern int error_count;
 
 void Init_Hash_Table(HASH_TAB *ht)
 {  
@@ -27,7 +26,7 @@ symbol *new_symbol(char *name)
    symbp=(symbol *)malloc(sizeof(symbol));
 
    if(!symbp){
-      fprintf(stderr,"cannot allocate memory for symbp %s\n", name);
+      printf("cannot allocate memory for symbp %s\n", name);
       exit(1);
    }
    memset(symbp,0,sizeof(symbol));
@@ -88,7 +87,7 @@ void addmethod(char *name){
    }
    int len=strlen(name);
    if(len>NAME_MAX){
-      fprintf(stderr,"method name %s is too long, so it is shortened\n", name);
+      printf("method name %s is too long, so it is shortened\n", name);
    }
    memcpy(mt[numbmethods].name,name,NAME_MAX);
    mt[numbmethods].name[NAME_MAX]='\0';
@@ -142,7 +141,7 @@ AstNode *MkNode(int tipos,symbol *sn,
    p=(AstNode *)malloc(sizeof(AstNode));
    if(!p)
    {
-      fprintf(stderr,"Out of memory\n");
+      printf("Out of memory\n");
       exit(1);
    }
    else
@@ -254,5 +253,5 @@ void error_message(const char *errortype,const char *msg,const char *extra){
    fprintf(stderr,"|%s| in line %d col %d: %s",errortype,currentline,currentcol,msg);
    if(extra) fprintf(stderr," (near %s)",extra);
    fprintf(stderr,"\n");
-   error_count++;
+   exit(1);
 }

@@ -110,5 +110,3 @@ int is_location(AstNode *s);
 void error_message(const char *errortype,const char *msg,const char *extra);
 
 #endif
-
-
