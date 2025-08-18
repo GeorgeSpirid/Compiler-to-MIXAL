@@ -580,7 +580,7 @@ void yyerror(const char *s)
 
 int main(void)
 {
-   if(yyparse()==0 && error_count==0){
+   if(yyparse()==0){
 	int mi=methodidx("main");
 	if(mi==-1){
 		error_message("Syntax Error","need to have main method",NULL);
@@ -590,9 +590,5 @@ int main(void)
 	}
 	fflush(stdout);
 	printAST(TreeRoot, -3);
-   } else {
-	fflush(stdout);
-	fprintf(stderr,"Parsing has errors, fix them to print AST.\n");
-	fflush(stdout);
    }
 }

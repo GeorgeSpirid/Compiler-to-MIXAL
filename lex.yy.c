@@ -947,15 +947,25 @@ YY_RULE_SETUP
 {
 				currentcol++;
                                fprintf(stderr,"Lexical Error in line %d col %d: illegal 				char - %s\n",currentline,currentcol,yytext);
+<<<<<<< HEAD
 				error_count++;
+=======
+>>>>>>> parent of 62ac46c (some error recovery not perfect)
                             }  
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
+<<<<<<< HEAD
 #line 230 "lex.l"
 ECHO;
 	YY_BREAK
 #line 959 "lex.yy.c"
+=======
+#line 226 "lex.l"
+ECHO;
+	YY_BREAK
+#line 955 "lex.yy.c"
+>>>>>>> parent of 62ac46c (some error recovery not perfect)
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1841,7 +1851,11 @@ int main()
 	return 0;
 	}
 #endif
+<<<<<<< HEAD
 #line 230 "lex.l"
+=======
+#line 226 "lex.l"
+>>>>>>> parent of 62ac46c (some error recovery not perfect)
 
 
 static char *kid[N]={"return","break","true","false","else","if","int","while"};

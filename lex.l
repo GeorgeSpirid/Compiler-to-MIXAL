@@ -222,7 +222,7 @@ int currentcol=1;
 			    }
 .                           {
 				currentcol++;
-                               fprintf(stderr,"Lexical Error in line %d col %d: illegal 				char - %s\n",currentline,currentcol,yytext);
+                               fprintf(stderr,"Lexical Error in line %d col %d: illegal 			
 				error_count++;
                             }  
     
