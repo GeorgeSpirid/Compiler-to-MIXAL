@@ -1,6 +1,5 @@
 int method1(int a)
 {
-c=1;
 int b;
 b=0;
 while( a>0)
@@ -20,7 +19,7 @@ return e;
 }
 int main()
 {
-a=1;
 // comment
 return method1(5);
+}
 }

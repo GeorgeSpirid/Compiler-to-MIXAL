@@ -195,7 +195,9 @@ int currentcol=1;
 				currentcol+=yyleng;
 				if(yytext[0]=='0' && strlen(yytext)>1){
 					printf("%s number cannot start with zero",yytext);
-					exit(1);
+					error_count++;
+					yylval.yint=0;
+	                                return(NUM);
 				}
                                yylval.yint=atoi(yytext);
                                return(NUM);
@@ -220,7 +222,7 @@ int currentcol=1;
 .                           {
 				currentcol++;
                                fprintf(stderr,"Lexical Error in line %d col %d: illegal 				char - %s\n",currentline,currentcol,yytext);
-				error_count;
+				error_count++;
                             }  
     
 

@@ -1504,7 +1504,7 @@ yyreduce:
   case 5: /* METH_LIST: error '}'  */
 #line 69 "syd.y"
                 {
-			error_message("Syntax Error","skipping to end of method",NULL);
+			error_message("Syntax Error","skipping to end of method","-1");
 			yyerrok;
 		}
 #line 1511 "syd.tab.c"
@@ -1868,7 +1868,7 @@ yyreduce:
   case 34: /* STMT: error ';'  */
 #line 318 "syd.y"
                 {
-			error_message("Syntax Error","skipping invalid statement",NULL);
+			error_message("Syntax Error","skipping invalid statement","-1");
 			yyerrok;
 		}
 #line 1875 "syd.tab.c"
@@ -2470,7 +2470,7 @@ static symbol *new_num_symbol(int value) {
 
 void yyerror(const char *s)
 {
-   error_message("Syntax Error",s,NULL);
+   error_message("Syntax Error",s,yytext);
 }
 
 int main(void)

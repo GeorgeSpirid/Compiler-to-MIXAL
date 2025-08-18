@@ -253,5 +253,5 @@ void error_message(const char *errortype,const char *msg,const char *extra){
    fprintf(stderr,"|%s| in line %d col %d: %s",errortype,currentline,currentcol,msg);
    if(extra) fprintf(stderr," (near %s)",extra);
    fprintf(stderr,"\n");
-   error_count++;
+   if(atoi(extra)!=-1) error_count++;
 }
