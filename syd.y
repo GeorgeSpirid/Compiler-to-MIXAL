@@ -224,7 +224,11 @@ VARS            : ',' ID VARS
                         printf("Rule #20\n");
 #endif
 			$$=NULL;
-                     };
+                     }
+		| error
+		{
+			yyerrok;
+		}
 STMTS            : STMTS STMT
                      { 
 #if DEBUG
@@ -308,7 +312,13 @@ STMT            : ASSIGN ';'
                         printf("Rule #29\n");
 #endif
 			$$=MkNode(astNullStmt,NULL,NULL,NULL,NULL,NULL);
-                     };
+                     }
+		| error ';'
+		{
+			if (yychar != YYEMPTY && yychar !=')')
+				yyerror("invalid statement");
+			yyerrok;
+		};
 BLOCK            : '{' STMTS '}'
                      { 
 #if DEBUG
@@ -329,6 +339,8 @@ LOCATION            : ID
                         printf("Rule #32\n");
 #endif
 			symbol *temps=findsymbolinmethod($1);
+			if(!temps)
+				error_message("Semantic Error","undeclared variable",$1);
 			$$=MkNode(astId,temps,NULL,NULL,NULL,NULL);
                      };
 METHOD            : ID
@@ -355,7 +367,13 @@ EXPR            : ADD_EXPR RELOP ADD_EXPR
                         printf("Rule #35\n");
 #endif
 			$$=$1;
-                     };
+                     }
+		| error ';'
+		{
+			yyerror("invalid expression");
+			yyerrok;
+			$$=NULL;
+		};
 RELOP            : LE
                      { 
 #if DEBUG
@@ -512,7 +530,13 @@ FACTOR            : '(' EXPR ')'
 				error_message("Syntax Error","method needs different type 				of arguments",mt[mi].name);
 			}
 			$$=MkNode(astCall,NULL,$1,$3,NULL,NULL);
-                     };
+                     }
+		| ')'
+		{
+			yyerror("not matched ')'");
+			yyerrok;
+			$$=NULL;
+		};
 ACTUALS            : ARGS EXPR
                      { 
 #if DEBUG
@@ -573,6 +597,10 @@ int main(void)
 		error_message("Syntax Error","main cannot have parameters",NULL);
 	}
 	fflush(stdout);
-	printAST(TreeRoot, -3);
+	if(error_count==0){
+		printAST(TreeRoot, -3);
+	} else {
+		fprintf(stderr,"Parsing failed\n");
+	}
    }
 }

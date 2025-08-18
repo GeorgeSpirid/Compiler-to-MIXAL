@@ -904,7 +904,8 @@ YY_RULE_SETUP
 				currentcol+=yyleng;
 				if(yytext[0]=='0' && strlen(yytext)>1){
 					printf("%s number cannot start with zero",yytext);
-					exit(1);
+					error_count++;
+					yylval.yint=1;
 				}
                                yylval.yint=atoi(yytext);
                                return(NUM);
@@ -912,7 +913,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 204 "lex.l"
+#line 205 "lex.l"
 {
 #if DEBUG
 								printf("%s\n",yytext); 
@@ -922,7 +923,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 210 "lex.l"
+#line 211 "lex.l"
 {
 				currentline++;
 				currentcol=1;
@@ -930,7 +931,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 214 "lex.l"
+#line 215 "lex.l"
 {
 #if DEBUG
 				printf("comment\n");	
@@ -940,18 +941,19 @@ YY_RULE_SETUP
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 220 "lex.l"
+#line 221 "lex.l"
 {
 				currentcol++;
                                fprintf(stderr,"Lexical Error in line %d col %d: illegal 				char - %s\n",currentline,currentcol,yytext);
+				error_count;
                             }  
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 226 "lex.l"
+#line 228 "lex.l"
 ECHO;
 	YY_BREAK
-#line 955 "lex.yy.c"
+#line 957 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1837,7 +1839,7 @@ int main()
 	return 0;
 	}
 #endif
-#line 226 "lex.l"
+#line 228 "lex.l"
 
 
 static char *kid[N]={"return","break","true","false","else","if","int","while"};
