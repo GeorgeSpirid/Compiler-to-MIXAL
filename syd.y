@@ -64,12 +64,7 @@ METH_LIST            : METH METH_LIST
                         printf("Rule #4\n");
 #endif
 			$$=MkNode(astMethList,NULL,$1,NULL,NULL,NULL);
-                     }
-		| error '}'
-		{
-			error_message("Syntax Error","skipping to end of method","-1");
-			yyerrok;
-		};
+                     };
 METH            : TYPE ID
 {
 #if DEBUG
@@ -120,7 +115,12 @@ PARAMS            : FORMALS TYPE ID
                         printf("Rule #7\n");
 #endif
 			$$=MkNode(astParams,NULL,NULL,NULL,NULL,NULL);
-                     };
+                     }
+		| error ';'
+		{
+			error_message("Syntax Error","skipping invalid parameter list",NULL);
+			yyerrok;
+		};
 FORMALS            : FORMALS TYPE ID ','
                      { 
 #if DEBUG
@@ -246,7 +246,12 @@ STMTS            : STMTS STMT
                         printf("Rule #22\n");
 #endif
 			$$=MkNode(astStmtSeq,NULL,NULL,NULL,NULL,NULL);
-                     };
+                     }
+		| error ';'
+		{
+			error_message("Syntax Error","skipping invalid statement",NULL);
+			yyerrok;
+		};
 STMT            : ASSIGN ';'
                      { 
 #if DEBUG
@@ -313,12 +318,7 @@ STMT            : ASSIGN ';'
                         printf("Rule #29\n");
 #endif
 			$$=MkNode(astNullStmt,NULL,NULL,NULL,NULL,NULL);
-                     }
-		| error ';'
-		{
-			error_message("Syntax Error","skipping invalid statement","-1");
-			yyerrok;
-		};
+                     };
 BLOCK            : '{' STMTS '}'
                      { 
 #if DEBUG
@@ -554,7 +554,12 @@ ARGS            : ARGS EXPR ','
                         printf("Rule #59\n");
 #endif
 			$$=NULL;
-                     };
+                     }
+		| error ')'
+		{
+			error_message("Syntax Error","skipping invalid argument list",NULL);
+			yyerrok;
+		};
 %%
 
 /* creates symbols with int instead of char* */
@@ -585,6 +590,6 @@ int main(void)
 	fflush(stdout);
 	printAST(TreeRoot, -3);
    } else {
-	fprintf(stderr,"Parsing finished with %d errors\n",error_count);
+	fprintf(stderr,"Parsing has errors, fix them to print AST.");
    }
 }
