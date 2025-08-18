@@ -1,8 +1,9 @@
+
 %{
 
 #include "defs.h" 
 
-int error_count=0;
+extern int error_count;
 
 void yyerror(const char *s);
 int yyparse();
@@ -590,6 +591,8 @@ int main(void)
 	fflush(stdout);
 	printAST(TreeRoot, -3);
    } else {
-	fprintf(stderr,"Parsing has errors, fix them to print AST.");
+	fflush(stdout);
+	fprintf(stderr,"Parsing has errors, fix them to print AST.\n");
+	fflush(stdout);
    }
 }

@@ -9,6 +9,7 @@
 
 int id_or_keyword(char *s);
 
+extern int error_count;
 int currentline=1;
 int currentcol=1;
 

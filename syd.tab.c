@@ -67,12 +67,12 @@
 
 
 /* First part of user prologue.  */
-#line 1 "syd.y"
+#line 2 "syd.y"
 
 
 #include "defs.h" 
 
-int error_count=0;
+extern int error_count;
 
 void yyerror(const char *s);
 int yyparse();
@@ -563,13 +563,13 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    45,    45,    54,    61,    69,    79,    68,    98,   113,
-     119,   124,   136,   142,   148,   155,   164,   170,   178,   184,
-     194,   205,   215,   227,   233,   244,   250,   255,   265,   276,
-     284,   283,   298,   308,   315,   322,   329,   336,   344,   355,
-     362,   369,   376,   383,   390,   397,   404,   411,   418,   425,
-     432,   439,   449,   456,   463,   470,   477,   484,   492,   500,
-     508,   526,   538,   544,   552,   558
+       0,    46,    46,    55,    62,    70,    80,    69,    99,   114,
+     120,   125,   137,   143,   149,   156,   165,   171,   179,   185,
+     195,   206,   216,   228,   234,   245,   251,   256,   266,   277,
+     285,   284,   299,   309,   316,   323,   330,   337,   345,   356,
+     363,   370,   377,   384,   391,   398,   405,   412,   419,   426,
+     433,   440,   450,   457,   464,   471,   478,   485,   493,   501,
+     509,   527,   539,   545,   553,   559
 };
 #endif
 
@@ -1472,7 +1472,7 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* PROGRAM: METH_LIST  */
-#line 46 "syd.y"
+#line 47 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #1\n");
@@ -1484,7 +1484,7 @@ yyreduce:
     break;
 
   case 3: /* METH_LIST: METH METH_LIST  */
-#line 55 "syd.y"
+#line 56 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #3\n");
@@ -1495,7 +1495,7 @@ yyreduce:
     break;
 
   case 4: /* METH_LIST: METH  */
-#line 62 "syd.y"
+#line 63 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #4\n");
@@ -1506,7 +1506,7 @@ yyreduce:
     break;
 
   case 5: /* $@1: %empty  */
-#line 69 "syd.y"
+#line 70 "syd.y"
 {
 #if DEBUG
                         printf("Rule #5\n");
@@ -1520,7 +1520,7 @@ yyreduce:
     break;
 
   case 6: /* $@2: %empty  */
-#line 79 "syd.y"
+#line 80 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #5\n");
@@ -1531,7 +1531,7 @@ yyreduce:
     break;
 
   case 7: /* METH: TYPE ID $@1 '(' PARAMS ')' $@2 BODY  */
-#line 86 "syd.y"
+#line 87 "syd.y"
                 {
 #if DEBUG
                         printf("Rule #5\n");
@@ -1547,7 +1547,7 @@ yyreduce:
     break;
 
   case 8: /* PARAMS: FORMALS TYPE ID  */
-#line 99 "syd.y"
+#line 100 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #6\n");
@@ -1565,7 +1565,7 @@ yyreduce:
     break;
 
   case 9: /* PARAMS: %empty  */
-#line 113 "syd.y"
+#line 114 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #7\n");
@@ -1576,7 +1576,7 @@ yyreduce:
     break;
 
   case 10: /* PARAMS: error ';'  */
-#line 120 "syd.y"
+#line 121 "syd.y"
                 {
 			error_message("Syntax Error","skipping invalid parameter list",NULL);
 			yyerrok;
@@ -1585,7 +1585,7 @@ yyreduce:
     break;
 
   case 11: /* FORMALS: FORMALS TYPE ID ','  */
-#line 125 "syd.y"
+#line 126 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #8\n");
@@ -1600,7 +1600,7 @@ yyreduce:
     break;
 
   case 12: /* FORMALS: %empty  */
-#line 136 "syd.y"
+#line 137 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #9\n");
@@ -1611,7 +1611,7 @@ yyreduce:
     break;
 
   case 13: /* TYPE: INT  */
-#line 143 "syd.y"
+#line 144 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #10\n");
@@ -1621,7 +1621,7 @@ yyreduce:
     break;
 
   case 14: /* BODY: '{' DECLS STMTS '}'  */
-#line 149 "syd.y"
+#line 150 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #11\n");
@@ -1632,7 +1632,7 @@ yyreduce:
     break;
 
   case 15: /* DECLS: DECL_LIST DECL  */
-#line 156 "syd.y"
+#line 157 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #12\n");
@@ -1644,7 +1644,7 @@ yyreduce:
     break;
 
   case 16: /* DECLS: %empty  */
-#line 164 "syd.y"
+#line 165 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #13\n");
@@ -1655,7 +1655,7 @@ yyreduce:
     break;
 
   case 17: /* DECL_LIST: DECL_LIST DECL  */
-#line 171 "syd.y"
+#line 172 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #14\n");
@@ -1666,7 +1666,7 @@ yyreduce:
     break;
 
   case 18: /* DECL_LIST: %empty  */
-#line 178 "syd.y"
+#line 179 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #15\n");
@@ -1677,7 +1677,7 @@ yyreduce:
     break;
 
   case 19: /* DECL: TYPE ID VARS ';'  */
-#line 185 "syd.y"
+#line 186 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #16\n");
@@ -1691,7 +1691,7 @@ yyreduce:
     break;
 
   case 20: /* DECL: TYPE ID '=' EXPR VARS ';'  */
-#line 195 "syd.y"
+#line 196 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #17\n");
@@ -1706,7 +1706,7 @@ yyreduce:
     break;
 
   case 21: /* VARS: ',' ID VARS  */
-#line 206 "syd.y"
+#line 207 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #18\n");
@@ -1720,7 +1720,7 @@ yyreduce:
     break;
 
   case 22: /* VARS: ',' ID '=' EXPR VARS  */
-#line 216 "syd.y"
+#line 217 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #19\n");
@@ -1735,7 +1735,7 @@ yyreduce:
     break;
 
   case 23: /* VARS: %empty  */
-#line 227 "syd.y"
+#line 228 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #20\n");
@@ -1746,7 +1746,7 @@ yyreduce:
     break;
 
   case 24: /* STMTS: STMTS STMT  */
-#line 234 "syd.y"
+#line 235 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #21\n");
@@ -1760,7 +1760,7 @@ yyreduce:
     break;
 
   case 25: /* STMTS: %empty  */
-#line 244 "syd.y"
+#line 245 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #22\n");
@@ -1771,7 +1771,7 @@ yyreduce:
     break;
 
   case 26: /* STMTS: error ';'  */
-#line 251 "syd.y"
+#line 252 "syd.y"
                 {
 			error_message("Syntax Error","skipping invalid statement",NULL);
 			yyerrok;
@@ -1780,7 +1780,7 @@ yyreduce:
     break;
 
   case 27: /* STMT: ASSIGN ';'  */
-#line 256 "syd.y"
+#line 257 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #23\n");
@@ -1794,7 +1794,7 @@ yyreduce:
     break;
 
   case 28: /* STMT: RETURN EXPR ';'  */
-#line 266 "syd.y"
+#line 267 "syd.y"
                 { 
 #if DEBUG
                         printf("Rule #24\n");
@@ -1809,7 +1809,7 @@ yyreduce:
     break;
 
   case 29: /* STMT: IF '(' EXPR ')' STMT ELSE STMT  */
-#line 277 "syd.y"
+#line 278 "syd.y"
                 { 
 #if DEBUG
                         printf("Rule #25\n");
@@ -1820,7 +1820,7 @@ yyreduce:
     break;
 
   case 30: /* $@3: %empty  */
-#line 284 "syd.y"
+#line 285 "syd.y"
                 { 
 #if DEBUG
                         printf("Rule #26\n");
@@ -1831,7 +1831,7 @@ yyreduce:
     break;
 
   case 31: /* STMT: WHILE '(' EXPR ')' $@3 STMT  */
-#line 291 "syd.y"
+#line 292 "syd.y"
                 {
 #if DEBUG
                         printf("Rule #26\n");
@@ -1843,7 +1843,7 @@ yyreduce:
     break;
 
   case 32: /* STMT: BREAK ';'  */
-#line 299 "syd.y"
+#line 300 "syd.y"
                 { 
 #if DEBUG
                         printf("Rule #27\n");
@@ -1857,7 +1857,7 @@ yyreduce:
     break;
 
   case 33: /* STMT: BLOCK  */
-#line 309 "syd.y"
+#line 310 "syd.y"
                 { 
 #if DEBUG
                         printf("Rule #28\n");
@@ -1868,7 +1868,7 @@ yyreduce:
     break;
 
   case 34: /* STMT: ';'  */
-#line 316 "syd.y"
+#line 317 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #29\n");
@@ -1879,7 +1879,7 @@ yyreduce:
     break;
 
   case 35: /* BLOCK: '{' STMTS '}'  */
-#line 323 "syd.y"
+#line 324 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #30\n");
@@ -1890,7 +1890,7 @@ yyreduce:
     break;
 
   case 36: /* ASSIGN: LOCATION '=' EXPR  */
-#line 330 "syd.y"
+#line 331 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #31\n");
@@ -1901,7 +1901,7 @@ yyreduce:
     break;
 
   case 37: /* LOCATION: ID  */
-#line 337 "syd.y"
+#line 338 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #32\n");
@@ -1913,7 +1913,7 @@ yyreduce:
     break;
 
   case 38: /* METHOD: ID  */
-#line 345 "syd.y"
+#line 346 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #33\n");
@@ -1928,7 +1928,7 @@ yyreduce:
     break;
 
   case 39: /* EXPR: ADD_EXPR RELOP ADD_EXPR  */
-#line 356 "syd.y"
+#line 357 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #34\n");
@@ -1939,7 +1939,7 @@ yyreduce:
     break;
 
   case 40: /* EXPR: ADD_EXPR  */
-#line 363 "syd.y"
+#line 364 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #35\n");
@@ -1950,7 +1950,7 @@ yyreduce:
     break;
 
   case 41: /* RELOP: LE  */
-#line 370 "syd.y"
+#line 371 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #36\n");
@@ -1961,7 +1961,7 @@ yyreduce:
     break;
 
   case 42: /* RELOP: LT  */
-#line 377 "syd.y"
+#line 378 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #37\n");
@@ -1972,7 +1972,7 @@ yyreduce:
     break;
 
   case 43: /* RELOP: GT  */
-#line 384 "syd.y"
+#line 385 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #38\n");
@@ -1983,7 +1983,7 @@ yyreduce:
     break;
 
   case 44: /* RELOP: GE  */
-#line 391 "syd.y"
+#line 392 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #39\n");
@@ -1994,7 +1994,7 @@ yyreduce:
     break;
 
   case 45: /* RELOP: EQ  */
-#line 398 "syd.y"
+#line 399 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #40\n");
@@ -2005,7 +2005,7 @@ yyreduce:
     break;
 
   case 46: /* RELOP: NE  */
-#line 405 "syd.y"
+#line 406 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #41\n");
@@ -2016,7 +2016,7 @@ yyreduce:
     break;
 
   case 47: /* ADD_EXPR: ADD_EXPR ADDOP TERM  */
-#line 412 "syd.y"
+#line 413 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #42\n");
@@ -2027,7 +2027,7 @@ yyreduce:
     break;
 
   case 48: /* ADD_EXPR: TERM  */
-#line 419 "syd.y"
+#line 420 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #43\n");
@@ -2038,7 +2038,7 @@ yyreduce:
     break;
 
   case 49: /* ADDOP: '+'  */
-#line 426 "syd.y"
+#line 427 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #44\n");
@@ -2049,7 +2049,7 @@ yyreduce:
     break;
 
   case 50: /* ADDOP: '-'  */
-#line 433 "syd.y"
+#line 434 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #45\n");
@@ -2060,7 +2060,7 @@ yyreduce:
     break;
 
   case 51: /* TERM: TERM MULOP FACTOR  */
-#line 440 "syd.y"
+#line 441 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #46\n");
@@ -2074,7 +2074,7 @@ yyreduce:
     break;
 
   case 52: /* TERM: FACTOR  */
-#line 450 "syd.y"
+#line 451 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #47\n");
@@ -2085,7 +2085,7 @@ yyreduce:
     break;
 
   case 53: /* MULOP: '*'  */
-#line 457 "syd.y"
+#line 458 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #48\n");
@@ -2096,7 +2096,7 @@ yyreduce:
     break;
 
   case 54: /* MULOP: '/'  */
-#line 464 "syd.y"
+#line 465 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #49\n");
@@ -2107,7 +2107,7 @@ yyreduce:
     break;
 
   case 55: /* FACTOR: '(' EXPR ')'  */
-#line 471 "syd.y"
+#line 472 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #50\n");
@@ -2118,7 +2118,7 @@ yyreduce:
     break;
 
   case 56: /* FACTOR: LOCATION  */
-#line 478 "syd.y"
+#line 479 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #51\n");
@@ -2129,7 +2129,7 @@ yyreduce:
     break;
 
   case 57: /* FACTOR: NUM  */
-#line 485 "syd.y"
+#line 486 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #52\n");
@@ -2141,7 +2141,7 @@ yyreduce:
     break;
 
   case 58: /* FACTOR: TRUE  */
-#line 493 "syd.y"
+#line 494 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #53\n");
@@ -2153,7 +2153,7 @@ yyreduce:
     break;
 
   case 59: /* FACTOR: FALSE  */
-#line 501 "syd.y"
+#line 502 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #54\n");
@@ -2165,7 +2165,7 @@ yyreduce:
     break;
 
   case 60: /* FACTOR: METHOD '(' ACTUALS ')'  */
-#line 509 "syd.y"
+#line 510 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #55\n");
@@ -2187,7 +2187,7 @@ yyreduce:
     break;
 
   case 61: /* ACTUALS: ARGS EXPR  */
-#line 527 "syd.y"
+#line 528 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #56\n");
@@ -2202,7 +2202,7 @@ yyreduce:
     break;
 
   case 62: /* ACTUALS: %empty  */
-#line 538 "syd.y"
+#line 539 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #57\n");
@@ -2213,7 +2213,7 @@ yyreduce:
     break;
 
   case 63: /* ARGS: ARGS EXPR ','  */
-#line 545 "syd.y"
+#line 546 "syd.y"
                      { 
 #if DEBUG
                         printf("Rule #58\n");
@@ -2224,7 +2224,7 @@ yyreduce:
     break;
 
   case 64: /* ARGS: %empty  */
-#line 552 "syd.y"
+#line 553 "syd.y"
                         { 
 #if DEBUG
                         printf("Rule #59\n");
@@ -2235,7 +2235,7 @@ yyreduce:
     break;
 
   case 65: /* ARGS: error ')'  */
-#line 559 "syd.y"
+#line 560 "syd.y"
                 {
 			error_message("Syntax Error","skipping invalid argument list",NULL);
 			yyerrok;
@@ -2468,7 +2468,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 563 "syd.y"
+#line 564 "syd.y"
 
 
 /* creates symbols with int instead of char* */
@@ -2499,6 +2499,8 @@ int main(void)
 	fflush(stdout);
 	printAST(TreeRoot, -3);
    } else {
-	fprintf(stderr,"Parsing has errors, fix them to print AST.");
+	fflush(stdout);
+	fprintf(stderr,"Parsing has errors, fix them to print AST.\n");
+	fflush(stdout);
    }
 }
