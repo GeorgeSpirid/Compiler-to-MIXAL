@@ -22,4 +22,3 @@ int main()
 // comment
 return method1(5);
 }
-}

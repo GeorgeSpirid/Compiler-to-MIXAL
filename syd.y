@@ -13,7 +13,7 @@ extern int currLine;
 extern int currCol;
 extern char *yytext;
 
-#define DEBUG 1
+#define DEBUG 0
 
 static symbol *new_num_symbol(int value);
 
@@ -116,7 +116,12 @@ PARAMS            : FORMALS TYPE ID
                         printf("Rule #7\n");
 #endif
 			$$=MkNode(astParams,NULL,NULL,NULL,NULL,NULL);
-                     };
+                     }
+		| error ')'
+		{
+			yyerrok;
+			fprintf(stderr,"skipping parameters\n");
+		};
 FORMALS            : FORMALS TYPE ID ','
                      { 
 #if DEBUG
@@ -309,7 +314,13 @@ STMT            : ASSIGN ';'
                         printf("Rule #29\n");
 #endif
 			$$=MkNode(astNullStmt,NULL,NULL,NULL,NULL,NULL);
-                     };
+                     }
+		| error ';'
+		{
+			yyerrok;
+			fprintf(stderr,"skipping statement\n");
+			$$=MkNode(astNullStmt,NULL,NULL,NULL,NULL,NULL);
+		};
 BLOCK            : '{' STMTS '}'
                      { 
 #if DEBUG
@@ -574,6 +585,7 @@ int main(void)
 		error_message("Syntax Error","main cannot have parameters",NULL);
 	}
 	fflush(stdout);
-	printAST(TreeRoot, -3);
+	if(error_count==0)
+		printAST(TreeRoot, -3);
    }
 }

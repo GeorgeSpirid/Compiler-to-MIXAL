@@ -2,12 +2,10 @@ int method1(int a)
 {
 int b;
 b = ((a+10)-10)*5)/5;
-c=1;
 return b;
 }
 int main()
 {
 int a=5;
-c=1;
 return method1(a);
 }
