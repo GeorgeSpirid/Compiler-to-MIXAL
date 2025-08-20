@@ -195,8 +195,8 @@ int currentcol=1;
 #endif
 				currentcol+=yyleng;
 				if(yytext[0]=='0' && strlen(yytext)>1){
-					printf("%s number cannot start with zero",yytext);
-					exit(1);
+					error_message("Lexical Error","number cannot start with zero",yytext);
+					yylval.yint=0;
 				}
                                yylval.yint=atoi(yytext);
                                return(NUM);
@@ -204,7 +204,7 @@ int currentcol=1;
 
 [ \f\r\t]+                {
 #if DEBUG
-								printf("%s\n",yytext); 
+				printf("%s\n",yytext); 
 #endif
 				currentcol+=yyleng;
 			}
@@ -220,7 +220,7 @@ int currentcol=1;
 			    }
 .                           {
 				currentcol++;
-                               fprintf(stderr,"Lexical Error in line %d col %d: illegal 				char - %s\n",currentline,currentcol,yytext);
+				error_message("Lexical Error","illegal character",yytext);
                             }  
     
 
