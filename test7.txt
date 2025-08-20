@@ -1,0 +1,10 @@
+int method1(int a)
+{
+int b=0;
+int c=a/b;
+return c;
+}
+int main()
+{
+return method1(5);
+}

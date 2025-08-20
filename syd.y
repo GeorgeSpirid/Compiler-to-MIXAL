@@ -56,6 +56,13 @@ PROGRAM            : METH_LIST
 #if DEBUG
                         printf("Rule #2\n");
 #endif
+		}
+		| error
+		{
+			error_message("Syntax Error","program must have only methods",NULL);
+			yyerrok;
+			yyclearin;
+			$$=MkNode(astProgram,NULL,NULL,NULL,NULL,NULL);
 		};
 
 METH_LIST            : METH METH_LIST
@@ -76,13 +83,19 @@ METH_LIST            : METH METH_LIST
 		{
 			error_message("Syntax Error","declaration outside of method",NULL);
 			yyerrok;
-			$$=MkNode(astMethList,NULL,NULL,NULL,NULL,NULL);
+			yyclearin;
 		}
-		| error ';' 
+		| STMT ';' 
+		{
+			error_message("Syntax Error","statement outside of method",NULL);
+			yyerrok;
+			yyclearin;
+		}
+		| error ';'
 		{
 			error_message("Syntax Error","only methods allowed at the top level",NULL);
 			yyerrok;
-			$$=MkNode(astMethList,NULL,NULL,NULL,NULL,NULL);
+			yyclearin;
 		};
 METH            : TYPE ID
 {
@@ -472,7 +485,10 @@ TERM            : TERM MULOP FACTOR
 #if DEBUG
                         printf("Rule #48\n");
 #endif
-			if($2->NodeType==astDiv && is_zero($3)){
+			if($2->NodeType==astDiv){
+			    if(is_zero($3))
+				error_message("Semantic Error","division by zero",NULL);
+			    else if($3->NodeType==astId && $3->SymbolNode && $3->					SymbolNode->timi==0)
 				error_message("Semantic Error","division by zero",NULL);
 			}
 			$$=MkNode($2->NodeType,NULL,$1,$3,NULL,NULL);
