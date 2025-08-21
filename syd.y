@@ -13,7 +13,7 @@ extern int currLine;
 extern int currCol;
 extern char *yytext;
 
-#define DEBUG 1
+#define DEBUG 0
 
 static symbol *new_num_symbol(int value);
 
