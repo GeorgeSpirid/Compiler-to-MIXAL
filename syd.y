@@ -1,7 +1,8 @@
 
 %{
 
-#include "defs.h" 
+#include "defs.h"
+
 
 int error_count=0;
 
@@ -619,7 +620,7 @@ void yyerror(const char *s)
    error_message("Syntax Error",s,NULL);
 }
 
-int main(void)
+/* int main(void)
 {
    if(yyparse()==0){
 	int mi=methodidx("main");
@@ -636,4 +637,7 @@ int main(void)
 		fprintf(stderr,"Parsing failed.\n");
 	}
    }
-}
+} */
+
+
+#include "syd2.y"

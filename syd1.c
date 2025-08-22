@@ -1,257 +1,237 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "defs.h"
+#include "syd.tab.h"
 
-int numbmethods=0;
-int currentmethod=-1;
-MethodTab mt[MAX_METHOD_NUMBER];
-AstNode *TreeRoot; // poinrter to the root of the AST
+#define MAX_LOOP 32
+static const char* loop_end_lbls[MAX_LOOP];
+static int loop_depth=0;
 
-int loopdepth=0; // for break checking
-int cur_param_count=0;
+extern AstNode *TreeRoot;
+int yyparse();
 
-extern int currentline;
-extern int currentcol;
-extern int error_count;
+FILE *femitc;
 
-void Init_Hash_Table(HASH_TAB *ht)
-{  
-   ht->numbsymbols=0;
-   int i;
+static void CodeGeneration(AstNode *p);
 
-   for(i=0; i<SYM_TABLE_SIZE; i++)
-      ht->table[i]=NULL;
+static int lbl_counter=0;
+// Generates a unique label every time it is called
+static const char* new_label(const char *prefix){
+   static char name[32];
+   snprintf(name,sizeof(name),"%s-%d",prefix,++lbl_counter);
+   return name;
 }
 
-symbol *new_symbol(char *name)
-{  symbol *symbp;
-   symbp=(symbol *)malloc(sizeof(symbol));
-
-   if(!symbp){
-      printf("cannot allocate memory for symbp %s\n", name);
-      exit(1);
-   }
-   memset(symbp,0,sizeof(symbol));
-   strncpy(symbp->name,name,(strlen(name)>NAME_MAX)?NAME_MAX:strlen(name));
-   symbp->timi=0;
-   symbp->parameter=0;
-   symbp->NextSymbol=NULL;
-   symbp->PrevSymbol=NULL;
-   return(symbp);
-}
-
-int mkkey(char *s)
-{  char *p;
-   int athr=0;
-
-   for(p=s; *p; p++) athr=athr+(*p);
-   return (athr % SYM_TABLE_SIZE);
-}
-
-void addsymb(HASH_TAB *ht, symbol *symbp)
-{  int i;
-   symbol *p;
-
-   i=mkkey(symbp->name);
-   p=ht->table[i];
-   symbp->NextSymbol=p;
-   symbp->PrevSymbol=NULL;
-   if(p) p->PrevSymbol=symbp;
-   ht->table[i]=symbp;
-   ht->numbsymbols++;
-}
-
-symbol *findsymb(HASH_TAB *ht, char *onoma)
-{  int i;
-   symbol *p;
-
-   i=mkkey(onoma);
-   p=ht->table[i];
-   while(p && (strcmp(p->name,onoma) !=0))
-      p=p->NextSymbol;
-   return(p);
-}
-
-int methodidx(char *name){
-   for(int i=0;i<numbmethods;++i){
-      if(strcmp(mt[i].name,name)==0)
-         return i;
-   }
-   return -1;
-}
-
-void addmethod(char *name){
-   if(methodidx(name)!=-1){
-      error_message("Semantic Error","cannot add method",name);
-   }
-   if (numbmethods>=MAX_METHOD_NUMBER){
-      error_message("Semantic Error","cannot add method, too many methods",name);
-   }
-   int len=strlen(name);
-   if(len>NAME_MAX){
-      printf("method name %s is too long, so it is shortened\n", name);
-   }
-   memcpy(mt[numbmethods].name,name,NAME_MAX);
-   mt[numbmethods].name[NAME_MAX]='\0';
-   Init_Hash_Table(&mt[numbmethods].ht);
-   mt[numbmethods].exists=1;
-   mt[numbmethods].param_count=0;
-   mt[numbmethods].has_return=0;
-   numbmethods++;
-}
-
-void currentscope(char *name){
-   int i=methodidx(name);
-   if (i==-1){
-      error_message("Semantic Error","method isn't registered",name);
-   }
-   currentmethod=i;
-}
-
-void leavescope(void){
-   currentmethod=-1;
-}
-
-void addvariable(char *name, int parameter){
-   if(currentmethod==-1){
-      error_message("Semantic Error","declaring variable outside of a method",name);
-   }
-   HASH_TAB *tempht = &mt[currentmethod].ht;
-   if(findsymb(tempht,name)){
-      error_message("Semantic Error","redeclaring variable",name);
-   }
-   symbol *temps = new_symbol(name);
-   temps->parameter=parameter?1:0;
-   addsymb(tempht,temps);
-}
-
-symbol* findsymbolinmethod(char *name){
-   if(currentmethod==-1){
-      error_message("Semantic Error","looking for a variable outside a method",name);
-   }
-   symbol* temps = findsymb(&mt[currentmethod].ht, name);
-   if(!temps){
-      error_message("Semantic Error","variable not found in method",name);
-   }
-   return temps;
-}
-
-AstNode *MkNode(int tipos,symbol *sn,
-              AstNode *z0,AstNode *z1,AstNode *z2,AstNode *z3)
-{  AstNode *p;
-
-   p=(AstNode *)malloc(sizeof(AstNode));
-   if(!p)
-   {
-      printf("Out of memory\n");
-      exit(1);
-   }
+void emit(const char *op,const char *arg)
+{
+   if(arg && arg[0]!='\0')
+      fprintf(femitc," %s %s\n",op,arg);
    else
-   {
-      p->NodeType=tipos;
-      p->SymbolNode=sn;
-      p->pAstNode[0]=z0;
-      p->pAstNode[1]=z1;
-      p->pAstNode[2]=z2;
-      p->pAstNode[3]=z3;
-      return(p);
+      fprintf(femitc," %s\n",op);
+}
+
+static void BinOp(const char *op,AstNode *p){
+   CodeGeneration(p->pAstNode[0]);
+   emit("STA","TEMP");
+   CodeGeneration(p->pAstNode[1]);
+   emit(op,"TEMP");
+}
+
+static void ProcessProgram(AstNode *p);
+static void ProcessMethList(AstNode *p);
+static void ProcessMethod(AstNode *p);
+static void ProcessBody(AstNode *p);
+static void EmitDecls(AstNode *p);
+static void ProcessDecls(AstNode *p);
+static void ProcessStmtSeq(AstNode *p);
+static void ProcessExprStmt(AstNode *p);
+
+
+void ProcessDecimConst(AstNode *p){
+   fprintf(femitc," LDA =%s=\n",p->SymbolNode->name);
+}
+
+void ProcessId(AstNode *p){
+   fprintf(femitc," LDA %s\n",p->SymbolNode->name);
+}
+
+void ProcessAdd(AstNode *p) {BinOp("ADD", p);}
+
+void ProcessSub(AstNode *p) {BinOp("SUB", p);}
+
+void ProcessMult(AstNode *p) {BinOp("MUL", p);}
+
+void ProcessDiv(AstNode *p) {BinOp("DIV", p);}
+
+static void ProcessRelop(AstNode *p){
+   const char *trueLbl=new_label("TRUE");
+   const char *endLbl=new_label("END");
+
+   CodeGeneration(p->pAstNode[0]);
+   emit("STA","TEMP");
+   CodeGeneration(p->pAstNode[1]);
+   emit("CMPA","TEMP");
+
+   switch(p->NodeType){
+      case astEq: emit("JEQ",trueLbl); break;
+      case astNotEq: emit("JNE",trueLbl); break;
+      case astLess: emit("JLT",trueLbl); break;
+      case astLeEq: emit("JLE",trueLbl); break;
+      case astGreater: emit("JGT",trueLbl); break;
+      case astGrEq: emit("JGE",trueLbl); break;
+      default: break;
+   }
+
+   fprintf(femitc," LDA =0=\n");
+   fprintf(femitc," JMP %s\n",endLbl);
+   fprintf(femitc," %s ENTA 1\n",trueLbl);
+   fprintf(femitc," NOP\n",endLbl);
+}
+
+void ProcessAssign(AstNode *p){
+   CodeGeneration(p->pAstNode[1]);
+   fprintf(femitc," STA %s\n",p->pAstNode[0]->SymbolNode->name);  
+}
+
+static void ProcessReturn(AstNode *p){
+   if(p->pAstNode[0]) CodeGeneration(p->pAstNode[0]);
+   emit("HLT","");
+}
+
+static void ProcessExprStmt(AstNode *p){
+   if(p->pAstNode[0]) CodeGeneration(p->pAstNode[0]);
+}
+
+static void ProcessStmtSeq(AstNode *p){
+   if(!p) return;
+   if(p->pAstNode[0]) CodeGeneration(p->pAstNode[0]);
+   if(p->pAstNode[1]) ProcessStmtSeq(p->pAstNode[1]);
+}
+
+static void ProcessIfElse(AstNode *p){
+   const char *elseLbl=new_label("ELSE");
+   const char *endLbl=new_label("ENDIF");
+
+   CodeGeneration(p->pAstNode[0]);
+   emit("STA","TEMP");
+   fprintf(femitc," LDA TEMP\n");
+   fprintf(femitc," JZ %s\n",elseLbl);
+
+   CodeGeneration(p->pAstNode[1]);
+   fprintf(femitc," JMP %s\n",endLbl);
+
+   fprintf(femitc," %s NOP\n",elseLbl);
+   if(p->pAstNode[2]) CodeGeneration(p->pAstNode[2]);
+
+   fprintf(femitc," %s NOP\n",endLbl);
+}
+
+static void ProcessWhile(AstNode *p){
+   const char *startLbl=new_label("WHILE");
+   const char *endLbl=new_label("ENDW");
+
+   loop_end_lbls[loop_depth++]=endLbl;
+
+   fprintf(femitc,"%s NOP\n",startLbl);
+   CodeGeneration(p->pAstNode[0]);
+   emit("STA","TEMP");
+   fprintf(femitc," LDA TEMP\n");
+   fprintf(femitc," JZ %s\n",endLbl);
+
+   CodeGeneration(p->pAstNode[1]);
+   fprintf(femitc," JMP %s\n",startLbl);
+
+   fprintf(femitc," %s NOP\n",endLbl);
+   loop_depth--;
+}
+
+static void ProcessBreak(){
+   if(loop_depth>0){
+      fprintf(femitc," JMP %s\n",loop_end_lbls[loop_depth-1]);
    }
 }
 
-
-void kena(int n)
-{  int i;
-   
-   for(i=0; i<n; i++) printf(" ");
-}
-void printAST(AstNode *p, int n)
-{
-    if (!p) return;
-    n=n+3;
-    switch (p->NodeType) {
-        case astProgram:     kena(n); puts("astProgram"); break;
-        case astMethList:    kena(n); puts("astMethList"); break;
-        case astMethod:      kena(n); printf("astMethod%s%s\n",
-                                 p->SymbolNode ? "=" : "",
-                                 p->SymbolNode ? (char*)p->SymbolNode->name : ""); break;
-        case astParams:      kena(n); puts("astParams"); break;
-        case astParam:       kena(n); printf("astParam%s%s\n",
-                                 p->SymbolNode ? "=" : "",
-                                 p->SymbolNode ? (char*)p->SymbolNode->name : ""); break;
-        case astBody:        kena(n); puts("astBody"); break;
-        case astDecls:       kena(n); puts("astDecls"); break;
-        case astVarList:     kena(n); puts("astVarList"); break;
-        case astStmtSeq:     kena(n); puts("astStmtSeq"); break;
-        case astBlock:       kena(n); puts("astBlock"); break;
-        case astExprStmt:    kena(n); puts("astExprStmt"); break;
-        case astAssign:      kena(n); puts("astAssign"); break;
-        case astReturnStmt:  kena(n); puts("astReturnStmt"); break;
-        case astIfStmt:      kena(n); puts("astIfStmt"); break;
-        case astIfElseStmt:  kena(n); puts("astIfElseStmt"); break;
-        case astWhileStmt:   kena(n); puts("astWhileStmt"); break;
-        case astBreakStmt:   kena(n); puts("astBreakStmt"); break;
-        case astAdd:         kena(n); puts("astAdd"); break;
-        case astSub:         kena(n); puts("astSub"); break;
-        case astMult:        kena(n); puts("astMult"); break;
-        case astDiv:         kena(n); puts("astDiv"); break;
-        case astEq:          kena(n); puts("astEq"); break;
-        case astNotEq:       kena(n); puts("astNotEq"); break;
-        case astLess:        kena(n); puts("astLess"); break;
-        case astLeEq:        kena(n); puts("astLeEq"); break;
-        case astGreater:     kena(n); puts("astGreater"); break;
-        case astGrEq:        kena(n); puts("astGrEq"); break;
-        case astId:          kena(n); printf("astId=%s\n",
-                                 p->SymbolNode ? (char*)p->SymbolNode->name : "?"); break;
-        case astDecimConst:  kena(n); printf("astDecimConst=%s\n",
-                                 p->SymbolNode ? (char*)p->SymbolNode->name : "?"); break;
-        case astCall:        kena(n); puts("astCall"); break;
-        case astArgs:        kena(n); puts("astArgs"); break;
-        default:             kena(n); printf("UNKNOWN=%d\n", p->NodeType);
-    }
-    for (int i=0;i<4;i++) if (p->pAstNode[i]) printAST(p->pAstNode[i], n);
+static void EmitDecls(AstNode *p){
+   if(!p) return;
+   if(p->NodeType==astDecls){
+      AstNode *var=p->pAstNode[0];
+      if(var && var->NodeType==astVarList){
+         AstNode *temp=var->pAstNode[0];
+         if(temp && temp->NodeType==astAssign){
+            CodeGeneration(temp->pAstNode[0]);
+         }
+      }
+   }
 }
 
-AstNode*  mostright(AstNode *p)
-{
-    if (!p) return NULL;
-    if(p->NodeType==astStmtSeq){
-      if(p->pAstNode[1]) return mostright(p->pAstNode[1]);
-      else return mostright(p->pAstNode[0]);
-    }
-    return p;
+static void ProcessBody(AstNode *p){
+   EmitDecls(p->pAstNode[0]);
+   if(p->pAstNode[1]) CodeGeneration(p->pAstNode[1]);
 }
 
-int ast_returns(AstNode *s){
-   if (!s) return 0;
-   if (s->NodeType == astReturnStmt) return 1;
-   if (s->NodeType==astStmtSeq) return ast_returns(mostright(s));
-   if (s->NodeType==astBlock) return ast_returns(s->pAstNode[0]);
-   if (s->NodeType==astIfElseStmt)
-      return ast_returns(s->pAstNode[1]) && ast_returns(s->pAstNode[2]);
+static void ProcessMethod(AstNode *p){
+   if(p->SymbolNode && strcmp(p->SymbolNode->name,"main")==0){
+      ProcessBody(p->pAstNode[0]);
+   }
+}
+
+static void ProcessMethList(AstNode *p){
+   if(!p) return;
+   if(p->NodeType==astMethList){
+      if (p->pAstNode[0]) ProcessMethod(p->pAstNode[0]); 
+      if (p->pAstNode[1]) ProcessMethList(p->pAstNode[1]); 
+   } else {
+      ProcessMethod(p);
+   }
+}
+
+static void ProcessProgram(AstNode *p){
+   if(p->pAstNode[0]) ProcessMethList(p->pAstNode[0]);
+}
+
+void CodeGeneration(AstNode *p){
+   if(!p) return;
+   switch (p->NodeType) {
+      case astProgram: ProcessProgram(p); break;
+      case astMethList: ProcessMethList(p); break;
+      case astMethod: ProcessMethod(p); break;
+      case astBody: ProcessBody(p); break;
+      case astDecls: break;
+      case astVarList: break;
+      case astStmtSeq: ProcessStmtSeq(p); break;
+      case astExprStmt: ProcessExprStmt(p); break;
+      case astReturnStmt: ProcessReturn(p); break;
+      case astIfElseStmt: ProcessIfElse(p); break;
+      case astWhileStmt: ProcessWhile(p); break;
+      case astBreakStmt: ProcessBreak(); break;
+      case astDecimConst: ProcessDecimConst(p); break;
+      case astId: ProcessId(p); break;
+      case astAdd: ProcessAdd(p); break;
+      case astSub: ProcessSub(p); break;
+      case astMult: ProcessMult(p); break;
+      case astDiv: ProcessDiv(p); break;
+      case astAssign: ProcessAssign(p); break;
+      case astEq: case astNotEq: case astLess: case astLeEq: case astGreater: case astGrEq: ProcessRelop(p); break;
+      default: 
+         break;
+   }
+}
+
+int main(){
+   if(yyparse()==0){
+      femitc=fopen("output.mix","w");
+
+      fprintf(femitc," ORIG 1000\n");
+      fprintf(femitc," TEMP CON 0\n");
+
+      CodeGeneration(TreeRoot);
+
+      fprintf(femitc," HLT\n");
+      fprintf(femitc," END\n");
+
+      fclose(femitc);
+   }
    return 0;
 }
 
-int count_args(AstNode *s) {
-    if (!s) return 0;
-
-    if (s->NodeType == astArgs) {
-        return count_args(s->pAstNode[0]) + count_args(s->pAstNode[1]);
-    }
-
-    // Any non-astArgs node is a single argument
-    return 1;
-}
-
-
-int is_zero(AstNode *s){
-   return s && s->NodeType==astDecimConst && s->SymbolNode && s->SymbolNode->timi==0;
-}
-
-int is_location(AstNode *s){
-   return s && s->NodeType==astId;
-}
-
-void error_message(const char *errortype,const char *msg,const char *extra){
-   fprintf(stderr,"|%s| in line %d col %d: %s",errortype,currentline,currentcol,msg);
-   if(extra) fprintf(stderr," (near %s)",extra);
-   fprintf(stderr,"\n");
-   error_count++;
-}
