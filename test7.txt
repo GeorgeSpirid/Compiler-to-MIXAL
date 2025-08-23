@@ -1,21 +1,3 @@
 int main() {
-  int a=0, b=3, c=5;
-
-  while (a < 5) {
-    if (a == 2) {
-      break;
-    } else {
-      b = b + 1;
-    }
-    a = a + 1;
-  }
-
-  if (b >= c) {
-    c = c + 10;
-  }
-  else{
-  c=10;
-}
-
-  return c;
+  return 43;
 }
