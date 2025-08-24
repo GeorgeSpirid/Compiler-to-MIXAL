@@ -570,7 +570,16 @@ FACTOR            : '(' EXPR ')'
 				error_message("Syntax Error","method needs different type of arguments",mt[mi].name);
 			}
 			$$=MkNode(astCall,NULL,$1,$3,NULL,NULL);
-                     };
+                     } 
+		| '-' FACTOR
+		{
+#if DEBUG
+		printf("Rule #57-Unary Minus\n");
+#endif
+		symbol *temps=new_num_symbol(0);
+		$$=MkNode(astSub,NULL,MkNode(astDecimConst,temps,NULL,NULL,NULL,NULL),$2,NULL,NULL);
+		};
+                     
 ACTUALS            : ARGS EXPR
                      { 
 #if DEBUG

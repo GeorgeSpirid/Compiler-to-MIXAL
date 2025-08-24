@@ -1,6 +1,6 @@
-        ORIG 1000
-MAIN    NOP
-        OUT VAL(19)
-        HLT
-VAL     ALF "  145"
-        END MAIN
+ ORIG 1000
+MAIN NOP
+ OUT VAL(19)
+ HLT
+VAL ALF " -154"
+ END MAIN
