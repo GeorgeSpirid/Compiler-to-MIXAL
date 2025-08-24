@@ -12,11 +12,30 @@ static int lastReturnIsConst=0;
 static int lastReturnValue=0;
 
 static void emit_return(int value){
-   char num[6];
-   snprintf(num, sizeof(num), "%d", value);
-   size_t len = strlen(num);
-   fprintf(femitc, "BUF     ALF  \"%s\"\n", num);
-   fprintf(femitc, "        OUT BUF(%zu)\n",len);
+   lastReturnIsConst=1;
+   lastReturnValue=value;
+}
+
+static void emit_value_as_alf(int value){
+   char buf[32];
+   snprintf(buf, sizeof(buf), "%d", value);
+   size_t len = strlen(buf);
+   size_t start=0;
+   if(len>5){
+      start=len-5;
+      if(buf[0]=='-'){
+         start=len-5;
+         if(start<1) start=1;
+      }
+   }
+   size_t slice_len=len-start;
+   char word[6];
+   size_t pad=(slice_len<5)?(5-slice_len):0;
+   for(size_t i=0; i<pad; i++) word[i]=' ';
+   memcpy(word+pad, buf+start, slice_len);
+   word[5]='\0';
+   fprintf(femitc, "VAL     ALF \"%s\"\n", word);
+
 }
 
 static void CodeGeneration(AstNode *p){
@@ -35,8 +54,7 @@ static void CodeGeneration(AstNode *p){
       case astReturnStmt:
          AstNode *expr=p->pAstNode[0];
          if(expr&&expr->NodeType==astDecimConst){
-            lastReturnIsConst=1;
-            lastReturnValue=atoi(expr->SymbolNode->name);
+            emit_return(atoi(expr->SymbolNode->name));
          }
          break;
       case astDecimConst:
@@ -59,11 +77,13 @@ int main(){
 
       CodeGeneration(TreeRoot);
 
-      if(lastReturnIsConst)
-         emit_return(lastReturnValue);
+      if(lastReturnIsConst){}
+         fprintf(femitc, "        OUT VAL(19)\n", lastReturnValue);
 
       fprintf(femitc, "        HLT\n");
-      fprintf(femitc, "TEMP    CON 0\n");
+      if(lastReturnIsConst){
+         emit_value_as_alf(lastReturnValue);
+      }
       fprintf(femitc, "        END MAIN\n");
 
       fclose(femitc);

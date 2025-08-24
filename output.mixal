@@ -1,7 +1,6 @@
         ORIG 1000
 MAIN    NOP
-        OUT BUF(19)
+        OUT VAL(19)
         HLT
-BUF     ALF  "19   "
-TEMP    CON 0
+VAL     ALF "  145"
         END MAIN
