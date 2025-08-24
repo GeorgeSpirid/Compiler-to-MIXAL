@@ -8,21 +8,16 @@ int yyparse();
 
 FILE *femitc;
 
+static int lastReturnIsConst=0;
+static int lastReturnValue=0;
+
 static void emit_return(int value){
    char num[6];
    snprintf(num, sizeof(num), "%d", value);
-   char word[6]="     ";
    size_t len = strlen(num);
-   if(len>5) len=5;
-   memcpy(word+(5-len),num,len);
-   fprintf(femitc, "BUF     ALF  \"%s\"\n", word);
-   for(int i=0;i<13;i++){
-      fprintf(femitc, "        ALF \"     \"\n");
-   }
+   fprintf(femitc, "BUF     ALF  \"%s\"\n", num);
+   fprintf(femitc, "        OUT BUF(%zu)\n",len);
 }
-
-static int lastReturnIsConst=0;
-static int lastReturnValue=0;
 
 static void CodeGeneration(AstNode *p){
    if(!p) return;
@@ -42,10 +37,6 @@ static void CodeGeneration(AstNode *p){
          if(expr&&expr->NodeType==astDecimConst){
             lastReturnIsConst=1;
             lastReturnValue=atoi(expr->SymbolNode->name);
-            fprintf(femitc,"        OUT BUF(19)\n");
-         }
-         else{
-            fprintf(femitc, "        HLT\n");
          }
          break;
       case astDecimConst:
@@ -68,11 +59,10 @@ int main(){
 
       CodeGeneration(TreeRoot);
 
-      fprintf(femitc, "        HLT\n");
-
       if(lastReturnIsConst)
          emit_return(lastReturnValue);
 
+      fprintf(femitc, "        HLT\n");
       fprintf(femitc, "TEMP    CON 0\n");
       fprintf(femitc, "        END MAIN\n");
 
