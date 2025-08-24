@@ -2,19 +2,6 @@
 MAIN    NOP
         OUT BUF(19)
         HLT
-BUF     ALF  "   43"
-        ALF "     "
-        ALF "     "
-        ALF "     "
-        ALF "     "
-        ALF "     "
-        ALF "     "
-        ALF "     "
-        ALF "     "
-        ALF "     "
-        ALF "     "
-        ALF "     "
-        ALF "     "
-        ALF "     "
+BUF     ALF  "19   "
 TEMP    CON 0
         END MAIN
