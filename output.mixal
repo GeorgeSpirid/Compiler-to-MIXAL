@@ -1,6 +1,7 @@
  ORIG 1000
 MAIN NOP
-  OUT x(19)
+  OUT RCONST(19)
   HLT
-x ALF "-4616"
+x ALF "1    "
+RCONST ALF "36   "
  END MAIN

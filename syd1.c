@@ -35,6 +35,7 @@ static void emit_value_as_alf(char *label,int value){
 
       char line[64];
       if(pos==0){
+         printf("%s ALF \"%s\"\n",label,word);
          snprintf(line, sizeof(line), "%s ALF \"%s\"\n",label,word);
       } else {
          snprintf(line, sizeof(line), "     ALF \"%s\"\n", word);
@@ -43,7 +44,6 @@ static void emit_value_as_alf(char *label,int value){
       if(strlen(alf_buf)+strlen(line)<sizeof(alf_buf)){
          strcat(alf_buf, line);
       } else {
-         fprintf(stderr, "ALF buffer overflow\n");
          exit(1);
       }
 
@@ -51,6 +51,30 @@ static void emit_value_as_alf(char *label,int value){
    }
 } 
 
+static int evalExpr(AstNode *p){
+   if(!p) return 0;
+   switch(p->NodeType){
+      case astDecimConst:
+         return (int)p->SymbolNode->timi;
+      case astId:
+         return (p->SymbolNode)?(int)p->SymbolNode->timi:0;
+      case astAdd:
+         return evalExpr(p->pAstNode[0]) + evalExpr(p->pAstNode[1]);
+      case astSub:
+         return evalExpr(p->pAstNode[0]) - evalExpr(p->pAstNode[1]);
+      case astMult:
+         return evalExpr(p->pAstNode[0]) * evalExpr(p->pAstNode[1]);
+      case astDiv:
+      int second=evalExpr(p->pAstNode[1]);
+      if(second==0){
+         fprintf(stderr, "Error: Division by zero\n");
+         exit(1);
+      }
+      return evalExpr(p->pAstNode[0]) / evalExpr(p->pAstNode[1]);
+      default:
+         return 0;
+   }
+}
 
 static void CodeGeneration(AstNode *p){ 
    if(!p) return; 
@@ -60,31 +84,32 @@ static void CodeGeneration(AstNode *p){
          for(int i=0; i<4; i++){ CodeGeneration(p->pAstNode[i]); } 
          break; 
       case astReturnStmt:
-         AstNode *child1=p->pAstNode[0];
-         if(child1 && child1->NodeType==astDecimConst){
+         AstNode *expr=p->pAstNode[0];
+         if(expr){
+            int val=evalExpr(expr);
             fprintf(femitc, "  OUT RCONST(19)\n");
-            fprintf(femitc, "  HLT\n"); 
-            emit_value_as_alf("RCONST", child1->SymbolNode->timi);
+            fprintf(femitc, "  HLT\n");
+            emit_value_as_alf("RCONST", val);
          }
-         else if(child1 && child1->NodeType==astId){
-            fprintf(femitc, "  OUT %s(19)\n", child1->SymbolNode->name);
-            fprintf(femitc, "  HLT\n"); 
-         }
+         // AstNode *child1=p->pAstNode[0];
+         // if(child1 && child1->NodeType==astDecimConst){
+         //    fprintf(femitc, "  OUT RCONST(19)\n");
+         //    fprintf(femitc, "  HLT\n"); 
+         //    emit_value_as_alf("RCONST", child1->SymbolNode->timi);
+         // }
+         // else if(child1 && child1->NodeType==astId){
+         //    fprintf(femitc, "  OUT %s(19)\n", child1->SymbolNode->name);
+         //    fprintf(femitc, "  HLT\n"); 
+         // }
          break;
       case astAssign:{
             AstNode *child1=p->pAstNode[0];
             AstNode *child2=p->pAstNode[1];
-            if(child1 && child1->NodeType==astId){
-               if(child2 && child2->NodeType==astDecimConst){
-                  char * label = (char *)child1->SymbolNode->name;
-                  emit_value_as_alf(label,(int) child2->SymbolNode->timi);
-               }
-               if(child2 && child2->NodeType==astSub){
-                  if(child2->pAstNode[1] && child2->pAstNode[1]->NodeType==astDecimConst){
-                     char * label = (char *)child1->SymbolNode->name;
-                     emit_value_as_alf(label,-(int) child2->pAstNode[1]->SymbolNode->timi);
-                  }
-               }
+            if(child1 && child1->NodeType==astId && child2){
+               int val=evalExpr(child2);
+               char *label=(char*)child1->SymbolNode->name;
+               emit_value_as_alf(label, val);
+               child1->SymbolNode->timi=val;
             }
          break;
       }
