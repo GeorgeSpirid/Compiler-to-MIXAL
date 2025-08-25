@@ -1,8 +1,6 @@
  ORIG 1000
 MAIN NOP
- OUT VAL(19)
- HLT
-VAL ALF "-2147"
-     ALF "48364"
-     ALF "7    "
+  OUT x(19)
+  HLT
+x ALF "-4616"
  END MAIN

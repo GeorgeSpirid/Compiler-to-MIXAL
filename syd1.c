@@ -7,16 +7,9 @@ extern AstNode *TreeRoot;
 int yyparse(); 
 
 FILE *femitc; 
+char alf_buf[8192]="";
 
-static int lastReturnIsConst=0; 
-static int lastReturnValue=0; 
-
-static void emit_return(int value){ 
-   lastReturnIsConst=1; 
-   lastReturnValue=value; 
-} 
-
-static void emit_value_as_alf(int value){ 
+static void emit_value_as_alf(char *label,int value){ 
    char buf[32]; 
    snprintf(buf, sizeof(buf), "%d", value); 
 
@@ -40,55 +33,61 @@ static void emit_value_as_alf(int value){
       }
       word[5]='\0';
 
+      char line[64];
       if(pos==0){
-         fprintf(femitc, "VAL ALF \"%s\"\n", word);
+         snprintf(line, sizeof(line), "%s ALF \"%s\"\n",label,word);
       } else {
-         fprintf(femitc, "     ALF \"%s\"\n", word);
+         snprintf(line, sizeof(line), "     ALF \"%s\"\n", word);
       }
+
+      if(strlen(alf_buf)+strlen(line)<sizeof(alf_buf)){
+         strcat(alf_buf, line);
+      } else {
+         fprintf(stderr, "ALF buffer overflow\n");
+         exit(1);
+      }
+
       pos+=sliced_len;
    }
 } 
 
-static int evalConst(AstNode *p, int *ok){
-    if(!p){ *ok=0; return 0; }
-    switch(p->NodeType){
-        case astDecimConst:
-            *ok=1;
-            return p->SymbolNode->timi;
-        case astSub: {
-            int ok1=0, ok2=0;
-            int v1=evalConst(p->pAstNode[0], &ok1);
-            int v2=evalConst(p->pAstNode[1], &ok2);
-            if(ok1 && ok2){ *ok=1; return v1 - v2; }
-            break;
-        }
-        case astAdd: {
-            int ok1=0, ok2=0;
-            int v1=evalConst(p->pAstNode[0], &ok1);
-            int v2=evalConst(p->pAstNode[1], &ok2);
-            if(ok1 && ok2){ *ok=1; return v1 + v2; }
-            break;
-        }
-        // add astMult, astDiv if needed
-    }
-    *ok=0;
-    return 0;
-}
 
 static void CodeGeneration(AstNode *p){ 
    if(!p) return; 
    switch(p->NodeType){ 
       case astProgram: case astMethList: case astMethod: case astBody: case astStmtSeq: case astBlock: 
+      case astDecls: case astVarList:
          for(int i=0; i<4; i++){ CodeGeneration(p->pAstNode[i]); } 
          break; 
       case astReturnStmt:
-         AstNode *expr=p->pAstNode[0];
-         int ok=0;
-         int val=evalConst(expr, &ok);
-         if(ok){
-            emit_return(val);
+         AstNode *child1=p->pAstNode[0];
+         if(child1 && child1->NodeType==astDecimConst){
+            fprintf(femitc, "  OUT RCONST(19)\n");
+            fprintf(femitc, "  HLT\n"); 
+            emit_value_as_alf("RCONST", child1->SymbolNode->timi);
+         }
+         else if(child1 && child1->NodeType==astId){
+            fprintf(femitc, "  OUT %s(19)\n", child1->SymbolNode->name);
+            fprintf(femitc, "  HLT\n"); 
          }
          break;
+      case astAssign:{
+            AstNode *child1=p->pAstNode[0];
+            AstNode *child2=p->pAstNode[1];
+            if(child1 && child1->NodeType==astId){
+               if(child2 && child2->NodeType==astDecimConst){
+                  char * label = (char *)child1->SymbolNode->name;
+                  emit_value_as_alf(label,(int) child2->SymbolNode->timi);
+               }
+               if(child2 && child2->NodeType==astSub){
+                  if(child2->pAstNode[1] && child2->pAstNode[1]->NodeType==astDecimConst){
+                     char * label = (char *)child1->SymbolNode->name;
+                     emit_value_as_alf(label,-(int) child2->pAstNode[1]->SymbolNode->timi);
+                  }
+               }
+            }
+         break;
+      }
       case astDecimConst: break; 
       case astId: break; 
       default: break; 
@@ -97,6 +96,9 @@ static void CodeGeneration(AstNode *p){
 
 int main(){ 
    if(yyparse() == 0){ 
+      if(error_count==0)
+		   printAST(TreeRoot, -3);
+      
       femitc = fopen("output.mixal", "w"); 
       if(!femitc){ 
          fprintf(stderr, "Cannot open output.mixal for writing\n"); 
@@ -104,11 +106,11 @@ int main(){
       } 
       fprintf(femitc, " ORIG 1000\n"); 
       fprintf(femitc, "MAIN NOP\n"); 
+
       CodeGeneration(TreeRoot); 
-      if(lastReturnIsConst){} 
-      fprintf(femitc, " OUT VAL(19)\n", lastReturnValue); 
-      fprintf(femitc, " HLT\n"); 
-      if(lastReturnIsConst){ emit_value_as_alf(lastReturnValue); } 
+
+      fprintf(femitc, "%s", alf_buf); // add all the alf lines
+
       fprintf(femitc, " END MAIN\n"); 
       fclose(femitc); 
    } 
