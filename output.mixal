@@ -2,5 +2,7 @@
 MAIN NOP
  OUT VAL(19)
  HLT
-VAL ALF " -154"
+VAL ALF "-2147"
+     ALF "48364"
+     ALF "7    "
  END MAIN

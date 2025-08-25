@@ -1023,9 +1023,9 @@ YY_RULE_SETUP
 				currentcol+=yyleng;
 				if(yytext[0]=='0' && strlen(yytext)>1){
 					error_message("Lexical Error","number cannot start with zero",yytext);
-					yylval.yint=0;
+					yylval.yll=0;
 				}
-                               yylval.yint=atoi(yytext);
+                               yylval.yll=atoll(yytext);
                                return(NUM);
                             }
 	YY_BREAK

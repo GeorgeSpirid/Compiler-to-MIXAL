@@ -17,14 +17,36 @@ static void emit_return(int value){
 } 
 
 static void emit_value_as_alf(int value){ 
-   char buf[32]; snprintf(buf, sizeof(buf), "%d", value); 
-   size_t len = strlen(buf); size_t start=0; 
-   if(len>5){ start=len-5; if(buf[0]=='-'){ start=len-5; if(start<1) start=1; } } 
-   size_t slice_len=len-start; char word[6]; 
-   size_t pad=(slice_len<5)?(5-slice_len):0; 
-   for(size_t i=0; i<pad; i++) word[i]=' '; 
-   memcpy(word+pad, buf+start, slice_len); word[5]='\0'; 
-   fprintf(femitc, "VAL ALF \"%s\"\n", word); 
+   char buf[32]; 
+   snprintf(buf, sizeof(buf), "%d", value); 
+
+   size_t len = strlen(buf); 
+   size_t pos=0; 
+
+   while(pos<len){
+      char word[6];
+      size_t sliced_len=(len-pos>=5)?5:(len-pos);
+      size_t pad=(sliced_len<5)?(5-sliced_len):0;
+
+      memcpy(word+pad, buf+pos, sliced_len);
+      word[sliced_len+pad]='\0';
+
+      if(pos+sliced_len<len){
+         for(size_t i=0; i<pad; i++) word[i]=' ';
+         memcpy(word+pad, buf+pos, sliced_len);
+      } else{
+         memcpy(word,buf+pos,sliced_len);
+         for(size_t i=sliced_len; i<5; i++) word[i]=' ';
+      }
+      word[5]='\0';
+
+      if(pos==0){
+         fprintf(femitc, "VAL ALF \"%s\"\n", word);
+      } else {
+         fprintf(femitc, "     ALF \"%s\"\n", word);
+      }
+      pos+=sliced_len;
+   }
 } 
 
 static int evalConst(AstNode *p, int *ok){

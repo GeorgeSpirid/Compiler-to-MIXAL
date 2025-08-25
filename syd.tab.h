@@ -17,7 +17,8 @@
 #line 26 "syd.y"
 typedef union /* all types a grammar symbol can carry */
 {
-    int   yint;
+    long long yll; // to check int range
+    int yint;
     char  ystr[81];
     struct AstNode_tag *stnode; /* for nonterms that carry an AST node pointer */
 } yy_parse_stype;

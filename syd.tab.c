@@ -102,7 +102,7 @@ Maintained by Magnus Ekdahl <magnus@debian.org>
 
 
 #include "defs.h"
-
+#include <limits.h>
 
 int error_count=0;
 
@@ -124,7 +124,8 @@ static symbol *new_num_symbol(int value);
 #line 26 "syd.y"
 typedef union /* all types a grammar symbol can carry */
 {
-    int   yint;
+    long long yll; // to check int range
+    int yint;
     char  ystr[81];
     struct AstNode_tag *stnode; /* for nonterms that carry an AST node pointer */
 } yy_parse_stype;
@@ -578,13 +579,13 @@ static const short yyrhs[] = {    31,
 
 #if (YY_parse_DEBUG != 0) || defined(YY_parse_ERROR_VERBOSE) 
 static const short yyrline[] = { 0,
-    47,    55,    61,    69,    76,    83,    89,    95,   101,   111,
-   119,   131,   145,   152,   160,   171,   178,   184,   191,   199,
-   206,   213,   220,   230,   241,   246,   256,   267,   274,   284,
-   291,   301,   312,   319,   327,   334,   344,   351,   358,   367,
-   374,   381,   389,   400,   407,   414,   421,   428,   435,   442,
-   449,   456,   463,   470,   477,   484,   497,   504,   511,   518,
-   525,   532,   540,   548,   556,   574,   583,   594,   601,   608
+    48,    56,    62,    70,    77,    84,    90,    96,   102,   112,
+   120,   132,   146,   153,   161,   172,   179,   185,   192,   200,
+   207,   214,   221,   231,   242,   247,   257,   268,   275,   285,
+   292,   302,   313,   320,   328,   335,   345,   352,   359,   368,
+   375,   382,   390,   401,   408,   415,   422,   429,   436,   443,
+   450,   457,   464,   471,   478,   485,   498,   505,   512,   519,
+   526,   533,   546,   554,   562,   580,   589,   600,   607,   614
 };
 
 static const char * const yytname[] = {   "$","error","$illegal.","RETURN","BREAK",
@@ -1194,7 +1195,7 @@ YYLABEL(yyreduce)
   switch (yyn) {
 
 case 1:
-#line 48 "syd.y"
+#line 49 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #1\n");
@@ -1204,7 +1205,7 @@ case 1:
                      ;
     break;}
 case 2:
-#line 56 "syd.y"
+#line 57 "syd.y"
 {
 #if DEBUG
                         printf("Rule #2\n");
@@ -1212,7 +1213,7 @@ case 2:
 		;
     break;}
 case 3:
-#line 62 "syd.y"
+#line 63 "syd.y"
 {
 			error_message("Syntax Error","program must have only methods",NULL);
 			yyerrok;
@@ -1221,7 +1222,7 @@ case 3:
 		;
     break;}
 case 4:
-#line 70 "syd.y"
+#line 71 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #3\n");
@@ -1230,7 +1231,7 @@ case 4:
                      ;
     break;}
 case 5:
-#line 77 "syd.y"
+#line 78 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #4\n");
@@ -1239,7 +1240,7 @@ case 5:
                      ;
     break;}
 case 6:
-#line 84 "syd.y"
+#line 85 "syd.y"
 {
 			error_message("Syntax Error","declaration outside of method",NULL);
 			yyerrok;
@@ -1247,7 +1248,7 @@ case 6:
 		;
     break;}
 case 7:
-#line 90 "syd.y"
+#line 91 "syd.y"
 {
 			error_message("Syntax Error","statement outside of method",NULL);
 			yyerrok;
@@ -1255,7 +1256,7 @@ case 7:
 		;
     break;}
 case 8:
-#line 96 "syd.y"
+#line 97 "syd.y"
 {
 			error_message("Syntax Error","only methods allowed at the top level",NULL);
 			yyerrok;
@@ -1263,7 +1264,7 @@ case 8:
 		;
     break;}
 case 9:
-#line 102 "syd.y"
+#line 103 "syd.y"
 {
 #if DEBUG
                         printf("Rule #5 - Part 1\n");
@@ -1275,7 +1276,7 @@ case 9:
 ;
     break;}
 case 10:
-#line 112 "syd.y"
+#line 113 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #5 - Part 2\n");
@@ -1284,7 +1285,7 @@ case 10:
  		;
     break;}
 case 11:
-#line 119 "syd.y"
+#line 120 "syd.y"
 {
 #if DEBUG
                         printf("Rule #5 - Part 3\n");
@@ -1298,7 +1299,7 @@ case 11:
 			;
     break;}
 case 12:
-#line 132 "syd.y"
+#line 133 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #6\n");
@@ -1314,7 +1315,7 @@ case 12:
                      ;
     break;}
 case 13:
-#line 146 "syd.y"
+#line 147 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #7\n");
@@ -1323,7 +1324,7 @@ case 13:
                      ;
     break;}
 case 14:
-#line 153 "syd.y"
+#line 154 "syd.y"
 {
 #if DEBUG
                         printf("Rule #8\n");
@@ -1333,7 +1334,7 @@ case 14:
 		;
     break;}
 case 15:
-#line 161 "syd.y"
+#line 162 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #9\n");
@@ -1346,7 +1347,7 @@ case 15:
                      ;
     break;}
 case 16:
-#line 172 "syd.y"
+#line 173 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #10\n");
@@ -1355,7 +1356,7 @@ case 16:
                      ;
     break;}
 case 17:
-#line 179 "syd.y"
+#line 180 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #11\n");
@@ -1363,7 +1364,7 @@ case 17:
                      ;
     break;}
 case 18:
-#line 185 "syd.y"
+#line 186 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #12\n");
@@ -1372,7 +1373,7 @@ case 18:
                      ;
     break;}
 case 19:
-#line 192 "syd.y"
+#line 193 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #13\n");
@@ -1382,7 +1383,7 @@ case 19:
                      ;
     break;}
 case 20:
-#line 200 "syd.y"
+#line 201 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #14\n");
@@ -1391,7 +1392,7 @@ case 20:
                      ;
     break;}
 case 21:
-#line 207 "syd.y"
+#line 208 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #15\n");
@@ -1400,7 +1401,7 @@ case 21:
                      ;
     break;}
 case 22:
-#line 214 "syd.y"
+#line 215 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #16\n");
@@ -1409,7 +1410,7 @@ case 22:
                      ;
     break;}
 case 23:
-#line 221 "syd.y"
+#line 222 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #17\n");
@@ -1421,7 +1422,7 @@ case 23:
                      ;
     break;}
 case 24:
-#line 231 "syd.y"
+#line 232 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #18\n");
@@ -1434,14 +1435,14 @@ case 24:
                      ;
     break;}
 case 25:
-#line 242 "syd.y"
+#line 243 "syd.y"
 {
 			yyerrok;
 			yyval.stnode=MkNode(astDecls,NULL,NULL,NULL,NULL,NULL);
 		;
     break;}
 case 26:
-#line 247 "syd.y"
+#line 248 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #19\n");
@@ -1453,7 +1454,7 @@ case 26:
                      ;
     break;}
 case 27:
-#line 257 "syd.y"
+#line 258 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #20\n");
@@ -1466,7 +1467,7 @@ case 27:
                      ;
     break;}
 case 28:
-#line 268 "syd.y"
+#line 269 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #21\n");
@@ -1475,7 +1476,7 @@ case 28:
                      ;
     break;}
 case 29:
-#line 275 "syd.y"
+#line 276 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #22\n");
@@ -1487,7 +1488,7 @@ case 29:
                      ;
     break;}
 case 30:
-#line 285 "syd.y"
+#line 286 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #23\n");
@@ -1496,7 +1497,7 @@ case 30:
                      ;
     break;}
 case 31:
-#line 292 "syd.y"
+#line 293 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #24\n");
@@ -1508,7 +1509,7 @@ case 31:
                      ;
     break;}
 case 32:
-#line 302 "syd.y"
+#line 303 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #25\n");
@@ -1521,7 +1522,7 @@ case 32:
                      ;
     break;}
 case 33:
-#line 313 "syd.y"
+#line 314 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #26\n");
@@ -1530,7 +1531,7 @@ case 33:
                      ;
     break;}
 case 34:
-#line 320 "syd.y"
+#line 321 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #27 - Part 1\n");
@@ -1539,7 +1540,7 @@ case 34:
 		;
     break;}
 case 35:
-#line 327 "syd.y"
+#line 328 "syd.y"
 {
 #if DEBUG
                         printf("Rule #27 - Part 2\n");
@@ -1549,7 +1550,7 @@ case 35:
                      ;
     break;}
 case 36:
-#line 335 "syd.y"
+#line 336 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #28\n");
@@ -1561,7 +1562,7 @@ case 36:
                      ;
     break;}
 case 37:
-#line 345 "syd.y"
+#line 346 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #29\n");
@@ -1570,7 +1571,7 @@ case 37:
                      ;
     break;}
 case 38:
-#line 352 "syd.y"
+#line 353 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #30\n");
@@ -1579,7 +1580,7 @@ case 38:
                      ;
     break;}
 case 39:
-#line 359 "syd.y"
+#line 360 "syd.y"
 {
 #if DEBUG
                         printf("Rule #31\n");
@@ -1590,7 +1591,7 @@ case 39:
 		;
     break;}
 case 40:
-#line 368 "syd.y"
+#line 369 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #32\n");
@@ -1599,7 +1600,7 @@ case 40:
                      ;
     break;}
 case 41:
-#line 375 "syd.y"
+#line 376 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #33\n");
@@ -1608,7 +1609,7 @@ case 41:
                      ;
     break;}
 case 42:
-#line 382 "syd.y"
+#line 383 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #34\n");
@@ -1618,7 +1619,7 @@ case 42:
                      ;
     break;}
 case 43:
-#line 390 "syd.y"
+#line 391 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #35\n");
@@ -1631,7 +1632,7 @@ case 43:
                      ;
     break;}
 case 44:
-#line 401 "syd.y"
+#line 402 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #36\n");
@@ -1640,7 +1641,7 @@ case 44:
                      ;
     break;}
 case 45:
-#line 408 "syd.y"
+#line 409 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #37\n");
@@ -1649,7 +1650,7 @@ case 45:
                      ;
     break;}
 case 46:
-#line 415 "syd.y"
+#line 416 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #38\n");
@@ -1658,7 +1659,7 @@ case 46:
                      ;
     break;}
 case 47:
-#line 422 "syd.y"
+#line 423 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #39\n");
@@ -1667,7 +1668,7 @@ case 47:
                      ;
     break;}
 case 48:
-#line 429 "syd.y"
+#line 430 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #40\n");
@@ -1676,7 +1677,7 @@ case 48:
                      ;
     break;}
 case 49:
-#line 436 "syd.y"
+#line 437 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #41\n");
@@ -1685,7 +1686,7 @@ case 49:
                      ;
     break;}
 case 50:
-#line 443 "syd.y"
+#line 444 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #42\n");
@@ -1694,7 +1695,7 @@ case 50:
                      ;
     break;}
 case 51:
-#line 450 "syd.y"
+#line 451 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #43\n");
@@ -1703,7 +1704,7 @@ case 51:
                      ;
     break;}
 case 52:
-#line 457 "syd.y"
+#line 458 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #44\n");
@@ -1712,7 +1713,7 @@ case 52:
                      ;
     break;}
 case 53:
-#line 464 "syd.y"
+#line 465 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #45\n");
@@ -1721,7 +1722,7 @@ case 53:
                      ;
     break;}
 case 54:
-#line 471 "syd.y"
+#line 472 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #46\n");
@@ -1730,7 +1731,7 @@ case 54:
                      ;
     break;}
 case 55:
-#line 478 "syd.y"
+#line 479 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #47\n");
@@ -1739,7 +1740,7 @@ case 55:
                      ;
     break;}
 case 56:
-#line 485 "syd.y"
+#line 486 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #48\n");
@@ -1754,7 +1755,7 @@ case 56:
                      ;
     break;}
 case 57:
-#line 498 "syd.y"
+#line 499 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #49\n");
@@ -1763,7 +1764,7 @@ case 57:
                      ;
     break;}
 case 58:
-#line 505 "syd.y"
+#line 506 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #50\n");
@@ -1772,7 +1773,7 @@ case 58:
                      ;
     break;}
 case 59:
-#line 512 "syd.y"
+#line 513 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #51\n");
@@ -1781,7 +1782,7 @@ case 59:
                      ;
     break;}
 case 60:
-#line 519 "syd.y"
+#line 520 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #52\n");
@@ -1790,7 +1791,7 @@ case 60:
                      ;
     break;}
 case 61:
-#line 526 "syd.y"
+#line 527 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #53\n");
@@ -1799,17 +1800,22 @@ case 61:
                      ;
     break;}
 case 62:
-#line 533 "syd.y"
+#line 534 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #54\n");
 #endif
-			symbol *temps=new_num_symbol(yyvsp[0].yint);
-			yyval.stnode=MkNode(astDecimConst,temps,NULL,NULL,NULL,NULL);
+			if(yyvsp[0].yll<INT_MIN || yyvsp[0].yll>INT_MAX){
+				error_message("Semantic Error","numeric constant out of range",NULL);
+				yyval.stnode=MkNode(astDecimConst,NULL,NULL,NULL,NULL,NULL);
+			} else{
+				symbol *temps=new_num_symbol((int)yyvsp[0].yll);
+				yyval.stnode=MkNode(astDecimConst,temps,NULL,NULL,NULL,NULL);
+			}
                      ;
     break;}
 case 63:
-#line 541 "syd.y"
+#line 547 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #55\n");
@@ -1819,7 +1825,7 @@ case 63:
                      ;
     break;}
 case 64:
-#line 549 "syd.y"
+#line 555 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #56\n");
@@ -1829,7 +1835,7 @@ case 64:
                      ;
     break;}
 case 65:
-#line 557 "syd.y"
+#line 563 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #57\n");
@@ -1849,7 +1855,7 @@ case 65:
                      ;
     break;}
 case 66:
-#line 575 "syd.y"
+#line 581 "syd.y"
 {
 #if DEBUG
 		printf("Rule #57-Unary Minus\n");
@@ -1859,7 +1865,7 @@ case 66:
 		;
     break;}
 case 67:
-#line 584 "syd.y"
+#line 590 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #58\n");
@@ -1872,7 +1878,7 @@ case 67:
                      ;
     break;}
 case 68:
-#line 595 "syd.y"
+#line 601 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #59\n");
@@ -1881,7 +1887,7 @@ case 68:
                      ;
     break;}
 case 69:
-#line 602 "syd.y"
+#line 608 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #60\n");
@@ -1890,7 +1896,7 @@ case 69:
                      ;
     break;}
 case 70:
-#line 609 "syd.y"
+#line 615 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #61\n");
@@ -2102,7 +2108,7 @@ YYLABEL(yyerrhandle)
 /* END */
 
  #line 1038 "/usr/share/bison++/bison.cc"
-#line 615 "syd.y"
+#line 621 "syd.y"
 
 
 /* creates symbols with int instead of char* */

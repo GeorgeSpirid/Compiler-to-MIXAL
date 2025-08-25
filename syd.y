@@ -2,7 +2,7 @@
 %{
 
 #include "defs.h"
-
+#include <limits.h>
 
 int error_count=0;
 
@@ -25,7 +25,8 @@ static symbol *new_num_symbol(int value);
 
 %union /* all types a grammar symbol can carry */
 {
-    int   yint;
+    long long yll; // to check int range
+    int yint;
     char  ystr[81];
     struct AstNode_tag *stnode; /* for nonterms that carry an AST node pointer */
 }
@@ -33,7 +34,7 @@ static symbol *new_num_symbol(int value);
 %token <yint> RETURN BREAK ELSE IF INT WHILE TRUE FALSE
 %token <yint> GT LT GE LE EQ NE
 %token <ystr> ID
-%token <yint> NUM
+%token <yll> NUM
 
  
 %type <stnode> PROGRAM METH_LIST METH PARAMS FORMALS TYPE BODY DECLS DECL_LIST DECL VARS
@@ -534,8 +535,13 @@ FACTOR            : '(' EXPR ')'
 #if DEBUG
                         printf("Rule #54\n");
 #endif
-			symbol *temps=new_num_symbol($1);
-			$$=MkNode(astDecimConst,temps,NULL,NULL,NULL,NULL);
+			if($1<INT_MIN || $1>INT_MAX){
+				error_message("Semantic Error","numeric constant out of range",NULL);
+				$$=MkNode(astDecimConst,NULL,NULL,NULL,NULL,NULL);
+			} else{
+				symbol *temps=new_num_symbol((int)$1);
+				$$=MkNode(astDecimConst,temps,NULL,NULL,NULL,NULL);
+			}
                      }
 		| TRUE
                      { 
