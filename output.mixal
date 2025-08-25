@@ -3,5 +3,6 @@ MAIN NOP
   OUT RCONST(19)
   HLT
 x ALF "1    "
-RCONST ALF "36   "
+y ALF "4    "
+RCONST ALF "15   "
  END MAIN

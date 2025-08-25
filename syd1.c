@@ -35,7 +35,6 @@ static void emit_value_as_alf(char *label,int value){
 
       char line[64];
       if(pos==0){
-         printf("%s ALF \"%s\"\n",label,word);
          snprintf(line, sizeof(line), "%s ALF \"%s\"\n",label,word);
       } else {
          snprintf(line, sizeof(line), "     ALF \"%s\"\n", word);
@@ -44,6 +43,7 @@ static void emit_value_as_alf(char *label,int value){
       if(strlen(alf_buf)+strlen(line)<sizeof(alf_buf)){
          strcat(alf_buf, line);
       } else {
+         fprintf(stderr, "ALF buffer overflow\n");
          exit(1);
       }
 
