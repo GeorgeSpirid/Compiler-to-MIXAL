@@ -65,24 +65,12 @@ static int evalExpr(AstNode *p){
       case astMult:
          return evalExpr(p->pAstNode[0]) * evalExpr(p->pAstNode[1]);
       case astDiv:
-         int second=evalExpr(p->pAstNode[1]);
-         if(second==0){
-            fprintf(stderr, "Error: Division by zero\n");
-            exit(1);
-         }
-         return evalExpr(p->pAstNode[0]) / evalExpr(p->pAstNode[1]);
-      case astLeEq:
-         return evalExpr(p->pAstNode[0]) <= evalExpr(p->pAstNode[1]);
-      case astLess:
-         return evalExpr(p->pAstNode[0]) < evalExpr(p->pAstNode[1]);
-      case astGrEq:
-         return evalExpr(p->pAstNode[0]) >= evalExpr(p->pAstNode[1]);
-      case astGreater:
-         return evalExpr(p->pAstNode[0]) > evalExpr(p->pAstNode[1]);
-      case astEq:
-         return evalExpr(p->pAstNode[0]) == evalExpr(p->pAstNode[1]);
-      case astNotEq:
-         return evalExpr(p->pAstNode[0]) != evalExpr(p->pAstNode[1]);
+      int second=evalExpr(p->pAstNode[1]);
+      if(second==0){
+         fprintf(stderr, "Error: Division by zero\n");
+         exit(1);
+      }
+      return evalExpr(p->pAstNode[0]) / evalExpr(p->pAstNode[1]);
       default:
          return 0;
    }
@@ -114,17 +102,6 @@ static void CodeGeneration(AstNode *p){
                child1->SymbolNode->timi=val;
             }
          break;
-      }
-      case astIfElseStmt:{
-         AstNode *condition=p->pAstNode[0];
-         AstNode *thenStmt=p->pAstNode[1];
-         AstNode *elseStmt=p->pAstNode[2];
-         int val=evalExpr(condition);
-         if(val){
-            CodeGeneration(thenStmt);
-         } else {
-            CodeGeneration(elseStmt);
-         }
       }
       case astDecimConst: break; 
       case astId: break; 
