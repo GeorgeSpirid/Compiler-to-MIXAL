@@ -1,5 +1,10 @@
 int main() {
     int x=1;
     int y=4;
-    return (x+y)*3;
+    if(x>y+5){
+    	return 3+y*8;
+    }
+    else{
+    	return x;
+    }
 } 

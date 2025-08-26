@@ -4,5 +4,5 @@ MAIN NOP
   HLT
 x ALF "1    "
 y ALF "4    "
-RCONST ALF "15   "
+RCONST ALF "1    "
  END MAIN
