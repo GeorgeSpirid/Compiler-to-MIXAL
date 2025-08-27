@@ -17,25 +17,19 @@ static int val_count=0;
 static int temp_array[1000];
 static int temp_count=0;
 
-static int var_array[1000];
+static char *var_array[1000];
 static int var_count=0;
 
 static void add_var(char *name, int v){
-   int exists=0;
    for(int i=0; i<var_count; i++){
-      if(var_array[i]==v){
-         exists=1;
-         break;
-      }
+      if(strcmp(var_array[i], name)==0){ return;}
    }
-   if(!exists){
-      var_array[var_count++]=v;
-      var_buf[strlen(var_buf)]=0;
-      sprintf(var_buf+strlen(var_buf), "%s CON %d\n", name,v);
-   }
+   var_array[var_count++]=name;
+   var_buf[strlen(var_buf)]=0;
+   sprintf(var_buf+strlen(var_buf), "%s CON %d\n", name,v);
 }
 
-static void add_val(int v){
+static void add_val(int v){      
    int exists=0;
    for(int i=0; i<val_count; i++){
       if(val_array[i]==v){
