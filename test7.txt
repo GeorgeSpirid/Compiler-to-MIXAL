@@ -1,5 +1,3 @@
 int main() {
-    int x=1;
-    x=x*2;
-    return x+14-312;
+    return 5+22/2+1*3;
 } 
