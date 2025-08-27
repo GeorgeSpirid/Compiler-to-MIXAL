@@ -9,12 +9,31 @@ int yyparse();
 FILE *femitc; 
 char val_buf[8192]="";
 char temp_buf[8192]="";
+char var_buf[8192]="";
 
 static int val_array[1000];
 static int val_count=0;
 
 static int temp_array[1000];
 static int temp_count=0;
+
+static int var_array[1000];
+static int var_count=0;
+
+static void add_var(char *name, int v){
+   int exists=0;
+   for(int i=0; i<var_count; i++){
+      if(var_array[i]==v){
+         exists=1;
+         break;
+      }
+   }
+   if(!exists){
+      var_array[var_count++]=v;
+      var_buf[strlen(var_buf)]=0;
+      sprintf(var_buf+strlen(var_buf), "%s CON %d\n", name,v);
+   }
+}
 
 static void add_val(int v){
    int exists=0;
@@ -40,7 +59,10 @@ static void add_temp(int v){
    }
    temp_array[temp_count]=v;
    temp_buf[strlen(temp_buf)]=0;
-   sprintf(temp_buf+strlen(temp_buf), "T%d CON 0\n", v);
+   if(v>=0)
+      sprintf(temp_buf+strlen(temp_buf), "T%d CON 0\n", v);
+   else
+      sprintf(temp_buf+strlen(temp_buf), "TN%d CON 0\n", -v);
 }
 
 static int new_temp(){
@@ -60,15 +82,34 @@ static int is_neg_const(AstNode *p){
 static int genExpr(AstNode *p){ 
    if(!p) return -1; 
    switch(p->NodeType){ 
-      case astDecimConst:
-         add_val(p->SymbolNode->timi);
+      case astId:{
          int temp = new_temp();
-         fprintf(femitc, " LDA V%d\n", p->SymbolNode->timi);
+         fprintf(femitc, " LDA %s\n", p->SymbolNode->name);
+         fprintf(femitc, " STA T%d\n", temp);
+         return temp;
+      }
+      case astDecimConst:{
+         int v= p->SymbolNode->timi;
+         add_val(v);
+         int temp = new_temp();
+         if(v>=0)
+            fprintf(femitc, " LDA V%d\n", v);
+         else
+            fprintf(femitc, " LDA N%d\n", -v);
          fprintf(femitc, " STA T%d\n", temp);
          return temp;
          break;
+      }
       case astAdd:
-      case astSub:
+      case astSub:{
+         if(is_neg_const(p)){
+            int v = -p->pAstNode[1]->SymbolNode->timi;
+            add_val(v);
+            int temp = new_temp();
+            fprintf(femitc, " LDA N%d\n", -v);
+            fprintf(femitc, " STA T%d\n", temp);
+            return temp;
+         }
          int left_temp = genExpr(p->pAstNode[0]);
          int right_temp = genExpr(p->pAstNode[1]);
          int result_temp = new_temp();
@@ -81,22 +122,24 @@ static int genExpr(AstNode *p){
          fprintf(femitc, " STA T%d\n", result_temp);
          return result_temp;
          break;
-      case astMult:
-         left_temp = genExpr(p->pAstNode[0]);
-         right_temp = genExpr(p->pAstNode[1]);
-         result_temp = new_temp();
+      }
+      case astMult:{
+         int left_temp = genExpr(p->pAstNode[0]);
+         int right_temp = genExpr(p->pAstNode[1]);
+         int result_temp = new_temp();
 
          fprintf(femitc, " LDA T%d\n", left_temp);
          fprintf(femitc, " MUL T%d\n", right_temp);
          fprintf(femitc, " STX T%d\n", result_temp);
          return result_temp;
          break;
-      case astDiv:
+      }
+      case astDiv:{
          AstNode *left = p->pAstNode[0];
          AstNode *right = p->pAstNode[1];
-         left_temp = genExpr(p->pAstNode[0]);
-         right_temp = genExpr(p->pAstNode[1]);
-         result_temp = new_temp();
+         int left_temp = genExpr(p->pAstNode[0]);
+         int right_temp = genExpr(p->pAstNode[1]);
+         int result_temp = new_temp();
          int zero_temp = new_temp();
          
          fprintf(femitc, " LDA T%d\n", right_temp);
@@ -105,7 +148,7 @@ static int genExpr(AstNode *p){
          fprintf(femitc, " ENTA 0\n");
          fprintf(femitc, " DIV T%d\n", result_temp);
          if(is_neg_const(left) || is_neg_const(right)){
-            if(!(is_neg_const(left) || is_neg_const(right))){
+            if(!(is_neg_const(left) && is_neg_const(right))){
                add_val(-1);
                fprintf(femitc, " MUL N1\n");
                fprintf(femitc, " STX T%d\n", zero_temp);
@@ -115,6 +158,7 @@ static int genExpr(AstNode *p){
          fprintf(femitc, " STA T%d\n", result_temp);
          return result_temp;
          break;
+      }
       default: 
          return -1; 
          break;
@@ -126,12 +170,23 @@ static void CodeGeneration(AstNode *p){
    switch(p->NodeType){ 
       case astProgram: case astMethList: case astMethod: case astBody: case astStmtSeq: case astBlock: 
       case astDecls: case astVarList:
-         for(int i=0; i<4; i++){ CodeGeneration(p->pAstNode[i]); } 
+         for(int i=0; i<4; i++){ 
+            if(p->pAstNode[i]) CodeGeneration(p->pAstNode[i]); 
+         }
          break; 
       case astReturnStmt: 
          int res_temp = genExpr(p->pAstNode[0]);
          fprintf(femitc, " LDA T%d\n", res_temp);
          break;
+      case astAssign:{
+         char *var_label = p->pAstNode[0]->SymbolNode->name;
+         int var_num = p->pAstNode[0]->SymbolNode->timi;
+         add_var(var_label,var_num);
+         int res_temp = genExpr(p->pAstNode[1]);
+         fprintf(femitc, " LDA T%d\n", res_temp);
+         fprintf(femitc, " STA %s\n", var_label);
+         break;
+      }
       case astDecimConst: break; 
       case astId: break; 
       default: break; 
@@ -157,6 +212,7 @@ int main(){
       fprintf(femitc, " ORIG 2000\n");
       fprintf(femitc, "%s", val_buf); // add all the val lines
       fprintf(femitc, "%s", temp_buf); // add all the temp lines
+      fprintf(femitc, "%s", var_buf); // add all the var lines
       fprintf(femitc, " END MAIN\n"); 
       fclose(femitc); 
    } 
