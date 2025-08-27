@@ -27,7 +27,10 @@ static void add_val(int v){
    if(!exists){
       val_array[val_count++]=v;
       val_buf[strlen(val_buf)]=0;
-      sprintf(val_buf+strlen(val_buf), "V%d CON %d\n", v, v);
+      if(v>=0)
+         sprintf(val_buf+strlen(val_buf), "V%d CON %d\n", v, v);
+      else
+      sprintf(val_buf+strlen(val_buf), "N%d CON %d\n", -v, v);
    }
 }
 
@@ -45,6 +48,13 @@ static int new_temp(){
    add_temp(val);
    temp_count++;
    return val;
+}
+
+static int is_neg_const(AstNode *p){
+   return p->NodeType==astSub&&
+            p->pAstNode[0]->NodeType==astDecimConst&&
+            p->pAstNode[0]->SymbolNode->timi==0&&
+            p->pAstNode[1]->NodeType==astDecimConst;
 }
 
 static int genExpr(AstNode *p){ 
@@ -82,15 +92,26 @@ static int genExpr(AstNode *p){
          return result_temp;
          break;
       case astDiv:
+         AstNode *left = p->pAstNode[0];
+         AstNode *right = p->pAstNode[1];
          left_temp = genExpr(p->pAstNode[0]);
          right_temp = genExpr(p->pAstNode[1]);
          result_temp = new_temp();
+         int zero_temp = new_temp();
          
          fprintf(femitc, " LDA T%d\n", right_temp);
          fprintf(femitc, " STA T%d\n", result_temp);
          fprintf(femitc, " LDX T%d\n", left_temp);
          fprintf(femitc, " ENTA 0\n");
          fprintf(femitc, " DIV T%d\n", result_temp);
+         if(is_neg_const(left) || is_neg_const(right)){
+            if(!(is_neg_const(left) || is_neg_const(right))){
+               add_val(-1);
+               fprintf(femitc, " MUL N1\n");
+               fprintf(femitc, " STX T%d\n", zero_temp);
+            fprintf(femitc, " LDA T%d\n", zero_temp);
+            }
+         }
          fprintf(femitc, " STA T%d\n", result_temp);
          return result_temp;
          break;
