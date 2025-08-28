@@ -20,6 +20,11 @@ static int temp_count=0;
 static char *var_array[1000];
 static int var_count=0;
 
+static int label_count=0;
+static int new_label(){
+   return label_count++;
+}
+
 static void add_var(char *name, int v){
    for(int i=0; i<var_count; i++){
       if(strcmp(var_array[i], name)==0){ return;}
@@ -153,6 +158,59 @@ static int genExpr(AstNode *p){
          return result_temp;
          break;
       }
+      case astEq:
+      case astNotEq:
+      case astLess:
+      case astLeEq:
+      case astGreater:
+      case astGrEq:{
+         int left_temp = genExpr(p->pAstNode[0]);
+         int right_temp = genExpr(p->pAstNode[1]);
+         int result_temp = new_temp();
+
+         int true_label = new_label();
+         int end_label = new_label();
+
+         add_val(0);
+         fprintf(femitc, " LDA V0\n");
+         fprintf(femitc, " STA T%d\n", result_temp);
+         fprintf(femitc, " LDA T%d\n", left_temp);
+         fprintf(femitc, " SUB T%d\n", right_temp);
+         
+         switch(p->NodeType){
+            case astEq:
+               fprintf(femitc, " JAZ L%d\n", true_label);
+               break;
+            case astNotEq:
+               fprintf(femitc, " JAN L%d\n", true_label);
+               fprintf(femitc, " JAP L%d\n", true_label);
+               break;
+            case astLess:
+               fprintf(femitc, " JAN L%d\n", true_label);
+               break;
+            case astLeEq:
+               fprintf(femitc, " JAN L%d\n", true_label);
+               fprintf(femitc, " JAZ L%d\n", true_label);
+               break;
+            case astGreater:
+               fprintf(femitc, " JAP L%d\n", true_label);
+               break;
+            case astGrEq:
+               fprintf(femitc, " JAP L%d\n", true_label);
+               fprintf(femitc, " JAZ L%d\n", true_label);
+               break;
+         }
+
+         fprintf(femitc, " JMP L%d\n", end_label);
+         fprintf(femitc, "L%d NOP\n", true_label);
+         add_val(1);
+         fprintf(femitc, " LDA V1\n");
+         fprintf(femitc, " STA T%d\n", result_temp);
+         fprintf(femitc, "L%d NOP\n", end_label);
+         return result_temp;
+
+         break;
+      }
       default: 
          return -1; 
          break;
@@ -162,12 +220,19 @@ static int genExpr(AstNode *p){
 static void CodeGeneration(AstNode *p){ 
    if(!p) return; 
    switch(p->NodeType){ 
-      case astProgram: case astMethList: case astMethod: case astBody: case astStmtSeq: case astBlock: 
+      case astProgram: case astMethList: case astMethod: 
+      case astBody: case astStmtSeq: case astBlock: 
       case astDecls: case astVarList:
          for(int i=0; i<4; i++){ 
             if(p->pAstNode[i]) CodeGeneration(p->pAstNode[i]); 
          }
          break; 
+      case astExprStmt:{
+         if(p->pAstNode[0]){
+            CodeGeneration(p->pAstNode[0]);
+         }
+         break;
+      }
       case astReturnStmt: 
          int res_temp = genExpr(p->pAstNode[0]);
          fprintf(femitc, " LDA T%d\n", res_temp);
@@ -179,6 +244,25 @@ static void CodeGeneration(AstNode *p){
          int res_temp = genExpr(p->pAstNode[1]);
          fprintf(femitc, " LDA T%d\n", res_temp);
          fprintf(femitc, " STA %s\n", var_label);
+         break;
+      }
+      case astIfElseStmt:{
+         int condition=genExpr(p->pAstNode[0]);
+         int else_label = new_label();
+         int end_label = new_label();
+
+         fprintf(femitc, " LDA T%d\n", condition);
+         fprintf(femitc, " JAZ L%d\n", else_label);
+
+         CodeGeneration(p->pAstNode[1]);
+         fprintf(femitc, " JMP L%d\n", end_label);
+
+         fprintf(femitc, "L%d NOP\n", else_label);
+
+         if(p->pAstNode[2]){
+            CodeGeneration(p->pAstNode[2]);
+         }
+         fprintf(femitc, "L%d NOP\n", end_label);
          break;
       }
       case astDecimConst: break; 
