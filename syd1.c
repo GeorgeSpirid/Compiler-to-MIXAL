@@ -3,6 +3,8 @@
 #include "defs.h" 
 #include "syd.tab.h" 
 
+#define LOOP_MAX 1000
+
 extern AstNode *TreeRoot; 
 int yyparse(); 
 
@@ -20,9 +22,32 @@ static int temp_count=0;
 static char *var_array[1000];
 static int var_count=0;
 
+static int loop_stack[LOOP_MAX];
+static int loop_stack_top=-1;
+
 static int label_count=0;
 static int new_label(){
    return label_count++;
+}
+
+static void push_loop(int label){
+   if(loop_stack_top<LOOP_MAX-1){
+      loop_stack[++loop_stack_top]=label;
+   }
+}
+
+static int pop_loop(){
+   if(loop_stack_top>=0){
+      return loop_stack[loop_stack_top--];
+   }
+   return -1;
+}
+
+static int current_loop(){
+   if(loop_stack_top>=0){
+      return loop_stack[loop_stack_top];
+   }
+   return -1;
 }
 
 static void add_var(char *name, int v){
@@ -263,6 +288,30 @@ static void CodeGeneration(AstNode *p){
             CodeGeneration(p->pAstNode[2]);
          }
          fprintf(femitc, "L%d NOP\n", end_label);
+         break;
+      }
+      case astWhileStmt:{
+         int start_label = new_label();
+         int end_label = new_label();
+
+         fprintf(femitc, "L%d NOP\n", start_label);
+         int condition=genExpr(p->pAstNode[0]);
+         fprintf(femitc, " LDA T%d\n", condition);
+         fprintf(femitc, " JAZ L%d\n", end_label);
+
+         push_loop(end_label);
+         CodeGeneration(p->pAstNode[1]);
+         pop_loop();
+
+         fprintf(femitc, " JMP L%d\n", start_label);
+         fprintf(femitc, "L%d NOP\n", end_label);
+         break;
+      }
+      case astBreakStmt:{
+         int loop_end = current_loop();
+         if(loop_end!=-1){
+            fprintf(femitc, " JMP L%d\n", loop_end);
+         }
          break;
       }
       case astDecimConst: break; 
