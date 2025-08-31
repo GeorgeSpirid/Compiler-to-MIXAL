@@ -245,13 +245,21 @@ static int genExpr(AstNode *p){
 static void CodeGeneration(AstNode *p){ 
    if(!p) return; 
    switch(p->NodeType){ 
-      case astProgram: case astMethList: case astMethod: 
+      case astProgram: case astMethList: 
       case astBody: case astStmtSeq: case astBlock: 
       case astDecls: case astVarList:
          for(int i=0; i<4; i++){ 
             if(p->pAstNode[i]) CodeGeneration(p->pAstNode[i]); 
          }
          break; 
+      case astMethod:{
+         char *func_name = p->SymbolNode->name;
+         fprintf(femitc, "%s NOP\n", func_name);
+         for(int i=0; i<4; i++){ 
+            if(p->pAstNode[i]) CodeGeneration(p->pAstNode[i]); 
+         }
+         break;
+      }
       case astExprStmt:{
          if(p->pAstNode[0]){
             CodeGeneration(p->pAstNode[0]);
@@ -261,6 +269,10 @@ static void CodeGeneration(AstNode *p){
       case astReturnStmt: 
          int res_temp = genExpr(p->pAstNode[0]);
          fprintf(femitc, " LDA T%d\n", res_temp);
+         fprintf(femitc, " STA RVAL\n");
+         fprintf(femitc, " LDA RADR\n");
+         fprintf(femitc, " LD1 RADR\n");
+         fprintf(femitc, " JMP 0,1\n");
          break;
       case astAssign:{
          char *var_label = p->pAstNode[0]->SymbolNode->name;
@@ -331,7 +343,14 @@ int main(){
          return 1; 
       } 
       fprintf(femitc, " ORIG 1000\n"); 
-      fprintf(femitc, "MAIN NOP\n"); 
+      fprintf(femitc, "START NOP\n");
+      fprintf(femitc, " ENTA L0\n");
+      fprintf(femitc, " STA RADR\n");
+      fprintf(femitc, " JMP main\n");
+      fprintf(femitc, "L0 NOP\n");
+      fprintf(femitc, " LDA RVAL\n");
+      fprintf(femitc, " STA T0\n");
+      fprintf(femitc, " HLT\n");
 
       CodeGeneration(TreeRoot); 
 
@@ -340,7 +359,10 @@ int main(){
       fprintf(femitc, "%s", val_buf); // add all the val lines
       fprintf(femitc, "%s", temp_buf); // add all the temp lines
       fprintf(femitc, "%s", var_buf); // add all the var lines
-      fprintf(femitc, " END MAIN\n"); 
+      fprintf(femitc, "RVAL CON 0\n");
+      fprintf(femitc, "RADR CON 0\n");
+      fprintf(femitc, " END START\n"); 
       fclose(femitc); 
-   } 
+   }
+   return 0;
 }
