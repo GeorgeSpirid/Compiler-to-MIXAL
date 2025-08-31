@@ -313,7 +313,7 @@ static void CodeGeneration(AstNode *p){
          if(expr->NodeType==astCall){
             emit_call_stmt(expr);
          } else {
-            genExpr(expr);
+            CodeGeneration(expr);
          }
          break;
       }

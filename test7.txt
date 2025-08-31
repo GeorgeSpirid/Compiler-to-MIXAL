@@ -1,10 +1,20 @@
+int method3(int a){
+ int d=200/10;
+ return a+d;
+}
+int method2(int a){
+ int c=5;
+ a=a+c*10;
+ return method3(a);
+}
 int method1(int a){
  int b=5;
  a=a+b;
- return a;
+ return method2(a);
 }
 int main()
 {
  int a=5;
+ a=a+1;
  return method1(a);
 }
