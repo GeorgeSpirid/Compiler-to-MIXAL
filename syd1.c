@@ -36,16 +36,11 @@ static int new_label(){
 
 static void emit_call_stmt(AstNode *p){
    char *func_name= p->pAstNode[0]->SymbolNode->name;
-   if(p->pAstNode[1]){
-      AstNode *args = p->pAstNode[1];
-      for(int i=0;args&&args->pAstNode[i];i++){
-         int arg_temp = genExpr(args->pAstNode[i]);
-         char arg_label[20];
-         sprintf(arg_label, "A%d", i);
-         fprintf(femitc, " LDA T%d\n", arg_temp);
-         fprintf(femitc, " STA %s\n", arg_label);
-         add_var(strdup(arg_label),0);
-      }
+   if (p->pAstNode[1]) {
+      int arg_temp = genExpr(p->pAstNode[1]->pAstNode[0]);
+      fprintf(femitc, " LDA T%d\n", arg_temp);
+      fprintf(femitc, " STA A0\n");
+      add_var("A0", 0);
    }
    fprintf(femitc, " ENTA L0\n");
    fprintf(femitc, " STA RADR\n");
@@ -130,16 +125,11 @@ static int genExpr(AstNode *p){
    switch(p->NodeType){
     case astCall:{
          char *func_name= p->pAstNode[0]->SymbolNode->name;
-         if(p->pAstNode[1]){
-            AstNode *args = p->pAstNode[1];
-            for(int i=0;args&&args->pAstNode[i];i++){
-               int arg_temp = genExpr(args->pAstNode[i]);
-               char arg_label[20];
-               sprintf(arg_label, "A%d", i);
-               fprintf(femitc, " LDA T%d\n", arg_temp);
-               fprintf(femitc, " STA %s\n", arg_label);
-               add_var(strdup(arg_label),0);
-            }
+         if (p->pAstNode[1]) {
+            int arg_temp = genExpr(p->pAstNode[1]->pAstNode[0]);
+            fprintf(femitc, " LDA T%d\n", arg_temp);
+            fprintf(femitc, " STA A0\n");
+            add_var("A0", 0);
          }
          int ret_label = new_label();
          fprintf(femitc, " ENTA L%d\n", ret_label);
