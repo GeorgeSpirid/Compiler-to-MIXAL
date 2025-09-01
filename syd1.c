@@ -1,6 +1,5 @@
 #include <stdio.h> 
 #include <stdlib.h> 
-#include <string.h>
 #include "defs.h" 
 #include "syd.tab.h" 
 
@@ -8,9 +7,6 @@
 
 extern AstNode *TreeRoot; 
 int yyparse(); 
-
-static int genExpr(AstNode *p);
-static void add_var(char *name, int v);
 
 FILE *femitc; 
 char val_buf[8192]="";
@@ -29,22 +25,9 @@ static int var_count=0;
 static int loop_stack[LOOP_MAX];
 static int loop_stack_top=-1;
 
-static int label_count=1;
+static int label_count=0;
 static int new_label(){
    return label_count++;
-}
-
-static void emit_call_stmt(AstNode *p){
-   char *func_name= p->pAstNode[0]->SymbolNode->name;
-   if (p->pAstNode[1]) {
-      int arg_temp = genExpr(p->pAstNode[1]->pAstNode[0]);
-      fprintf(femitc, " LDA T%d\n", arg_temp);
-      fprintf(femitc, " STA A0\n");
-      add_var("A0", 0);
-   }
-   fprintf(femitc, " ENTA L0\n");
-   fprintf(femitc, " STA RADR\n");
-   fprintf(femitc, " JMP %s\n", func_name);
 }
 
 static void push_loop(int label){
@@ -122,27 +105,7 @@ static int is_neg_const(AstNode *p){
 
 static int genExpr(AstNode *p){ 
    if(!p) return -1; 
-   switch(p->NodeType){
-    case astCall:{
-         char *func_name= p->pAstNode[0]->SymbolNode->name;
-         if (p->pAstNode[1]) {
-            int arg_temp = genExpr(p->pAstNode[1]->pAstNode[0]);
-            fprintf(femitc, " LDA T%d\n", arg_temp);
-            fprintf(femitc, " STA A0\n");
-            add_var("A0", 0);
-         }
-         int ret_label = new_label();
-         fprintf(femitc, " ENTA L%d\n", ret_label);
-         fprintf(femitc, " STA RADR\n");
-         fprintf(femitc, " JMP %s\n", func_name);
-         fprintf(femitc, "L%d NOP\n", ret_label);
-
-         int res_temp = new_temp();
-         fprintf(femitc, " LDA RVAL\n");
-         fprintf(femitc, " STA T%d\n", res_temp);
-         return res_temp;
-         break;
-      }
+   switch(p->NodeType){ 
       case astId:{
          int temp = new_temp();
          fprintf(femitc, " LDA %s\n", p->SymbolNode->name);
@@ -282,54 +245,23 @@ static int genExpr(AstNode *p){
 static void CodeGeneration(AstNode *p){ 
    if(!p) return; 
    switch(p->NodeType){ 
-      case astProgram: case astMethList: 
+      case astProgram: case astMethList: case astMethod: 
       case astBody: case astStmtSeq: case astBlock: 
       case astDecls: case astVarList:
          for(int i=0; i<4; i++){ 
             if(p->pAstNode[i]) CodeGeneration(p->pAstNode[i]); 
          }
          break; 
-      case astMethod:{
-         char *func_name = p->SymbolNode->name;
-         fprintf(femitc, "%s NOP\n", func_name);
-         for(int i=0; i<4; i++){ 
-            if(p->pAstNode[i]) CodeGeneration(p->pAstNode[i]); 
-         }
-         break;
-      }
       case astExprStmt:{
-         AstNode *expr = p->pAstNode[0];
-         if(!expr) break;
-         if(expr->NodeType==astCall){
-            emit_call_stmt(expr);
-         } else {
-            CodeGeneration(expr);
+         if(p->pAstNode[0]){
+            CodeGeneration(p->pAstNode[0]);
          }
          break;
       }
-      case astReturnStmt:{
-         AstNode *expr = p->pAstNode[0];
-         if(!expr){
-            fprintf(femitc, " LDA RADR\n");
-            fprintf(femitc, " LD1 RADR\n");
-            fprintf(femitc, " JMP 0,1\n");
-         }
-         if(expr->NodeType==astCall){
-            emit_call_stmt(expr);
-            fprintf(femitc, " LDA RVAL\n");
-            fprintf(femitc, " LDA RADR\n");
-            fprintf(femitc, " LD1 RADR\n");
-            fprintf(femitc, " JMP 0,1\n");
-         } else {
-            int res_temp = genExpr(p->pAstNode[0]);
-            fprintf(femitc, " LDA T%d\n", res_temp);
-            fprintf(femitc, " STA RVAL\n");
-            fprintf(femitc, " LDA RADR\n");
-            fprintf(femitc, " LD1 RADR\n");
-            fprintf(femitc, " JMP 0,1\n");
-         }
+      case astReturnStmt: 
+         int res_temp = genExpr(p->pAstNode[0]);
+         fprintf(femitc, " LDA T%d\n", res_temp);
          break;
-      }
       case astAssign:{
          char *var_label = p->pAstNode[0]->SymbolNode->name;
          int var_num = p->pAstNode[0]->SymbolNode->timi;
@@ -399,25 +331,16 @@ int main(){
          return 1; 
       } 
       fprintf(femitc, " ORIG 1000\n"); 
-      fprintf(femitc, "START NOP\n");
-      fprintf(femitc, " ENTA L0\n");
-      fprintf(femitc, " STA RADR\n");
-      fprintf(femitc, " JMP main\n");
-      fprintf(femitc, "L0 NOP\n");
-      fprintf(femitc, " LDA RVAL\n");
-      fprintf(femitc, " STA T0\n");
-      fprintf(femitc, " HLT\n");
+      fprintf(femitc, "MAIN NOP\n"); 
 
       CodeGeneration(TreeRoot); 
 
+      fprintf(femitc, " HLT\n");
       fprintf(femitc, " ORIG 2000\n");
       fprintf(femitc, "%s", val_buf); // add all the val lines
       fprintf(femitc, "%s", temp_buf); // add all the temp lines
       fprintf(femitc, "%s", var_buf); // add all the var lines
-      fprintf(femitc, "RVAL CON 0\n");
-      fprintf(femitc, "RADR CON 0\n");
-      fprintf(femitc, " END START\n"); 
+      fprintf(femitc, " END MAIN\n"); 
       fclose(femitc); 
-   }
-   return 0;
+   } 
 }
