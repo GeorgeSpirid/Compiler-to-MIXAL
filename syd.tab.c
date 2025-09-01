@@ -584,8 +584,8 @@ static const short yyrline[] = { 0,
    207,   214,   221,   231,   242,   247,   257,   268,   275,   285,
    292,   302,   313,   320,   328,   335,   345,   352,   359,   368,
    375,   382,   390,   401,   408,   415,   422,   429,   436,   443,
-   450,   457,   464,   471,   478,   485,   498,   505,   512,   519,
-   526,   533,   546,   554,   562,   580,   589,   600,   607,   614
+   450,   457,   464,   471,   478,   485,   496,   503,   510,   517,
+   524,   531,   544,   552,   560,   578,   587,   598,   605,   612
 };
 
 static const char * const yytname[] = {   "$","error","$illegal.","RETURN","BREAK",
@@ -1748,14 +1748,12 @@ case 56:
 			if(yyvsp[-1].stnode->NodeType==astDiv){
 			    if(is_zero(yyvsp[0].stnode))
 				error_message("Semantic Error","division by zero",NULL);
-			    else if(yyvsp[0].stnode->NodeType==astId && yyvsp[0].stnode->SymbolNode && yyvsp[0].stnode->					SymbolNode->timi==0)
-				error_message("Semantic Error","division by zero",NULL);
 			}
 			yyval.stnode=MkNode(yyvsp[-1].stnode->NodeType,NULL,yyvsp[-2].stnode,yyvsp[0].stnode,NULL,NULL);
                      ;
     break;}
 case 57:
-#line 499 "syd.y"
+#line 497 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #49\n");
@@ -1764,7 +1762,7 @@ case 57:
                      ;
     break;}
 case 58:
-#line 506 "syd.y"
+#line 504 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #50\n");
@@ -1773,7 +1771,7 @@ case 58:
                      ;
     break;}
 case 59:
-#line 513 "syd.y"
+#line 511 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #51\n");
@@ -1782,7 +1780,7 @@ case 59:
                      ;
     break;}
 case 60:
-#line 520 "syd.y"
+#line 518 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #52\n");
@@ -1791,7 +1789,7 @@ case 60:
                      ;
     break;}
 case 61:
-#line 527 "syd.y"
+#line 525 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #53\n");
@@ -1800,7 +1798,7 @@ case 61:
                      ;
     break;}
 case 62:
-#line 534 "syd.y"
+#line 532 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #54\n");
@@ -1815,7 +1813,7 @@ case 62:
                      ;
     break;}
 case 63:
-#line 547 "syd.y"
+#line 545 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #55\n");
@@ -1825,7 +1823,7 @@ case 63:
                      ;
     break;}
 case 64:
-#line 555 "syd.y"
+#line 553 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #56\n");
@@ -1835,7 +1833,7 @@ case 64:
                      ;
     break;}
 case 65:
-#line 563 "syd.y"
+#line 561 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #57\n");
@@ -1855,7 +1853,7 @@ case 65:
                      ;
     break;}
 case 66:
-#line 581 "syd.y"
+#line 579 "syd.y"
 {
 #if DEBUG
 		printf("Rule #57-Unary Minus\n");
@@ -1865,7 +1863,7 @@ case 66:
 		;
     break;}
 case 67:
-#line 590 "syd.y"
+#line 588 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #58\n");
@@ -1878,7 +1876,7 @@ case 67:
                      ;
     break;}
 case 68:
-#line 601 "syd.y"
+#line 599 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #59\n");
@@ -1887,7 +1885,7 @@ case 68:
                      ;
     break;}
 case 69:
-#line 608 "syd.y"
+#line 606 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #60\n");
@@ -1896,7 +1894,7 @@ case 69:
                      ;
     break;}
 case 70:
-#line 615 "syd.y"
+#line 613 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #61\n");
@@ -2108,7 +2106,7 @@ YYLABEL(yyerrhandle)
 /* END */
 
  #line 1038 "/usr/share/bison++/bison.cc"
-#line 621 "syd.y"
+#line 619 "syd.y"
 
 
 /* creates symbols with int instead of char* */

@@ -1,12 +1,13 @@
 int method1(){
-    return 1+5;
-}
-int method2(){
     return 2;
 }
+int method2(){
+    int a=5;
+    int b=5;
+    return a/0+2;
+}
 int main() {
-    int a=method1();
-    int b=method2();
-    return a*b;
+    int a=method2();
+    return a*method1();
 } 
 

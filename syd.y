@@ -490,8 +490,6 @@ TERM            : TERM MULOP FACTOR
 			if($2->NodeType==astDiv){
 			    if(is_zero($3))
 				error_message("Semantic Error","division by zero",NULL);
-			    else if($3->NodeType==astId && $3->SymbolNode && $3->					SymbolNode->timi==0)
-				error_message("Semantic Error","division by zero",NULL);
 			}
 			$$=MkNode($2->NodeType,NULL,$1,$3,NULL,NULL);
                      }
