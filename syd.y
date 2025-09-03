@@ -125,7 +125,7 @@ METH            : TYPE ID
 				error_message("Semantic Error","method doesn't have return value",mt[currentmethod].name);
 			}
 			symbol *temps=new_symbol($2);
-			$$=MkNode(astMethod,temps,$8,NULL,NULL,NULL);
+			$$=MkNode(astMethod,temps,$5,$8,NULL,NULL);
 			leavescope();
 			};
                 
@@ -489,8 +489,6 @@ TERM            : TERM MULOP FACTOR
 #endif
 			if($2->NodeType==astDiv){
 			    if(is_zero($3))
-				error_message("Semantic Error","division by zero",NULL);
-			    else if($3->NodeType==astId && $3->SymbolNode && $3->					SymbolNode->timi==0)
 				error_message("Semantic Error","division by zero",NULL);
 			}
 			$$=MkNode($2->NodeType,NULL,$1,$3,NULL,NULL);

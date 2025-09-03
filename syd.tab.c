@@ -1294,7 +1294,7 @@ case 11:
 				error_message("Semantic Error","method doesn't have return value",mt[currentmethod].name);
 			}
 			symbol *temps=new_symbol(yyvsp[-6].ystr);
-			yyval.stnode=MkNode(astMethod,temps,yyvsp[0].stnode,NULL,NULL,NULL);
+			yyval.stnode=MkNode(astMethod,temps,yyvsp[-3].stnode,yyvsp[0].stnode,NULL,NULL);
 			leavescope();
 			;
     break;}

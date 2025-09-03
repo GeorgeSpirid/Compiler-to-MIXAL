@@ -269,6 +269,10 @@ static void CodeGeneration(AstNode *p){
       case astMethod:{
          current_method_name = p->SymbolNode->name;
          fprintf(femitc, "%s NOP\n", p->SymbolNode->name);
+         if(p->pAstNode[1]){
+            CodeGeneration(p->pAstNode[1]);
+         }
+         break;
       }
       case astExprStmt:{
          if(p->pAstNode[0]){
