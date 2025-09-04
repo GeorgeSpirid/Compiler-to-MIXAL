@@ -3,7 +3,8 @@ int method1(int a,int b){
 }
 int method2(int a,int b,int c){
     int d=method1(1,2);
-    return d/a+b+c;
+    int e=0;
+    return d/e+b+c;
 }
 int main() {
     int c=5;

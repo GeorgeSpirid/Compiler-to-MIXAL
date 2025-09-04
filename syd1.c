@@ -223,8 +223,11 @@ static int genExpr(AstNode *p){
          int right_temp = genExpr(p->pAstNode[1]);
          int result_temp = new_temp();
          int zero_temp = new_temp();
-         
+
          fprintf(femitc, " LDA T%d\n", right_temp);
+
+         fprintf(femitc," JAZ DZ\n");
+
          fprintf(femitc, " STA T%d\n", result_temp);
          fprintf(femitc, " LDX T%d\n", left_temp);
          fprintf(femitc, " ENTA 0\n");
@@ -238,6 +241,14 @@ static int genExpr(AstNode *p){
             }
          }
          fprintf(femitc, " STA T%d\n", result_temp);
+         fprintf(femitc," JMP NDZ\n");
+
+         fprintf(femitc,"DZ NOP\n");
+         fprintf(femitc," OUT DZMSG(19)\n");
+         fprintf(femitc," HLT\n");
+
+         fprintf(femitc, "NDZ NOP\n");
+
          return result_temp;
          break;
       }
@@ -449,6 +460,13 @@ int main(){
       for(int i=0;i<max_argument_count;i++){
          fprintf(femitc, "A%d CON 0\n", i);
       }
+      fprintf(femitc,"DZMSG ALF RUNTI");
+      fprintf(femitc," ALF ME ER");
+      fprintf(femitc," ALF ROR: ");
+      fprintf(femitc," ALF DIVIS");
+      fprintf(femitc," ALF ION B");
+      fprintf(femitc," ALF Y ZER");
+      fprintf(femitc," ALF O    ");
       fprintf(femitc, " END main\n"); 
       fclose(femitc); 
    } 
