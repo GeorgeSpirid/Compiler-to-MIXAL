@@ -42,9 +42,11 @@ static void proccessParams(AstNode *p){
    if(p->NodeType==astParam){
       if(p->SymbolNode&&p->SymbolNode->name){
          char *param_name=p->SymbolNode->name;
-         add_var(param_name,0);
+         char new_name[256];
+         snprintf(new_name, sizeof(new_name), "%s%s", current_method_name, param_name);
+         add_var(strdup(new_name),0);
          fprintf(femitc, " LDA A%d\n", param_count++);
-         fprintf(femitc, " STA %s\n", param_name);
+         fprintf(femitc, " STA %s\n", new_name);
       }
    }
    for(int i=0; i<4; i++){
@@ -161,8 +163,10 @@ static int genExpr(AstNode *p){
          return ret_temp;
       }
       case astId:{
+         char new_name[256];
+         snprintf(new_name, sizeof(new_name), "%s%s", current_method_name, p->SymbolNode->name);
          int temp = new_temp();
-         fprintf(femitc, " LDA %s\n", p->SymbolNode->name);
+         fprintf(femitc, " LDA %s\n", new_name);
          fprintf(femitc, " STA T%d\n", temp);
          return temp;
       }
@@ -328,7 +332,9 @@ static void CodeGeneration(AstNode *p){
             }
             if(arg->NodeType==astId){
                char *var_name=arg->SymbolNode->name;
-               fprintf(femitc, " LDA %s\n", var_name);
+               char new_name[256];
+               snprintf(new_name, sizeof(new_name), "%s%s", current_method_name, var_name);
+               fprintf(femitc, " LDA %s\n", new_name);
             } else if(arg->NodeType==astDecimConst){
                int val=arg->SymbolNode->timi;
                add_val(val);
@@ -361,12 +367,13 @@ static void CodeGeneration(AstNode *p){
          }
          break;
       case astAssign:{
-         char *var_label = p->pAstNode[0]->SymbolNode->name;
+         char new_name[256];
+         snprintf(new_name, sizeof(new_name),"%s%s", current_method_name, p->pAstNode[0]->SymbolNode->name);
          int var_num = p->pAstNode[0]->SymbolNode->timi;
-         add_var(var_label,var_num);
+         add_var(strdup(new_name),var_num);
          int res_temp = genExpr(p->pAstNode[1]);
          fprintf(femitc, " LDA T%d\n", res_temp);
-         fprintf(femitc, " STA %s\n", var_label);
+         fprintf(femitc, " STA %s\n", new_name);
          break;
       }
       case astIfElseStmt:{
