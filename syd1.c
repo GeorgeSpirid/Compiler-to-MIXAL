@@ -13,6 +13,14 @@ char val_buf[8192]="";
 char temp_buf[8192]="";
 char var_buf[8192]="";
 
+static void CodeGeneration(AstNode *p);
+static void add_var(char *name, int v);
+
+static int max_argument_count=0;
+static int argument_count=0;
+
+static int param_count=0;
+
 static char *current_method_name=NULL;
 
 static int val_array[1000];
@@ -28,6 +36,25 @@ static int loop_stack[LOOP_MAX];
 static int loop_stack_top=-1;
 
 static int label_count=0;
+
+static void proccessParams(AstNode *p){
+   if(!p) return;
+   if(p->NodeType==astParam){
+      if(p->SymbolNode&&p->SymbolNode->name){
+         char *param_name=p->SymbolNode->name;
+         int param_num=p->SymbolNode->timi;
+         add_var(param_name,param_num);
+         fprintf(femitc, " LDA A%d\n", param_count++);
+         fprintf(femitc, " STA %s\n", param_name);
+      }
+   }
+   for(int i=0; i<4; i++){
+      if(p->pAstNode[i]){
+         proccessParams(p->pAstNode[i]);
+      }
+   }
+}
+
 static int new_label(){
    return label_count++;
 }
@@ -109,6 +136,13 @@ static int genExpr(AstNode *p){
    if(!p) return -1; 
    switch(p->NodeType){ 
       case astCall:{
+         argument_count=0;
+         if(p->pAstNode[1]){
+            CodeGeneration(p->pAstNode[1]);
+         }
+         if(argument_count>max_argument_count){
+            max_argument_count=argument_count;
+         }
          int ret_label = new_label();
          fprintf(femitc, " ENTA L%d\n", ret_label);
          fprintf(femitc, " STA RADR\n");
@@ -269,8 +303,38 @@ static void CodeGeneration(AstNode *p){
       case astMethod:{
          current_method_name = p->SymbolNode->name;
          fprintf(femitc, "%s NOP\n", p->SymbolNode->name);
+         if(p->pAstNode[0]){
+            param_count=0;
+            proccessParams(p->pAstNode[0]);
+         }
          if(p->pAstNode[1]){
             CodeGeneration(p->pAstNode[1]);
+         }
+         break;
+      }
+      case astArgs:{
+         for(int i=0; i<4; i++){ 
+            AstNode *arg = p->pAstNode[i];
+            if(!arg) continue;
+            if(arg->NodeType==astArgs){
+               CodeGeneration(arg);
+               continue;
+            }
+            if(arg->NodeType==astId){
+               char *var_name=arg->SymbolNode->name;
+               fprintf(femitc, " LDA %s\n", var_name);
+            } else if(arg->NodeType==astDecimConst){
+               int val=arg->SymbolNode->timi;
+               add_val(val);
+               if(val>=0)
+                  fprintf(femitc, " LDA V%d\n", val);
+               else
+                  fprintf(femitc, " LDA N%d\n", -val);
+            } else{
+               int arg_temp = genExpr(arg);
+               fprintf(femitc, " LDA T%d\n", arg_temp);
+            }
+            fprintf(femitc, " STA A%d\n", argument_count++);
          }
          break;
       }
@@ -369,6 +433,9 @@ int main(){
       fprintf(femitc, "%s", var_buf); // add all the var lines
       fprintf(femitc, "RVAL CON 0\n"); 
       fprintf(femitc, "RADR CON 0\n"); 
+      for(int i=0;i<max_argument_count;i++){
+         fprintf(femitc, "A%d CON 0\n", i);
+      }
       fprintf(femitc, " END main\n"); 
       fclose(femitc); 
    } 

@@ -1,8 +1,13 @@
-int method1(int a){
-    return a;
+int method1(int a,int b){
+    return a+b;
+}
+int method2(int a,int b,int c){
+    int d=method1(1,2);
+    return d/a+b+c;
 }
 int main() {
-    int a=2;
-    return a*method1(2);
+    int c=5;
+    int a=method2(c,2,3);
+    return a+method1(1,2);
 } 
 
