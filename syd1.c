@@ -42,8 +42,7 @@ static void proccessParams(AstNode *p){
    if(p->NodeType==astParam){
       if(p->SymbolNode&&p->SymbolNode->name){
          char *param_name=p->SymbolNode->name;
-         int param_num=p->SymbolNode->timi;
-         add_var(param_name,param_num);
+         add_var(param_name,0);
          fprintf(femitc, " LDA A%d\n", param_count++);
          fprintf(femitc, " STA %s\n", param_name);
       }
@@ -143,12 +142,19 @@ static int genExpr(AstNode *p){
          if(argument_count>max_argument_count){
             max_argument_count=argument_count;
          }
+
+         int radr_temp = new_temp();
+         fprintf(femitc, " LDA RADR\n");
+         fprintf(femitc, " STA T%d\n", radr_temp);
+
          int ret_label = new_label();
          fprintf(femitc, " ENTA L%d\n", ret_label);
          fprintf(femitc, " STA RADR\n");
          char *method_name= p->pAstNode[0]->SymbolNode->name;
          fprintf(femitc, " JMP %s\n", method_name);
          fprintf(femitc, "L%d NOP\n", ret_label);
+         fprintf(femitc, " LDA T%d\n", radr_temp);
+         fprintf(femitc, " STA RADR\n");
          int ret_temp = new_temp();
          fprintf(femitc, " LDA RVAL\n");
          fprintf(femitc, " STA T%d\n", ret_temp);
