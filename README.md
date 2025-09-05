@@ -36,10 +36,12 @@ Now we have created the executable *a.exe* which is the compiler.
 To test for example with file *test7.txt* we can:
 <pre>./a.exe < test7.txt</pre>
 If there are no errors, the AST of *test7.txt* is displayed and if we check the contents of *output.mixal* we can see an equivelant program but in MIXAL. Now to see the result:
-```mixasm output.mixal
+```sh
+mixasm output.mixal
 mixvm output.mix
 MIX> run
-MIX> preg```
+MIX> preg
+```
 And now we see the contents of the rA register of the MIX computer which is meant to have our result.
 
 ## Tests
