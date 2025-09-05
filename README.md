@@ -1,34 +1,58 @@
-# Compiler to MIXAL
+# C-like Compiler to MIXAL
 
 ## Introduction
-This is a compiler from a simple c-like language to the symbolic language of the MIX computer from the book "The Art of Computer Programming", written by D.Knuth, called MIXAL. The project is broken down to six main stages, lexical, syntax and semantic analysis, then error finding and recovery and finally production to goal language.
-All tools and files, both source and test, must be in the same directory for the following instruction to work.
+This project implemets a compiler for a simple c-like language to the MIX Assembly Language (MIXAL), from D.Knuth's *The Art of Computer Programming*.
+The compiler is divided into sixe stages:
+1. Lexical Analysis
+2. Syntax Analysis
+3. Semantic Analysis
+4. Error Detection
+5. Error Recovery
+6. Code Generation
+All source, helper, and test files should be in the same directory for the instructions to work.
 
 ## Lexical Analysis
-In this language variables and methods can be named with a combination of digits, letters and underscores, but they need to start with a letter.
-The tool **flex** is used in combination with the lex.l file to generate tokens to pass to the syntax analysis.
-In order to do the above and create the *lex.yy.c*, which is our lexer, just type the following:
-<pre>flex lex.l</pre>
+- **Identifiers**: variables and methods must start with a letter, followed by letters, digits, or underscores.
+- **Tool**: *flex* is used with *lex.l* to generate tokens for syntax analysis.
+To generate the lexer, *lex.yy.c*:
+```sh flex lex.l```
 
 ## Syntax Analysis
-Now that we have converted the *.txt* file to tokens we can continue with integrating the context-free grammar rules. The rules can be seen in the *syd.y* file which also creates the nodes for the Abstract Syntax Tree, also known as AST, that is incredibly important to continue.
-In order to create our parser, the *syd.tab.c* file we can use **bison**:
-<pre>bison -dv syd.y</pre>
-Every program must have zero or more methods and the only type supported is signed int. All methods must return an **int** and can have zero or more parameters. Variables can me assigned a value when declared or later.
+The context-free grammar is defined in *syd.y* and uses *bison* to produce an Abstract Syntax Tree (AST), which is the backbone for later stages.
+To build the parser, *syd.tab.c* and *syd.tab.h*:
+```sh bison -dv syd.y```
+**Language Rules**:
+- Programs consist of zero or more methods.
+- Only type supported is signed *int*.
+- All nethods must return *int*.
+- Methods can have zero or more parameters.
+- Variabled can be initialized at declaration or later.
 
 ## Semantic Analysis
-Semantic analysis takes place in the same file as syntax analysis and adds more rules for the language. A *break* statement stops the innermost loop in which it is in. All statements in conditions that are evaluated to be non-zero are considered **true**, while those that evaluate to zero are considered **false**. Declarations must be in the beginning of a method and method overloading isn't supported. Lastly, every program must have a **main** method.
+Performed in the same file with the syntax analysys, *syd.y*.
+**Rules**:
+- *break* terminates the innermost loop.
+- In conditions, any non-zero expression is *true* and zero expressions are *false*.
+- Declarations must appear at the beginning of a method.
+- Method overloading isn't supported.
+- Every program must have a *main* method.
 
-## Error Finding
-If a program doesn't comply to the rules above then an appropriate message should be printed in the terminal and the AST will not be built. For this purpose, the *error* token is used in our grammar and in specific rules. The error types are "Lexical", "Syntax", and "Semantic" and contain a message and a location near which the error is found. There is also a runtime error that is only seen when there is a division with a variable and not a constant that has the value of zero. However, this only outputs division by zero and doesn't show where it was found at.
+## Error Handling
+**Error Types**:
+- Lexical - invalid tokens.
+- Syntax - violating the grammar.
+- Semantic - invalid program meaning.
+- Runtime - only division by zero variable is detected at runtime.
+The message printed gives information about the location and type of the error. If there is one or more errors the AST won't be built. The *error* token is used in some rules to handle expected errors.
 
 ## Error Recovery
-This is used in order to find as many errors as possible in one take. The function used is *yyerrok()* which returns the compiler to its normal state after encountering an error. Sometimes, when an error is found, some of the next errors displayed are fixed with fixing the first one.
+Uses *yyerrok()* to recover and continue parsing. Multiple errors can be detected in a signle run and can sometimes be resolved by handling the first one. This happens because some following errors are side effects or previous ones.
 
 ## Goal Language
-MIX's Assembly Language, called MIXAL, has basic instructions and is easy to understand for someone with assembly expirience. The main file which converts the given *.txt* file to a *.mixal* file is *syd1.c*. This file prints the AST if there are no errors and uses it in order to generate an equivalent program as the one in the beggining but in MIXAL. The mixal assembler **mixasm** then can convert the *output.mixal* file we created to an object file, *output.mix*, which is then loaded and executed on a simulated MIX machine by the mix virtual machine **mixv**.
+Implemented in *syd1.c*. If no errors are found then the AST is printed and *output.mixal* contains a MIXAL program equivalent to the *.txt* one.
+The MIXAL assembler, **mixasm**, then creates an object file, *.mix*, and the MIX Virtual Machine, **mixvm**, loads it and executes it.
 
-## Creating the Executable
+## Building the Compiler
 In order to create and test the compiler we do the following:
 <pre>gcc syd.tab.c lex.yy.c syd1.c zyywrap.c</pre>
 *zyywrap.c* and *syd2.y* contain helper functions that are essential for our compiler to work.
@@ -45,12 +69,52 @@ MIX> preg
 And now we see the contents of the rA register of the MIX computer which is meant to have our result.
 
 ## Tests
-``` this is text ```
+These are some of the test cases and their results.
+**test4.txt**
+```c
+int method1(int a)
+{
+int b;
+b = ((a+10)-10)*5/5;
+return b;
+}
+int main()
+{
+int a=5;
+return method1(a);
+}
+```
+**test5.txt**
+```c
+int method1(int a)
+{
+int b;
+b = a+10;
+return b;
+}
+int method2(int c, int d)
+{
+int e;
+e = method1(c);
+e = e + d;
+return e;
+}
+int main()
+{
+return method2(5,6);
+}
+```
+**test6.txt**
+```c
+```
+**test7.txt**
+```c
+```
 
 ## Requirements
 The versions of the tools used are listed below:
-flex 2.6.4
-bison++ 1.21.9-1
-gcc (Debian 14.2.0-19) 14.2.0
-mixasm GNU MDK 1.3.0
-mixvm GNU MDK 1.3.0
+- flex 2.6.4
+- bison++ 1.21.9-1
+- gcc (Debian 14.2.0-19) 14.2.0
+- mixasm GNU MDK 1.3.0
+- mixvm GNU MDK 1.3.0
