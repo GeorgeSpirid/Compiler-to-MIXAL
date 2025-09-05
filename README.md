@@ -8,12 +8,12 @@ All tools and files, both source and test, must be in the same directory for the
 In this language variables and methods can be named with a combination of digits, letters and underscores, but they need to start with a letter.
 The tool **flex** is used in combination with the lex.l file to generate tokens to pass to the syntax analysis.
 In order to do the above and create the *lex.yy.c*, which is our lexer, just type the following:
-<pre>```sh flex lex.l```</pre>
+<pre>flex lex.l</pre>
 
 ## Syntax Analysis
 Now that we have converted the *.txt* file to tokens we can continue with integrating the context-free grammar rules. The rules can be seen in the *syd.y* file which also creates the nodes for the Abstract Syntax Tree, also known as AST, that is incredibly important to continue.
 In order to create our parser, the *syd.tab.c* file we can use **bison**:
-<pre>```sh bison -dv syd.y```</pre>
+<pre>bison -dv syd.y</pre>
 Every program must have zero or more methods and the only type supported is signed int. All methods must return an **int** and can have zero or more parameters. Variables can me assigned a value when declared or later.
 
 ## Semantic Analysis
@@ -36,11 +36,14 @@ Now we have created the executable *a.exe* which is the compiler.
 To test for example with file *test7.txt* we can:
 <pre>./a.exe < test7.txt</pre>
 If there are no errors, the AST of *test7.txt* is displayed and if we check the contents of *output.mixal* we can see an equivelant program but in MIXAL. Now to see the result:
-<pre>mixasm output.mixal\nmixvm output.mix\nMIX> run\nMIX> preg</pre>
+```mixasm output.mixal
+mixvm output.mix
+MIX> run
+MIX> preg```
 And now we see the contents of the rA register of the MIX computer which is meant to have our result.
 
 ## Tests
-<pre>text This is text</pre>
+``` this is text ```
 
 ## Requirements
 The versions of the tools used are listed below:
