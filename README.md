@@ -30,13 +30,13 @@ MIX's Assembly Language, called MIXAL, has basic instructions and is easy to und
 
 ## Creating the Executable
 In order to create and test the compiler we do the following:
-<pre>sh gcc syd.tab.c lex.yy.c syd1.c zyywrap.c</pre>
+<pre>gcc syd.tab.c lex.yy.c syd1.c zyywrap.c</pre>
 *zyywrap.c* and *syd2.y* contain helper functions that are essential for our compiler to work.
 Now we have created the executable *a.exe* which is the compiler.
 To test for example with file *test7.txt* we can:
-<pre>sh ./a.exe < test7.txt</pre>
+<pre>./a.exe < test7.txt</pre>
 If there are no errors, the AST of *test7.txt* is displayed and if we check the contents of *output.mixal* we can see an equivelant program but in MIXAL. Now to see the result:
-<pre>sh mixasm output.mixal sh mixvm output.mix MIX> run MIX> preg</pre>
+<pre>mixasm output.mixal\nmixvm output.mix\nMIX> run\nMIX> preg</pre>
 And now we see the contents of the rA register of the MIX computer which is meant to have our result.
 
 ## Tests
