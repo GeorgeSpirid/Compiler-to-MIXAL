@@ -70,12 +70,13 @@ And now we see the contents of the rA register of the MIX computer which is mean
 
 ## Tests
 These are some of the test cases and their results.
-**test4.txt**
+
+**test2.txt**
 ```c
 int method1(int a)
 {
 int b;
-b = ((a+10)-10)*5/5;
+b = ((a+10)-10)*5)/5;
 return b;
 }
 int main()
@@ -83,6 +84,33 @@ int main()
 int a=5;
 return method1(a);
 }
+
+Result: 
+|Syntax Error| in line 4 col 19: parse error
+There were 1 errors. No code generated.
+
+```
+**test3.txt**
+```c
+int method1(int a)
+{
+int b;
+b=0;
+while( a>0)
+{
+b = (a+10);
+a = (a-1);
+break;
+}
+return b;
+}
+int main()
+{
+return method1(5);
+}
+
+Result:
+rA: + 00 00 00 00 15 (0000000015)
 ```
 **test5.txt**
 ```c
@@ -103,12 +131,107 @@ int main()
 {
 return method2(5,6);
 }
+
+Result:
+rA: + 00 00 00 00 21 (0000000021)
 ```
 **test6.txt**
 ```c
+iint method1(int a)
+{
+int d=1;
+int e=0;
+int h=d/e;
+int b;
+int b;
+b=0;
+c=1;
+while( a>0)
+{
+b = (a+10);
+a = (a-1);
+break;
+}
+break;
+return b;
+}
+int method2(int c, int d)
+{
+int e;
+e = method1(c);
+e = e + d;
+}
+int a=1;
+int main()
+{
+int a=01;
+&
+// comment
+method3();
+return method1(5,1);
+int d=1;
+}
+
+Result:
+|Semantic Error| in line 7 col 7: redeclaring variable (near b)
+|Semantic Error| in line 9 col 2: variable not found in method (near c)
+|Semantic Error| in line 16 col 7: break outside of loop
+|Semantic Error| in line 24 col 2: method doesn't have return value (near method2)
+|Semantic Error| in line 25 col 9: declaring variable outside of a method (near a)
+|Semantic Error| in line 25 col 9: looking for a variable outside a method (near a)
+|Syntax Error| in line 26 col 4: parse error
+|Lexical Error| in line 28 col 9: number cannot start with zero (near 01)
+|Lexical Error| in line 29 col 2: illegal character (near &)
+|Syntax Error| in line 31 col 8: only methods allowed at the top level
+|Syntax Error| in line 31 col 9: parse error
+|Syntax Error| in line 31 col 9: program must have only methods
+|Syntax Error| in line 31 col 10: parse error
+|Syntax Error| in line 31 col 10: program must have only methods
+|Syntax Error| in line 31 col 11: parse error
+|Syntax Error| in line 32 col 7: only methods allowed at the top level
+|Syntax Error| in line 32 col 15: parse error
+|Syntax Error| in line 32 col 15: program must have only methods
+|Syntax Error| in line 32 col 16: parse error
+|Syntax Error| in line 32 col 16: program must have only methods
+|Syntax Error| in line 32 col 17: parse error
+|Syntax Error| in line 32 col 17: program must have only methods
+|Syntax Error| in line 32 col 18: parse error
+|Syntax Error| in line 32 col 18: program must have only methods
+|Syntax Error| in line 32 col 19: parse error
+|Syntax Error| in line 32 col 19: program must have only methods
+|Syntax Error| in line 32 col 20: parse error
+|Syntax Error| in line 32 col 20: program must have only methods
+|Syntax Error| in line 32 col 21: parse error
+|Syntax Error| in line 33 col 4: only methods allowed at the top level
+|Syntax Error| in line 33 col 6: parse error
+|Syntax Error| in line 33 col 6: program must have only methods
+|Syntax Error| in line 33 col 7: parse error
+|Syntax Error| in line 33 col 7: program must have only methods
+|Syntax Error| in line 33 col 8: parse error
+|Syntax Error| in line 33 col 8: program must have only methods
+|Syntax Error| in line 33 col 9: parse error
+|Syntax Error| in line 34 col 2: only methods allowed at the top level
+|Syntax Error| in line 36 col 1: need to have main method
+There were 39 errors. No code generated.
 ```
 **test7.txt**
 ```c
+int method1(int a,int b){
+    return a+b;
+}
+int method2(int a,int b,int c){
+    int d=method1(1,2);
+    int e=0;
+    return d/e+b+c;
+}
+int main() {
+    int c=5;
+    int a=method2(c,2,3);
+    return a+method1(1,2);
+} 
+
+Result:
+RUNTIME ERROR: DIVISION BY ZERO 
 ```
 
 ## Requirements

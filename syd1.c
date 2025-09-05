@@ -438,36 +438,48 @@ static void CodeGeneration(AstNode *p){
 
 int main(){ 
    if(yyparse() == 0){ 
-      if(error_count==0)
+      int mi=methodidx("main");
+      if(mi==-1){
+         error_message("Syntax Error","need to have main method",NULL);
+      }
+      if(mt[mi].param_count != 0){
+         error_message("Syntax Error","main cannot have parameters",NULL);
+      }
+      if(error_count==0){
 		   printAST(TreeRoot, -3);
       
-      femitc = fopen("output.mixal", "w"); 
-      if(!femitc){ 
-         fprintf(stderr, "Cannot open output.mixal for writing\n"); 
-         return 1; 
-      } 
-      fprintf(femitc, " ORIG 1000\n"); 
+         femitc = fopen("output.mixal", "w"); 
+         if(!femitc){ 
+            fprintf(stderr, "Cannot open output.mixal for writing\n"); 
+            return 1; 
+         } 
+         fprintf(femitc, " ORIG 1000\n"); 
 
-      CodeGeneration(TreeRoot); 
+         CodeGeneration(TreeRoot); 
 
-      fprintf(femitc, " HLT\n");
-      fprintf(femitc, " ORIG 2000\n");
-      fprintf(femitc, "%s", val_buf); // add all the val lines
-      fprintf(femitc, "%s", temp_buf); // add all the temp lines
-      fprintf(femitc, "%s", var_buf); // add all the var lines
-      fprintf(femitc, "RVAL CON 0\n"); 
-      fprintf(femitc, "RADR CON 0\n"); 
-      for(int i=0;i<max_argument_count;i++){
-         fprintf(femitc, "A%d CON 0\n", i);
+         fprintf(femitc, " HLT\n");
+         fprintf(femitc, " ORIG 2000\n");
+         fprintf(femitc, "%s", val_buf); // add all the val lines
+         fprintf(femitc, "%s", temp_buf); // add all the temp lines
+         fprintf(femitc, "%s", var_buf); // add all the var lines
+         fprintf(femitc, "RVAL CON 0\n"); 
+         fprintf(femitc, "RADR CON 0\n"); 
+         for(int i=0;i<max_argument_count;i++){
+            fprintf(femitc, "A%d CON 0\n", i);
+         }
+         fprintf(femitc,"DZMSG ALF RUNTI");
+         fprintf(femitc," ALF ME ER");
+         fprintf(femitc," ALF ROR: ");
+         fprintf(femitc," ALF DIVIS");
+         fprintf(femitc," ALF ION B");
+         fprintf(femitc," ALF Y ZER");
+         fprintf(femitc," ALF O    ");
+         fprintf(femitc, " END main\n"); 
+         fclose(femitc);
+      } else {
+         fprintf(stderr, "There were %d errors. No code generated.\n", error_count);
+         return 1;
       }
-      fprintf(femitc,"DZMSG ALF RUNTI");
-      fprintf(femitc," ALF ME ER");
-      fprintf(femitc," ALF ROR: ");
-      fprintf(femitc," ALF DIVIS");
-      fprintf(femitc," ALF ION B");
-      fprintf(femitc," ALF Y ZER");
-      fprintf(femitc," ALF O    ");
-      fprintf(femitc, " END main\n"); 
-      fclose(femitc); 
    } 
+   return 0;
 }

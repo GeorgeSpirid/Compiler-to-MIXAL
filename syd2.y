@@ -111,10 +111,12 @@ void leavescope(void){
 void addvariable(char *name, int parameter){
    if(currentmethod==-1){
       error_message("Semantic Error","declaring variable outside of a method",name);
+      return;
    }
    HASH_TAB *tempht = &mt[currentmethod].ht;
    if(findsymb(tempht,name)){
       error_message("Semantic Error","redeclaring variable",name);
+      return;
    }
    symbol *temps = new_symbol(name);
    temps->parameter=parameter?1:0;
@@ -124,10 +126,12 @@ void addvariable(char *name, int parameter){
 symbol* findsymbolinmethod(char *name){
    if(currentmethod==-1){
       error_message("Semantic Error","looking for a variable outside a method",name);
+      return NULL;
    }
    symbol* temps = findsymb(&mt[currentmethod].ht, name);
    if(!temps){
       error_message("Semantic Error","variable not found in method",name);
+      return NULL;
    }
    return temps;
 }

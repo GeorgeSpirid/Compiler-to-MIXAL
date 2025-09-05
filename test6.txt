@@ -16,15 +16,13 @@ break;
 break;
 return b;
 }
-a=1;
-
 int method2(int c, int d)
 {
 int e;
 e = method1(c);
 e = e + d;
-
 }
+int a=1;
 int main()
 {
 int a=01;
