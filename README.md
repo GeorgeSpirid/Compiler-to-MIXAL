@@ -56,9 +56,9 @@ The MIXAL assembler, **mixasm**, then creates an object file, *.mix*, and the MI
 In order to create and test the compiler we do the following:
 <pre>gcc syd.tab.c lex.yy.c syd1.c zyywrap.c</pre>
 *zyywrap.c* and *syd2.y* contain helper functions that are essential for our compiler to work.
-Now we have created the executable *a.exe* which is the compiler.
+Now we have created the executable *a* which is the compiler.
 To test for example with file *test7.txt* we can:
-<pre>./a.exe < test7.txt</pre>
+<pre>./a.out < test7.txt</pre>
 If there are no errors, the AST of *test7.txt* is displayed and if we check the contents of *output.mixal* we can see an equivelant program but in MIXAL. Now to see the result:
 ```sh
 mixasm output.mixal
@@ -233,6 +233,11 @@ int main() {
 Result:
 RUNTIME ERROR: DIVISION BY ZERO 
 ```
+
+## Final Notes
+The name of a variable plus the name of the method it is in cannot be more than 10 characters combined, e.x.
+variable called "name" in method called "findName" is too big and therefor invalid.
+The project was mostly developed in Notepad with some use of Visual Studio Code.
 
 ## Requirements
 The versions of the tools used are listed below:
