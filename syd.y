@@ -48,7 +48,7 @@ static symbol *new_num_symbol(int value);
 PROGRAM            : METH_LIST
                      { 
 #if DEBUG
-                        printf("Rule #1\n");
+                        printf("Rule #1a\n");
 #endif 
 			TreeRoot=MkNode(astProgram,NULL,$1,NULL,NULL,NULL);
 			$$=TreeRoot;
@@ -56,11 +56,14 @@ PROGRAM            : METH_LIST
 		|
 		{
 #if DEBUG
-                        printf("Rule #2\n");
+                        printf("Rule #1b\n");
 #endif
 		}
 		| error
 		{
+#if DEBUG
+                        printf("Rule #1c\n");
+#endif 
 			error_message("Syntax Error","program must have only methods",NULL);
 			yyerrok;
 			yyclearin;
@@ -70,31 +73,40 @@ PROGRAM            : METH_LIST
 METH_LIST            : METH METH_LIST
                      { 
 #if DEBUG
-                        printf("Rule #3\n");
+                        printf("Rule #2a\n");
 #endif 
 			$$=MkNode(astMethList,NULL,$1,$2,NULL,NULL);
                      }
 		       | METH
                      { 
 #if DEBUG
-                        printf("Rule #4\n");
+                        printf("Rule #2b\n");
 #endif
 			$$=MkNode(astMethList,NULL,$1,NULL,NULL,NULL);
                      }
 		| DECL ';' 
 		{
+#if DEBUG
+                        printf("Rule #2c\n");
+#endif 
 			error_message("Syntax Error","declaration outside of method",NULL);
 			yyerrok;
 			yyclearin;
 		}
 		| STMT ';' 
 		{
+#if DEBUG
+                        printf("Rule #2d\n");
+#endif 
 			error_message("Syntax Error","statement outside of method",NULL);
 			yyerrok;
 			yyclearin;
 		}
 		| error ';'
 		{
+#if DEBUG
+                        printf("Rule #2e\n");
+#endif 
 			error_message("Syntax Error","only methods allowed at the top level",NULL);
 			yyerrok;
 			yyclearin;
@@ -102,7 +114,7 @@ METH_LIST            : METH METH_LIST
 METH            : TYPE ID
 {
 #if DEBUG
-                        printf("Rule #5 - Part 1\n");
+                        printf("Rule #3a\n");
 #endif
 			addmethod($2);
 			currentscope($2);
@@ -112,14 +124,14 @@ METH            : TYPE ID
 		'(' PARAMS ')'
                      { 
 #if DEBUG
-                        printf("Rule #5 - Part 2\n");
+                        printf("Rule #3b\n");
 #endif
 			mt[currentmethod].param_count=cur_param_count;
  		}
 			 BODY
 		{
 #if DEBUG
-                        printf("Rule #5 - Part 3\n");
+                        printf("Rule #3c\n");
 #endif
 			if(!mt[currentmethod].has_return){
 				error_message("Semantic Error","method doesn't have return value",mt[currentmethod].name);
@@ -132,7 +144,7 @@ METH            : TYPE ID
 PARAMS            : FORMALS TYPE ID
                      { 
 #if DEBUG
-                        printf("Rule #6\n");
+                        printf("Rule #4a\n");
 #endif
 			if(findsymb(&mt[currentmethod].ht,$3)){
 				error_message("Semantic Error","duplicate parameter in method",$3);
@@ -146,14 +158,14 @@ PARAMS            : FORMALS TYPE ID
 		       | 
                      { 
 #if DEBUG
-                        printf("Rule #7\n");
+                        printf("Rule #4b\n");
 #endif
 			$$=MkNode(astParams,NULL,NULL,NULL,NULL,NULL);
                      }
 		| error ')'
 		{
 #if DEBUG
-                        printf("Rule #8\n");
+                        printf("Rule #4c\n");
 			fprintf(stderr,"Skipping parameters.\n");
 #endif
 			yyerrok;
@@ -161,7 +173,7 @@ PARAMS            : FORMALS TYPE ID
 FORMALS            : FORMALS TYPE ID ','
                      { 
 #if DEBUG
-                        printf("Rule #9\n");
+                        printf("Rule #5a\n");
 #endif
 			addvariable($3,TRUE_VAL);
 			cur_param_count++;
@@ -172,27 +184,27 @@ FORMALS            : FORMALS TYPE ID ','
 		       | 
                      { 
 #if DEBUG
-                        printf("Rule #10\n");
+                        printf("Rule #5b\n");
 #endif
 			$$=NULL;
                      };
 TYPE            : INT
                      { 
 #if DEBUG
-                        printf("Rule #11\n");
+                        printf("Rule #6a\n");
 #endif
                      };
 BODY            : '{' DECLS STMTS '}'
                      { 
 #if DEBUG
-                        printf("Rule #12\n");
+                        printf("Rule #7a\n");
 #endif
 			$$=MkNode(astBody,NULL,$2,$3,NULL,NULL);
                      };
 DECLS            : DECL_LIST DECL
                      { 
 #if DEBUG
-                        printf("Rule #13\n");
+                        printf("Rule #8a\n");
 #endif
 			$$=MkNode(astBody,NULL,$1,$2,NULL,NULL);
 
@@ -200,28 +212,28 @@ DECLS            : DECL_LIST DECL
 		       | 
                      { 
 #if DEBUG
-                        printf("Rule #14\n");
+                        printf("Rule #8b\n");
 #endif
 			$$=MkNode(astBody,NULL,NULL,NULL,NULL,NULL);
                      };
 DECL_LIST            : DECL_LIST DECL
                      { 
 #if DEBUG
-                        printf("Rule #15\n");
+                        printf("Rule #9a\n");
 #endif
 			$$=MkNode(astDecls,NULL,$1,$2,NULL,NULL);
                      }
 		       | 
                      { 
 #if DEBUG
-                        printf("Rule #16\n");
+                        printf("Rule #9b\n");
 #endif
 			$$=NULL;
                      };
 DECL            : TYPE ID VARS ';'
                      { 
 #if DEBUG
-                        printf("Rule #17\n");
+                        printf("Rule #10a\n");
 #endif
 			addvariable($2,FALSE_VAL);
 			symbol *temps=new_symbol($2);
@@ -231,7 +243,7 @@ DECL            : TYPE ID VARS ';'
 		       | TYPE ID '=' EXPR VARS ';' 
                      { 
 #if DEBUG
-                        printf("Rule #18\n");
+                        printf("Rule #10b\n");
 #endif
 			addvariable($2,FALSE_VAL);
 			symbol *temps=new_symbol($2);
@@ -241,13 +253,16 @@ DECL            : TYPE ID VARS ';'
                      }
 		| TYPE error ';'
 		{
+#if DEBUG
+                        printf("Rule #10c\n");
+#endif 
 			yyerrok;
 			$$=MkNode(astDecls,NULL,NULL,NULL,NULL,NULL);
 		};
 VARS            : ',' ID VARS
                      { 
 #if DEBUG
-                        printf("Rule #19\n");
+                        printf("Rule #11a\n");
 #endif
 			addvariable($2,FALSE_VAL);
 			symbol *temps=new_symbol($2);
@@ -257,7 +272,7 @@ VARS            : ',' ID VARS
 		       | ',' ID '=' EXPR VARS
                      { 
 #if DEBUG
-                        printf("Rule #20\n");
+                        printf("Rule #11b\n");
 #endif
 			addvariable($2,FALSE_VAL);
 			symbol *temps=new_symbol($2);
@@ -268,14 +283,14 @@ VARS            : ',' ID VARS
 		       | 
                      { 
 #if DEBUG
-                        printf("Rule #21\n");
+                        printf("Rule #11c\n");
 #endif
 			$$=NULL;
                      };
 STMTS            : STMTS STMT
                      { 
 #if DEBUG
-                        printf("Rule #22\n");
+                        printf("Rule #12a\n");
 #endif
 			if(ast_returns($1)){
 				error_message("Semantic Error","cannot reach code after return",mt[currentmethod].name);
@@ -285,14 +300,14 @@ STMTS            : STMTS STMT
 		       | 
                      { 
 #if DEBUG
-                        printf("Rule #23\n");
+                        printf("Rule #12b\n");
 #endif
 			$$=MkNode(astStmtSeq,NULL,NULL,NULL,NULL,NULL);
                      };
 STMT            : ASSIGN ';'
                      { 
 #if DEBUG
-                        printf("Rule #24\n");
+                        printf("Rule #13a\n");
 #endif
 			if(!$1 || !is_location($1->pAstNode[0])){
 				error_message("Semantic Error","assignment target is not a variable",NULL);
@@ -302,7 +317,7 @@ STMT            : ASSIGN ';'
 		       | RETURN EXPR ';'
 		{ 
 #if DEBUG
-                        printf("Rule #25\n");
+                        printf("Rule #13b\n");
 #endif
 			if(currentmethod==-1){
 				error_message("Semantic Error","return outside of a method",NULL);
@@ -313,21 +328,21 @@ STMT            : ASSIGN ';'
 			| IF '(' EXPR ')' STMT ELSE STMT
 		{ 
 #if DEBUG
-                        printf("Rule #26\n");
+                        printf("Rule #13c\n");
 #endif
 			$$=MkNode(astIfElseStmt,NULL,$3,$5,$7,NULL);
                      }
 			| WHILE '(' EXPR ')' 
 		{ 
 #if DEBUG
-                        printf("Rule #27 - Part 1\n");
+                        printf("Rule #13d\n");
 #endif
 			loopdepth++;
 		} 
 			STMT
 		{
 #if DEBUG
-                        printf("Rule #27 - Part 2\n");
+                        printf("Rule #13e\n");
 #endif
 			loopdepth--;
 			$$=MkNode(astWhileStmt,NULL,$3,$6,NULL,NULL);
@@ -335,7 +350,7 @@ STMT            : ASSIGN ';'
 			| BREAK ';'
 		{ 
 #if DEBUG
-                        printf("Rule #28\n");
+                        printf("Rule #13f\n");
 #endif
 			if(loopdepth==0){
 				error_message("Semantic Error","break outside of loop",NULL);
@@ -345,21 +360,21 @@ STMT            : ASSIGN ';'
 			| BLOCK
 		{ 
 #if DEBUG
-                        printf("Rule #29\n");
+                        printf("Rule #13g\n");
 #endif
 			$$=$1;
                      }
 		       | ';'
                      { 
 #if DEBUG
-                        printf("Rule #30\n");
+                        printf("Rule #13h\n");
 #endif
 			$$=MkNode(astNullStmt,NULL,NULL,NULL,NULL,NULL);
                      }
 		| error ';'
 		{
 #if DEBUG
-                        printf("Rule #31\n");
+                        printf("Rule #13i\n");
 			fprintf(stderr,"Skipping statement.\n");
 #endif
 			yyerrok;
@@ -375,14 +390,14 @@ BLOCK            : '{' STMTS '}'
 ASSIGN            : LOCATION '=' EXPR
                      { 
 #if DEBUG
-                        printf("Rule #33\n");
+                        printf("Rule #14a\n");
 #endif
 			$$=MkNode(astAssign,NULL,$1,$3,NULL,NULL);
                      };
 LOCATION            : ID
                      { 
 #if DEBUG
-                        printf("Rule #34\n");
+                        printf("Rule #15a\n");
 #endif
 			symbol *temps=findsymbolinmethod($1);
 			$$=MkNode(astId,temps,NULL,NULL,NULL,NULL);
@@ -390,7 +405,7 @@ LOCATION            : ID
 METHOD            : ID
                      { 
 #if DEBUG
-                        printf("Rule #35\n");
+                        printf("Rule #16a\n");
 #endif
 			if(methodidx($1)==-1){
 				error_message("Semantic Error","undeclared method",$1);
@@ -401,91 +416,91 @@ METHOD            : ID
 EXPR            : ADD_EXPR RELOP ADD_EXPR
                      { 
 #if DEBUG
-                        printf("Rule #36\n");
+                        printf("Rule #17a\n");
 #endif
 			$$=MkNode($2->NodeType,NULL,$1,$3,NULL,NULL);
                      }
 		| ADD_EXPR
                      { 
 #if DEBUG
-                        printf("Rule #37\n");
+                        printf("Rule #17b\n");
 #endif
 			$$=$1;
                      };
 RELOP            : LE
                      { 
 #if DEBUG
-                        printf("Rule #38\n");
+                        printf("Rule #18a\n");
 #endif
 			$$=MkNode(astLeEq,NULL,NULL,NULL,NULL,NULL);
                      }
 		| LT
                      { 
 #if DEBUG
-                        printf("Rule #39\n");
+                        printf("Rule #18b\n");
 #endif
 			$$=MkNode(astLess,NULL,NULL,NULL,NULL,NULL);
                      }
 		| GT
                      { 
 #if DEBUG
-                        printf("Rule #40\n");
+                        printf("Rule #18c\n");
 #endif
 			$$=MkNode(astGreater,NULL,NULL,NULL,NULL,NULL);
                      }
 		| GE
                      { 
 #if DEBUG
-                        printf("Rule #41\n");
+                        printf("Rule #18d\n");
 #endif
 			$$=MkNode(astGrEq,NULL,NULL,NULL,NULL,NULL);
                      }
 		| EQ
                      { 
 #if DEBUG
-                        printf("Rule #42\n");
+                        printf("Rule #18e\n");
 #endif
 			$$=MkNode(astEq,NULL,NULL,NULL,NULL,NULL);
                      }
 		| NE
                      { 
 #if DEBUG
-                        printf("Rule #43\n");
+                        printf("Rule #18f\n");
 #endif
 			$$=MkNode(astNotEq,NULL,NULL,NULL,NULL,NULL);
                      };
 ADD_EXPR            : ADD_EXPR ADDOP TERM
                      { 
 #if DEBUG
-                        printf("Rule #44\n");
+                        printf("Rule #19a\n");
 #endif
 			$$=MkNode($2->NodeType,NULL,$1,$3,NULL,NULL);
                      }
 		| TERM
                      { 
 #if DEBUG
-                        printf("Rule #45\n");
+                        printf("Rule #19b\n");
 #endif
 			$$=$1;
                      };
 ADDOP            : '+'
                      { 
 #if DEBUG
-                        printf("Rule #46\n");
+                        printf("Rule #20a\n");
 #endif
 			$$=MkNode(astAdd,NULL,NULL,NULL,NULL,NULL);
                      }
 		| '-'
                      { 
 #if DEBUG
-                        printf("Rule #47\n");
+                        printf("Rule #20b\n");
 #endif
 			$$=MkNode(astSub,NULL,NULL,NULL,NULL,NULL);
                      };
 TERM            : TERM MULOP FACTOR
                      { 
 #if DEBUG
-                        printf("Rule #48\n");
+                        printf("Rule #21a\n");
 #endif
 			if($2->NodeType==astDiv){
 			    if(is_zero($3))
@@ -496,42 +511,42 @@ TERM            : TERM MULOP FACTOR
 		| FACTOR
                      { 
 #if DEBUG
-                        printf("Rule #49\n");
+                        printf("Rule #21b\n");
 #endif
 			$$=$1;
                      };
 MULOP            : '*'
                      { 
 #if DEBUG
-                        printf("Rule #50\n");
+                        printf("Rule #21c\n");
 #endif
 			$$=MkNode(astMult,NULL,NULL,NULL,NULL,NULL);
                      }
 		| '/'
                      { 
 #if DEBUG
-                        printf("Rule #51\n");
+                        printf("Rule #21d\n");
 #endif
 			$$=MkNode(astDiv,NULL,NULL,NULL,NULL,NULL);
                      };
 FACTOR            : '(' EXPR ')'
                      { 
 #if DEBUG
-                        printf("Rule #52\n");
+                        printf("Rule #22a\n");
 #endif
 			$$=$2;
                      }
 		| LOCATION
                      { 
 #if DEBUG
-                        printf("Rule #53\n");
+                        printf("Rule #22b\n");
 #endif
 			$$=$1;
                      }
 		| NUM
                      { 
 #if DEBUG
-                        printf("Rule #54\n");
+                        printf("Rule #22c\n");
 #endif
 			if($1<INT_MIN || $1>INT_MAX){
 				error_message("Semantic Error","numeric constant out of range",NULL);
@@ -544,7 +559,7 @@ FACTOR            : '(' EXPR ')'
 		| TRUE
                      { 
 #if DEBUG
-                        printf("Rule #55\n");
+                        printf("Rule #22d\n");
 #endif
 			symbol *temps=new_num_symbol(1);
 			$$=MkNode(astDecimConst,temps,NULL,NULL,NULL,NULL);
@@ -552,7 +567,7 @@ FACTOR            : '(' EXPR ')'
 		| FALSE
                      { 
 #if DEBUG
-                        printf("Rule #56\n");
+                        printf("Rule #22e\n");
 #endif
 			symbol *temps=new_num_symbol(0);
 			$$=MkNode(astDecimConst,temps,NULL,NULL,NULL,NULL);
@@ -560,7 +575,7 @@ FACTOR            : '(' EXPR ')'
 		| METHOD '(' ACTUALS ')'
                      { 
 #if DEBUG
-                        printf("Rule #57\n");
+                        printf("Rule #22f\n");
 #endif
 			if(!$1 || !$1->SymbolNode){
 				error_message("Semantic Error","method symbol missing in call",(char*)$1->SymbolNode->name);
@@ -578,7 +593,7 @@ FACTOR            : '(' EXPR ')'
 		| '-' FACTOR
 		{
 #if DEBUG
-		printf("Rule #57-Unary Minus\n");
+		printf("Rule #22g\n");
 #endif
 		symbol *temps=new_num_symbol(0);
 		$$=MkNode(astSub,NULL,MkNode(astDecimConst,temps,NULL,NULL,NULL,NULL),$2,NULL,NULL);
@@ -587,7 +602,7 @@ FACTOR            : '(' EXPR ')'
 ACTUALS            : ARGS EXPR
                      { 
 #if DEBUG
-                        printf("Rule #58\n");
+                        printf("Rule #23a\n");
 #endif
 			if($1==NULL){
 				$$=MkNode(astArgs,NULL,$2,NULL,NULL,NULL);
@@ -598,21 +613,21 @@ ACTUALS            : ARGS EXPR
 		|
                      { 
 #if DEBUG
-                        printf("Rule #59\n");
+                        printf("Rule #23b\n");
 #endif
 			$$=NULL;
                      };
 ARGS            : ARGS EXPR ','
                      { 
 #if DEBUG
-                        printf("Rule #60\n");
+                        printf("Rule #24a\n");
 #endif
 			$$=MkNode(astArgs,NULL,$1,MkNode(astArgs,NULL,$2,NULL,NULL,NULL),NULL,NULL);
                      }
 		|
                      	{ 
 #if DEBUG
-                        printf("Rule #61\n");
+                        printf("Rule #24b\n");
 #endif
 			$$=NULL;
                      };
@@ -633,6 +648,7 @@ void yyerror(const char *s)
    error_message("Syntax Error",s,NULL);
 }
 
+// main used without syd1.c
 /* int main(void)
 {
    if(yyparse()==0){

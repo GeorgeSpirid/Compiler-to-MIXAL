@@ -467,13 +467,13 @@ int main(){
          for(int i=0;i<max_argument_count;i++){
             fprintf(femitc, "A%d CON 0\n", i);
          }
-         fprintf(femitc,"DZMSG ALF RUNTI");
-         fprintf(femitc," ALF ME ER");
-         fprintf(femitc," ALF ROR: ");
-         fprintf(femitc," ALF DIVIS");
-         fprintf(femitc," ALF ION B");
-         fprintf(femitc," ALF Y ZER");
-         fprintf(femitc," ALF O    ");
+         fprintf(femitc,"DZMSG ALF RUNTI\n");
+         fprintf(femitc," ALF ME ER\n");
+         fprintf(femitc," ALF ROR: \n");
+         fprintf(femitc," ALF DIVIS\n");
+         fprintf(femitc," ALF ION B\n");
+         fprintf(femitc," ALF Y ZER\n");
+         fprintf(femitc," ALF O    \n");
          fprintf(femitc, " END main\n"); 
          fclose(femitc);
       } else {

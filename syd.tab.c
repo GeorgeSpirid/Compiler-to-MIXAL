@@ -579,13 +579,13 @@ static const short yyrhs[] = {    31,
 
 #if (YY_parse_DEBUG != 0) || defined(YY_parse_ERROR_VERBOSE) 
 static const short yyrline[] = { 0,
-    48,    56,    62,    70,    77,    84,    90,    96,   102,   112,
-   120,   132,   146,   153,   161,   172,   179,   185,   192,   200,
-   207,   214,   221,   231,   242,   247,   257,   268,   275,   285,
-   292,   302,   313,   320,   328,   335,   345,   352,   359,   368,
-   375,   382,   390,   401,   408,   415,   422,   429,   436,   443,
-   450,   457,   464,   471,   478,   485,   496,   503,   510,   517,
-   524,   531,   544,   552,   560,   578,   587,   598,   605,   612
+    48,    56,    62,    73,    80,    87,    96,   105,   114,   124,
+   132,   144,   158,   165,   173,   184,   191,   197,   204,   212,
+   219,   226,   233,   243,   254,   262,   272,   283,   290,   300,
+   307,   317,   328,   335,   343,   350,   360,   367,   374,   383,
+   390,   397,   405,   416,   423,   430,   437,   444,   451,   458,
+   465,   472,   479,   486,   493,   500,   511,   518,   525,   532,
+   539,   546,   559,   567,   575,   593,   602,   613,   620,   627
 };
 
 static const char * const yytname[] = {   "$","error","$illegal.","RETURN","BREAK",
@@ -1198,7 +1198,7 @@ case 1:
 #line 49 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #1\n");
+                        printf("Rule #1a\n");
 #endif 
 			TreeRoot=MkNode(astProgram,NULL,yyvsp[0].stnode,NULL,NULL,NULL);
 			yyval.stnode=TreeRoot;
@@ -1208,13 +1208,16 @@ case 2:
 #line 57 "syd.y"
 {
 #if DEBUG
-                        printf("Rule #2\n");
+                        printf("Rule #1b\n");
 #endif
 		;
     break;}
 case 3:
 #line 63 "syd.y"
 {
+#if DEBUG
+                        printf("Rule #1c\n");
+#endif 
 			error_message("Syntax Error","program must have only methods",NULL);
 			yyerrok;
 			yyclearin;
@@ -1222,52 +1225,61 @@ case 3:
 		;
     break;}
 case 4:
-#line 71 "syd.y"
+#line 74 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #3\n");
+                        printf("Rule #2a\n");
 #endif 
 			yyval.stnode=MkNode(astMethList,NULL,yyvsp[-1].stnode,yyvsp[0].stnode,NULL,NULL);
                      ;
     break;}
 case 5:
-#line 78 "syd.y"
+#line 81 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #4\n");
+                        printf("Rule #2b\n");
 #endif
 			yyval.stnode=MkNode(astMethList,NULL,yyvsp[0].stnode,NULL,NULL,NULL);
                      ;
     break;}
 case 6:
-#line 85 "syd.y"
+#line 88 "syd.y"
 {
+#if DEBUG
+                        printf("Rule #2c\n");
+#endif 
 			error_message("Syntax Error","declaration outside of method",NULL);
 			yyerrok;
 			yyclearin;
 		;
     break;}
 case 7:
-#line 91 "syd.y"
+#line 97 "syd.y"
 {
+#if DEBUG
+                        printf("Rule #2d\n");
+#endif 
 			error_message("Syntax Error","statement outside of method",NULL);
 			yyerrok;
 			yyclearin;
 		;
     break;}
 case 8:
-#line 97 "syd.y"
+#line 106 "syd.y"
 {
+#if DEBUG
+                        printf("Rule #2e\n");
+#endif 
 			error_message("Syntax Error","only methods allowed at the top level",NULL);
 			yyerrok;
 			yyclearin;
 		;
     break;}
 case 9:
-#line 103 "syd.y"
+#line 115 "syd.y"
 {
 #if DEBUG
-                        printf("Rule #5 - Part 1\n");
+                        printf("Rule #3a\n");
 #endif
 			addmethod(yyvsp[0].ystr);
 			currentscope(yyvsp[0].ystr);
@@ -1276,19 +1288,19 @@ case 9:
 ;
     break;}
 case 10:
-#line 113 "syd.y"
+#line 125 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #5 - Part 2\n");
+                        printf("Rule #3b\n");
 #endif
 			mt[currentmethod].param_count=cur_param_count;
  		;
     break;}
 case 11:
-#line 120 "syd.y"
+#line 132 "syd.y"
 {
 #if DEBUG
-                        printf("Rule #5 - Part 3\n");
+                        printf("Rule #3c\n");
 #endif
 			if(!mt[currentmethod].has_return){
 				error_message("Semantic Error","method doesn't have return value",mt[currentmethod].name);
@@ -1299,10 +1311,10 @@ case 11:
 			;
     break;}
 case 12:
-#line 133 "syd.y"
+#line 145 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #6\n");
+                        printf("Rule #4a\n");
 #endif
 			if(findsymb(&mt[currentmethod].ht,yyvsp[0].ystr)){
 				error_message("Semantic Error","duplicate parameter in method",yyvsp[0].ystr);
@@ -1315,29 +1327,29 @@ case 12:
                      ;
     break;}
 case 13:
-#line 147 "syd.y"
+#line 159 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #7\n");
+                        printf("Rule #4b\n");
 #endif
 			yyval.stnode=MkNode(astParams,NULL,NULL,NULL,NULL,NULL);
                      ;
     break;}
 case 14:
-#line 154 "syd.y"
+#line 166 "syd.y"
 {
 #if DEBUG
-                        printf("Rule #8\n");
+                        printf("Rule #4c\n");
 			fprintf(stderr,"Skipping parameters.\n");
 #endif
 			yyerrok;
 		;
     break;}
 case 15:
-#line 162 "syd.y"
+#line 174 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #9\n");
+                        printf("Rule #5a\n");
 #endif
 			addvariable(yyvsp[-1].ystr,TRUE_VAL);
 			cur_param_count++;
@@ -1347,73 +1359,73 @@ case 15:
                      ;
     break;}
 case 16:
-#line 173 "syd.y"
+#line 185 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #10\n");
+                        printf("Rule #5b\n");
 #endif
 			yyval.stnode=NULL;
                      ;
     break;}
 case 17:
-#line 180 "syd.y"
+#line 192 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #11\n");
+                        printf("Rule #6a\n");
 #endif
                      ;
     break;}
 case 18:
-#line 186 "syd.y"
+#line 198 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #12\n");
+                        printf("Rule #7a\n");
 #endif
 			yyval.stnode=MkNode(astBody,NULL,yyvsp[-2].stnode,yyvsp[-1].stnode,NULL,NULL);
                      ;
     break;}
 case 19:
-#line 193 "syd.y"
+#line 205 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #13\n");
+                        printf("Rule #8a\n");
 #endif
 			yyval.stnode=MkNode(astBody,NULL,yyvsp[-1].stnode,yyvsp[0].stnode,NULL,NULL);
 
                      ;
     break;}
 case 20:
-#line 201 "syd.y"
+#line 213 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #14\n");
+                        printf("Rule #8b\n");
 #endif
 			yyval.stnode=MkNode(astBody,NULL,NULL,NULL,NULL,NULL);
                      ;
     break;}
 case 21:
-#line 208 "syd.y"
+#line 220 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #15\n");
+                        printf("Rule #9a\n");
 #endif
 			yyval.stnode=MkNode(astDecls,NULL,yyvsp[-1].stnode,yyvsp[0].stnode,NULL,NULL);
                      ;
     break;}
 case 22:
-#line 215 "syd.y"
+#line 227 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #16\n");
+                        printf("Rule #9b\n");
 #endif
 			yyval.stnode=NULL;
                      ;
     break;}
 case 23:
-#line 222 "syd.y"
+#line 234 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #17\n");
+                        printf("Rule #10a\n");
 #endif
 			addvariable(yyvsp[-2].ystr,FALSE_VAL);
 			symbol *temps=new_symbol(yyvsp[-2].ystr);
@@ -1422,10 +1434,10 @@ case 23:
                      ;
     break;}
 case 24:
-#line 232 "syd.y"
+#line 244 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #18\n");
+                        printf("Rule #10b\n");
 #endif
 			addvariable(yyvsp[-4].ystr,FALSE_VAL);
 			symbol *temps=new_symbol(yyvsp[-4].ystr);
@@ -1435,17 +1447,20 @@ case 24:
                      ;
     break;}
 case 25:
-#line 243 "syd.y"
+#line 255 "syd.y"
 {
+#if DEBUG
+                        printf("Rule #10c\n");
+#endif 
 			yyerrok;
 			yyval.stnode=MkNode(astDecls,NULL,NULL,NULL,NULL,NULL);
 		;
     break;}
 case 26:
-#line 248 "syd.y"
+#line 263 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #19\n");
+                        printf("Rule #11a\n");
 #endif
 			addvariable(yyvsp[-1].ystr,FALSE_VAL);
 			symbol *temps=new_symbol(yyvsp[-1].ystr);
@@ -1454,10 +1469,10 @@ case 26:
                      ;
     break;}
 case 27:
-#line 258 "syd.y"
+#line 273 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #20\n");
+                        printf("Rule #11b\n");
 #endif
 			addvariable(yyvsp[-3].ystr,FALSE_VAL);
 			symbol *temps=new_symbol(yyvsp[-3].ystr);
@@ -1467,19 +1482,19 @@ case 27:
                      ;
     break;}
 case 28:
-#line 269 "syd.y"
+#line 284 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #21\n");
+                        printf("Rule #11c\n");
 #endif
 			yyval.stnode=NULL;
                      ;
     break;}
 case 29:
-#line 276 "syd.y"
+#line 291 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #22\n");
+                        printf("Rule #12a\n");
 #endif
 			if(ast_returns(yyvsp[-1].stnode)){
 				error_message("Semantic Error","cannot reach code after return",mt[currentmethod].name);
@@ -1488,19 +1503,19 @@ case 29:
                      ;
     break;}
 case 30:
-#line 286 "syd.y"
+#line 301 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #23\n");
+                        printf("Rule #12b\n");
 #endif
 			yyval.stnode=MkNode(astStmtSeq,NULL,NULL,NULL,NULL,NULL);
                      ;
     break;}
 case 31:
-#line 293 "syd.y"
+#line 308 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #24\n");
+                        printf("Rule #13a\n");
 #endif
 			if(!yyvsp[-1].stnode || !is_location(yyvsp[-1].stnode->pAstNode[0])){
 				error_message("Semantic Error","assignment target is not a variable",NULL);
@@ -1509,10 +1524,10 @@ case 31:
                      ;
     break;}
 case 32:
-#line 303 "syd.y"
+#line 318 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #25\n");
+                        printf("Rule #13b\n");
 #endif
 			if(currentmethod==-1){
 				error_message("Semantic Error","return outside of a method",NULL);
@@ -1522,38 +1537,38 @@ case 32:
                      ;
     break;}
 case 33:
-#line 314 "syd.y"
+#line 329 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #26\n");
+                        printf("Rule #13c\n");
 #endif
 			yyval.stnode=MkNode(astIfElseStmt,NULL,yyvsp[-4].stnode,yyvsp[-2].stnode,yyvsp[0].stnode,NULL);
                      ;
     break;}
 case 34:
-#line 321 "syd.y"
+#line 336 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #27 - Part 1\n");
+                        printf("Rule #13d\n");
 #endif
 			loopdepth++;
 		;
     break;}
 case 35:
-#line 328 "syd.y"
+#line 343 "syd.y"
 {
 #if DEBUG
-                        printf("Rule #27 - Part 2\n");
+                        printf("Rule #13e\n");
 #endif
 			loopdepth--;
 			yyval.stnode=MkNode(astWhileStmt,NULL,yyvsp[-3].stnode,yyvsp[0].stnode,NULL,NULL);
                      ;
     break;}
 case 36:
-#line 336 "syd.y"
+#line 351 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #28\n");
+                        printf("Rule #13f\n");
 #endif
 			if(loopdepth==0){
 				error_message("Semantic Error","break outside of loop",NULL);
@@ -1562,28 +1577,28 @@ case 36:
                      ;
     break;}
 case 37:
-#line 346 "syd.y"
+#line 361 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #29\n");
+                        printf("Rule #13g\n");
 #endif
 			yyval.stnode=yyvsp[0].stnode;
                      ;
     break;}
 case 38:
-#line 353 "syd.y"
+#line 368 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #30\n");
+                        printf("Rule #13h\n");
 #endif
 			yyval.stnode=MkNode(astNullStmt,NULL,NULL,NULL,NULL,NULL);
                      ;
     break;}
 case 39:
-#line 360 "syd.y"
+#line 375 "syd.y"
 {
 #if DEBUG
-                        printf("Rule #31\n");
+                        printf("Rule #13i\n");
 			fprintf(stderr,"Skipping statement.\n");
 #endif
 			yyerrok;
@@ -1591,7 +1606,7 @@ case 39:
 		;
     break;}
 case 40:
-#line 369 "syd.y"
+#line 384 "syd.y"
 { 
 #if DEBUG
                         printf("Rule #32\n");
@@ -1600,29 +1615,29 @@ case 40:
                      ;
     break;}
 case 41:
-#line 376 "syd.y"
+#line 391 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #33\n");
+                        printf("Rule #14a\n");
 #endif
 			yyval.stnode=MkNode(astAssign,NULL,yyvsp[-2].stnode,yyvsp[0].stnode,NULL,NULL);
                      ;
     break;}
 case 42:
-#line 383 "syd.y"
+#line 398 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #34\n");
+                        printf("Rule #15a\n");
 #endif
 			symbol *temps=findsymbolinmethod(yyvsp[0].ystr);
 			yyval.stnode=MkNode(astId,temps,NULL,NULL,NULL,NULL);
                      ;
     break;}
 case 43:
-#line 391 "syd.y"
+#line 406 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #35\n");
+                        printf("Rule #16a\n");
 #endif
 			if(methodidx(yyvsp[0].ystr)==-1){
 				error_message("Semantic Error","undeclared method",yyvsp[0].ystr);
@@ -1632,118 +1647,118 @@ case 43:
                      ;
     break;}
 case 44:
-#line 402 "syd.y"
+#line 417 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #36\n");
+                        printf("Rule #17a\n");
 #endif
 			yyval.stnode=MkNode(yyvsp[-1].stnode->NodeType,NULL,yyvsp[-2].stnode,yyvsp[0].stnode,NULL,NULL);
                      ;
     break;}
 case 45:
-#line 409 "syd.y"
+#line 424 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #37\n");
+                        printf("Rule #17b\n");
 #endif
 			yyval.stnode=yyvsp[0].stnode;
                      ;
     break;}
 case 46:
-#line 416 "syd.y"
+#line 431 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #38\n");
+                        printf("Rule #18a\n");
 #endif
 			yyval.stnode=MkNode(astLeEq,NULL,NULL,NULL,NULL,NULL);
                      ;
     break;}
 case 47:
-#line 423 "syd.y"
+#line 438 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #39\n");
+                        printf("Rule #18b\n");
 #endif
 			yyval.stnode=MkNode(astLess,NULL,NULL,NULL,NULL,NULL);
                      ;
     break;}
 case 48:
-#line 430 "syd.y"
+#line 445 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #40\n");
+                        printf("Rule #18c\n");
 #endif
 			yyval.stnode=MkNode(astGreater,NULL,NULL,NULL,NULL,NULL);
                      ;
     break;}
 case 49:
-#line 437 "syd.y"
+#line 452 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #41\n");
+                        printf("Rule #18d\n");
 #endif
 			yyval.stnode=MkNode(astGrEq,NULL,NULL,NULL,NULL,NULL);
                      ;
     break;}
 case 50:
-#line 444 "syd.y"
+#line 459 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #42\n");
+                        printf("Rule #18e\n");
 #endif
 			yyval.stnode=MkNode(astEq,NULL,NULL,NULL,NULL,NULL);
                      ;
     break;}
 case 51:
-#line 451 "syd.y"
+#line 466 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #43\n");
+                        printf("Rule #18f\n");
 #endif
 			yyval.stnode=MkNode(astNotEq,NULL,NULL,NULL,NULL,NULL);
                      ;
     break;}
 case 52:
-#line 458 "syd.y"
+#line 473 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #44\n");
+                        printf("Rule #19a\n");
 #endif
 			yyval.stnode=MkNode(yyvsp[-1].stnode->NodeType,NULL,yyvsp[-2].stnode,yyvsp[0].stnode,NULL,NULL);
                      ;
     break;}
 case 53:
-#line 465 "syd.y"
+#line 480 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #45\n");
+                        printf("Rule #19b\n");
 #endif
 			yyval.stnode=yyvsp[0].stnode;
                      ;
     break;}
 case 54:
-#line 472 "syd.y"
+#line 487 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #46\n");
+                        printf("Rule #20a\n");
 #endif
 			yyval.stnode=MkNode(astAdd,NULL,NULL,NULL,NULL,NULL);
                      ;
     break;}
 case 55:
-#line 479 "syd.y"
+#line 494 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #47\n");
+                        printf("Rule #20b\n");
 #endif
 			yyval.stnode=MkNode(astSub,NULL,NULL,NULL,NULL,NULL);
                      ;
     break;}
 case 56:
-#line 486 "syd.y"
+#line 501 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #48\n");
+                        printf("Rule #21a\n");
 #endif
 			if(yyvsp[-1].stnode->NodeType==astDiv){
 			    if(is_zero(yyvsp[0].stnode))
@@ -1753,55 +1768,55 @@ case 56:
                      ;
     break;}
 case 57:
-#line 497 "syd.y"
+#line 512 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #49\n");
+                        printf("Rule #21b\n");
 #endif
 			yyval.stnode=yyvsp[0].stnode;
                      ;
     break;}
 case 58:
-#line 504 "syd.y"
+#line 519 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #50\n");
+                        printf("Rule #21c\n");
 #endif
 			yyval.stnode=MkNode(astMult,NULL,NULL,NULL,NULL,NULL);
                      ;
     break;}
 case 59:
-#line 511 "syd.y"
+#line 526 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #51\n");
+                        printf("Rule #21d\n");
 #endif
 			yyval.stnode=MkNode(astDiv,NULL,NULL,NULL,NULL,NULL);
                      ;
     break;}
 case 60:
-#line 518 "syd.y"
+#line 533 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #52\n");
+                        printf("Rule #22a\n");
 #endif
 			yyval.stnode=yyvsp[-1].stnode;
                      ;
     break;}
 case 61:
-#line 525 "syd.y"
+#line 540 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #53\n");
+                        printf("Rule #22b\n");
 #endif
 			yyval.stnode=yyvsp[0].stnode;
                      ;
     break;}
 case 62:
-#line 532 "syd.y"
+#line 547 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #54\n");
+                        printf("Rule #22c\n");
 #endif
 			if(yyvsp[0].yll<INT_MIN || yyvsp[0].yll>INT_MAX){
 				error_message("Semantic Error","numeric constant out of range",NULL);
@@ -1813,30 +1828,30 @@ case 62:
                      ;
     break;}
 case 63:
-#line 545 "syd.y"
+#line 560 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #55\n");
+                        printf("Rule #22d\n");
 #endif
 			symbol *temps=new_num_symbol(1);
 			yyval.stnode=MkNode(astDecimConst,temps,NULL,NULL,NULL,NULL);
                      ;
     break;}
 case 64:
-#line 553 "syd.y"
+#line 568 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #56\n");
+                        printf("Rule #22e\n");
 #endif
 			symbol *temps=new_num_symbol(0);
 			yyval.stnode=MkNode(astDecimConst,temps,NULL,NULL,NULL,NULL);
                      ;
     break;}
 case 65:
-#line 561 "syd.y"
+#line 576 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #57\n");
+                        printf("Rule #22f\n");
 #endif
 			if(!yyvsp[-3].stnode || !yyvsp[-3].stnode->SymbolNode){
 				error_message("Semantic Error","method symbol missing in call",(char*)yyvsp[-3].stnode->SymbolNode->name);
@@ -1853,20 +1868,20 @@ case 65:
                      ;
     break;}
 case 66:
-#line 579 "syd.y"
+#line 594 "syd.y"
 {
 #if DEBUG
-		printf("Rule #57-Unary Minus\n");
+		printf("Rule #22g\n");
 #endif
 		symbol *temps=new_num_symbol(0);
 		yyval.stnode=MkNode(astSub,NULL,MkNode(astDecimConst,temps,NULL,NULL,NULL,NULL),yyvsp[0].stnode,NULL,NULL);
 		;
     break;}
 case 67:
-#line 588 "syd.y"
+#line 603 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #58\n");
+                        printf("Rule #23a\n");
 #endif
 			if(yyvsp[-1].stnode==NULL){
 				yyval.stnode=MkNode(astArgs,NULL,yyvsp[0].stnode,NULL,NULL,NULL);
@@ -1876,28 +1891,28 @@ case 67:
                      ;
     break;}
 case 68:
-#line 599 "syd.y"
+#line 614 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #59\n");
+                        printf("Rule #23b\n");
 #endif
 			yyval.stnode=NULL;
                      ;
     break;}
 case 69:
-#line 606 "syd.y"
+#line 621 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #60\n");
+                        printf("Rule #24a\n");
 #endif
 			yyval.stnode=MkNode(astArgs,NULL,yyvsp[-2].stnode,MkNode(astArgs,NULL,yyvsp[-1].stnode,NULL,NULL,NULL),NULL,NULL);
                      ;
     break;}
 case 70:
-#line 613 "syd.y"
+#line 628 "syd.y"
 { 
 #if DEBUG
-                        printf("Rule #61\n");
+                        printf("Rule #24b\n");
 #endif
 			yyval.stnode=NULL;
                      ;
@@ -2106,7 +2121,7 @@ YYLABEL(yyerrhandle)
 /* END */
 
  #line 1038 "/usr/share/bison++/bison.cc"
-#line 619 "syd.y"
+#line 634 "syd.y"
 
 
 /* creates symbols with int instead of char* */
@@ -2124,6 +2139,7 @@ void yyerror(const char *s)
    error_message("Syntax Error",s,NULL);
 }
 
+// main used without syd1.c
 /* int main(void)
 {
    if(yyparse()==0){
