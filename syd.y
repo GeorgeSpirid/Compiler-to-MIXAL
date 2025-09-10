@@ -586,7 +586,7 @@ FACTOR            : '(' EXPR ')'
 			}
 			int ca=count_args($3);
 			if(ca != mt[mi].param_count){
-				error_message("Syntax Error","method needs different type of arguments",mt[mi].name);
+				error_message("Syntax Error","method needs different number of arguments",mt[mi].name);
 			}
 			$$=MkNode(astCall,NULL,$1,$3,NULL,NULL);
                      } 

@@ -1862,7 +1862,7 @@ case 65:
 			}
 			int ca=count_args(yyvsp[-1].stnode);
 			if(ca != mt[mi].param_count){
-				error_message("Syntax Error","method needs different type of arguments",mt[mi].name);
+				error_message("Syntax Error","method needs different number of arguments",mt[mi].name);
 			}
 			yyval.stnode=MkNode(astCall,NULL,yyvsp[-3].stnode,yyvsp[-1].stnode,NULL,NULL);
                      ;
