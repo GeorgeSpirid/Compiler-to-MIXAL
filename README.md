@@ -2,13 +2,14 @@
 
 ## Introduction
 This project implemets a compiler for a simple c-like language to the MIX Assembly Language (MIXAL), from D.Knuth's *The Art of Computer Programming*.
-The compiler is divided into sixe stages:
+The compiler is divided into six stages:
 1. Lexical Analysis
 2. Syntax Analysis
 3. Semantic Analysis
 4. Error Detection
 5. Error Recovery
 6. Code Generation
+
 All source, helper, and test files should be in the same directory for the instructions to work.
 
 ## Lexical Analysis
@@ -21,12 +22,13 @@ To generate the lexer, *lex.yy.c*:
 The context-free grammar is defined in *syd.y* and uses *bison* to produce an Abstract Syntax Tree (AST), which is the backbone for later stages.
 To build the parser, *syd.tab.c* and *syd.tab.h*:
 ```sh bison -dv syd.y```
+
 **Language Rules**:
 - Programs consist of zero or more methods.
 - Only type supported is signed *int*.
 - All nethods must return *int*.
 - Methods can have zero or more parameters.
-- Variabled can be initialized at declaration or later.
+- Variables can be initialized at declaration or later.
 
 ## Semantic Analysis
 Performed in the same file with the syntax analysys, *syd.y*.
@@ -46,7 +48,7 @@ Performed in the same file with the syntax analysys, *syd.y*.
 The message printed gives information about the location and type of the error. If there is one or more errors the AST won't be built. The *error* token is used in some rules to handle expected errors.
 
 ## Error Recovery
-Uses *yyerrok()* to recover and continue parsing. Multiple errors can be detected in a signle run and can sometimes be resolved by handling the first one. This happens because some following errors are side effects or previous ones.
+Uses *yyerrok()* to recover and continue parsing. Multiple errors can be detected in a signle run and can sometimes be resolved by handling the first one. This happens because some following errors are side effects of previous ones.
 
 ## Goal Language
 Implemented in *syd1.c*. If no errors are found then the AST is printed and *output.mixal* contains a MIXAL program equivalent to the *.txt* one.
