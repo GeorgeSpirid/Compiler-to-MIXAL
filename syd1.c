@@ -60,7 +60,7 @@ void intToBase26(int num,char *buf){
         strcpy(buf,"a");
         return;
     }
-    // convert to base62
+    // convert to base26
     while(num>0 && i<MAX_CODE_LEN-1){
         temp[i++]=chars[num%26];
         num/=26;
@@ -87,6 +87,7 @@ char *compress(const char *input){
     }
     // if exceeds max entries, return NULL
     if(entry_count>=MAX_ENTRIES){
+        fprintf(stderr, "Dictionary full, cannot compress more strings.\n");
         return NULL;
     }
     // create new entry
@@ -222,7 +223,11 @@ static int genExpr(AstNode *p){
          fprintf(femitc, " ENTA L%d\n", ret_label);
          fprintf(femitc, " STA RADR\n");
          char *method_name= p->pAstNode[0]->SymbolNode->name;
-         fprintf(femitc, " JMP %s\n", method_name);
+         if(strcmp(method_name, "main")==0){
+            fprintf(femitc, " JMP %s\n", method_name);
+         } else {
+            fprintf(femitc, " JMP %s\n", compress(method_name));
+         }
          fprintf(femitc, "L%d NOP\n", ret_label);
          fprintf(femitc, " LDA T%d\n", radr_temp);
          fprintf(femitc, " STA RADR\n");
@@ -394,7 +399,11 @@ static void CodeGeneration(AstNode *p){
          break; 
       case astMethod:{
          current_method_name = p->SymbolNode->name;
-         fprintf(femitc, "%s NOP\n", p->SymbolNode->name);
+         if(strcmp(current_method_name, "main")!=0){
+            char *compressed=compress(current_method_name);
+            if(compressed) current_method_name=compressed;
+         }
+         fprintf(femitc, "%s NOP\n", current_method_name);
          if(p->pAstNode[0]){
             param_count=0;
             proccessParams(p->pAstNode[0]);
