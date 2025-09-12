@@ -237,8 +237,7 @@ RUNTIME ERROR: DIVISION BY ZERO
 ```
 
 ## Final Notes
-The name of a variable plus the name of the method it is in cannot be more than 10 characters combined, e.x.
-variable called "name" in method called "findName" is too big and therefor invalid.
+Methods and variables can now have names up to 256 characters.
 The project was mostly developed in Notepad with some use of Visual Studio Code.
 
 ## Requirements

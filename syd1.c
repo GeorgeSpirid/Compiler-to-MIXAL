@@ -1,7 +1,12 @@
 #include <stdio.h> 
 #include <stdlib.h> 
+#include <string.h>
 #include "defs.h" 
 #include "syd.tab.h" 
+
+#define MAX_ENTRIES 100
+#define MAX_STRING_LEN 256
+#define MAX_CODE_LEN 11
 
 #define LOOP_MAX 1000
 
@@ -12,6 +17,14 @@ FILE *femitc;
 char val_buf[8192]="";
 char temp_buf[8192]="";
 char var_buf[8192]="";
+
+typedef struct {
+    char original[MAX_STRING_LEN];
+    char code[MAX_CODE_LEN];
+} MapEntry;
+
+MapEntry dictionary[MAX_ENTRIES];
+int entry_count = 0;
 
 static void CodeGeneration(AstNode *p);
 static void add_var(char *name, int v);
@@ -37,6 +50,60 @@ static int loop_stack_top=-1;
 
 static int label_count=0;
 
+void intToBase26(int num,char *buf){
+    const char chars[]="abcdefghijklmnopqrstuvwxyz";
+    char temp[MAX_CODE_LEN];
+    int i=0;
+
+    // handle zero case
+    if(num==0){
+        strcpy(buf,"a");
+        return;
+    }
+    // convert to base62
+    while(num>0 && i<MAX_CODE_LEN-1){
+        temp[i++]=chars[num%26];
+        num/=26;
+    }
+    temp[i]='\0';
+
+    // reverse string
+    int len=strlen(temp);
+    for(int j=0;j<len;j++){
+        buf[j]=temp[len-j-1];
+    }
+    buf[len]='\0';
+}
+
+// compress string to shorter code
+char *compress(const char *input){
+    // if string already exists, return existing code
+    for(int i=0;i<entry_count;i++){
+        if(strcmp(dictionary[i].original,input)==0){
+            char *copy=malloc(strlen(dictionary[i].code)+1);
+            strcpy(copy,dictionary[i].code);
+            return copy;
+        }
+    }
+    // if exceeds max entries, return NULL
+    if(entry_count>=MAX_ENTRIES){
+        return NULL;
+    }
+    // create new entry
+    char new_code[MAX_CODE_LEN];
+    intToBase26(entry_count,new_code);
+
+    // store in dictionary
+    strcpy(dictionary[entry_count].original,input);
+    strcpy(dictionary[entry_count].code,new_code);
+    entry_count++;
+
+    // return new code
+    char *copy=malloc(strlen(new_code)+1);
+    strcpy(copy,new_code);
+    return copy;
+}
+
 static void proccessParams(AstNode *p){
    if(!p) return;
    if(p->NodeType==astParam){
@@ -44,6 +111,8 @@ static void proccessParams(AstNode *p){
          char *param_name=p->SymbolNode->name;
          char new_name[256];
          snprintf(new_name, sizeof(new_name), "%s%s", current_method_name, param_name);
+         char *compressed=compress(new_name);
+         if(compressed) strcpy(new_name, compressed);
          add_var(strdup(new_name),0);
          fprintf(femitc, " LDA A%d\n", param_count++);
          fprintf(femitc, " STA %s\n", new_name);
@@ -166,6 +235,8 @@ static int genExpr(AstNode *p){
          char new_name[256];
          snprintf(new_name, sizeof(new_name), "%s%s", current_method_name, p->SymbolNode->name);
          int temp = new_temp();
+         char *compressed=compress(new_name);
+         if(compressed) strcpy(new_name, compressed);
          fprintf(femitc, " LDA %s\n", new_name);
          fprintf(femitc, " STA T%d\n", temp);
          return temp;
@@ -345,6 +416,8 @@ static void CodeGeneration(AstNode *p){
                char *var_name=arg->SymbolNode->name;
                char new_name[256];
                snprintf(new_name, sizeof(new_name), "%s%s", current_method_name, var_name);
+               char *compressed=compress(new_name);
+               if(compressed) strcpy(new_name, compressed);
                fprintf(femitc, " LDA %s\n", new_name);
             } else if(arg->NodeType==astDecimConst){
                int val=arg->SymbolNode->timi;
@@ -381,6 +454,8 @@ static void CodeGeneration(AstNode *p){
          char new_name[256];
          snprintf(new_name, sizeof(new_name),"%s%s", current_method_name, p->pAstNode[0]->SymbolNode->name);
          int var_num = p->pAstNode[0]->SymbolNode->timi;
+         char *compressed=compress(new_name);
+         if(compressed) strcpy(new_name, compressed);
          add_var(strdup(new_name),var_num);
          int res_temp = genExpr(p->pAstNode[1]);
          fprintf(femitc, " LDA T%d\n", res_temp);
