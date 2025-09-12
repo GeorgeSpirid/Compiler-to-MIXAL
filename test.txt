@@ -1,11 +1,83 @@
+int add(int a, int b) {
+    int result;
+    result = a + b;
+    return result;
+}
+
+int multiply(int a, int b) {
+    int result;
+    result = a * b;
+    return result;
+}
+
+int power(int base, int exp) {
+    int result=1;
+    while (exp > 0) {
+        result = result * base;
+        exp = exp - 1;
+    }
+    return result;
+}
+
+int factorial(int n) {
+    int result=1;
+    while (n > 1) {
+        result = result * n;
+        n = n - 1;
+    }
+    return result;
+}
+
+int sumRange(int start, int end) {
+    int sum=0;
+    while (start <= end) {
+        sum = sum + start;
+        start = start + 1;
+    }
+    return sum;
+}
+
+int compareAndChoose(int x, int y) {
+    if (x > y) {
+        return x;
+    } else {
+        return y;
+    }
+}
+
+int complexCalc(int a, int b, int c) {
+    int tmp1, tmp2, tmp3, tmp4;
+
+    tmp1 = add(a, b);          // a+b
+    tmp2 = multiply(tmp1, c);  // (a+b)*c
+    tmp3 = power(c, 3);        // c^3
+    tmp4 = compareAndChoose(tmp2, tmp3); 
+
+    return tmp4;
+}
+
 int main() {
-    while(1>0){
-    if(1>0){
-    break;
+    int a=5, b=3, c=4;
+    int res1, res2, res3, res4, res5;
+
+    res1 = factorial(a);
+    res2 = sumRange(1, b);
+    res3 = complexCalc(a, b, c);
+    res4 = add(res1, res2);
+    res5 = multiply(res3, res4);
+
+    // nested block with break
+    while (res5 > 0) {
+        {
+            if (res5 > 1000) {
+                break;   // exit while
+            }
+            else{
+            res5 = res5 + 1;
+            }
+        }
     }
-    else{
-    }
-    }
-    return 1;
+
+    return res5;
 }
 

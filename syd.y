@@ -332,6 +332,15 @@ STMT            : ASSIGN ';'
 #endif
 			$$=MkNode(astIfElseStmt,NULL,$3,$5,$7,NULL);
                      }
+			| IF '(' EXPR ')' STMT error
+		{ 
+#if DEBUG
+                        printf("Rule #13c\n");
+#endif
+			error_message("Syntax Error","missing else in if statement",NULL);
+			yyerrok;
+			$$=MkNode(astIfElseStmt,NULL,NULL,NULL,NULL,NULL);
+		}
 			| WHILE '(' EXPR ')' 
 		{ 
 #if DEBUG
